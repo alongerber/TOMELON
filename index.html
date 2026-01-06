@@ -4840,22 +4840,90 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             currentTab = 'parser';
         }
 
-        // ==================== EMAIL PARSER MODULE ====================
+        // ==================== EMAIL PARSER MODULE (Claude AI) ====================
         let lastParsedData = null;
+        const CLAUDE_ANALYZE_API = '/api/analyze';
 
-        function parseEmailMessage() {
+        async function parseEmailMessage() {
             const emailText = document.getElementById('emailInput').value.trim();
             if (!emailText) {
                 showToast('נא להדביק הודעה לניתוח', 'warning');
                 return;
             }
 
-            const parsedData = extractShipData(emailText);
-            lastParsedData = parsedData;
-            displayParsedResult(parsedData);
+            // Show loading state
+            const btn = document.querySelector('.parser-container .btn-primary');
+            const originalBtnText = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;margin-left:8px;"></div> מנתח עם Claude AI...';
+            btn.disabled = true;
+
+            // Show loading in results area
+            document.getElementById('parsedResultsContainer').innerHTML = `
+                <div style="text-align:center;padding:40px;color:var(--text-secondary);">
+                    <div class="spinner" style="width:32px;height:32px;border:3px solid var(--glass-border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div>
+                    <p>Claude AI מנתח את ההודעה...</p>
+                </div>
+            `;
+
+            try {
+                // Get existing ship names for context
+                const existingShipNames = ships.map(s => s.name).filter(Boolean);
+
+                const response = await fetch(CLAUDE_ANALYZE_API, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        parseType: 'email',
+                        content: emailText,
+                        existingShips: existingShipNames
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || data.details || 'API error');
+                }
+
+                if (data.parsed) {
+                    // Convert Claude response to our format
+                    const parsedData = convertClaudeResponseToShipData(data.parsed);
+                    lastParsedData = parsedData;
+                    displayParsedResult(parsedData);
+                    showToast('ההודעה נותחה בהצלחה', 'success');
+                } else if (data.raw) {
+                    showToast('התקבל ניתוח אך לא בפורמט מובנה', 'warning');
+                    document.getElementById('parsedResultsContainer').innerHTML = `
+                        <div class="warning-message" style="background:var(--warning-glow);border:1px solid var(--warning);border-radius:8px;padding:16px;">
+                            <p style="margin-bottom:8px;font-weight:600;">ניתוח גולמי:</p>
+                            <pre style="white-space:pre-wrap;font-size:12px;direction:ltr;text-align:left;">${data.raw}</pre>
+                        </div>
+                    `;
+                } else {
+                    throw new Error('לא התקבלו נתונים מהניתוח');
+                }
+            } catch (error) {
+                console.error('Claude API error:', error);
+                showToast(`שגיאה בניתוח: ${error.message}`, 'error');
+                document.getElementById('parsedResultsContainer').innerHTML = `
+                    <div class="warning-message" style="background:var(--danger-glow);border:1px solid var(--danger);border-radius:8px;padding:16px;text-align:center;">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2" style="margin-bottom:8px;">
+                            <circle cx="12" cy="12" r="10"/>
+                            <line x1="12" y1="8" x2="12" y2="12"/>
+                            <line x1="12" y1="16" x2="12.01" y2="16"/>
+                        </svg>
+                        <p style="font-weight:600;margin-bottom:4px;">שגיאה בניתוח</p>
+                        <p style="font-size:13px;color:var(--text-secondary);">${error.message}</p>
+                        <p style="font-size:12px;color:var(--text-tertiary);margin-top:8px;">וודא שהגדרת CLAUDE_API_KEY ב-Vercel</p>
+                    </div>
+                `;
+            } finally {
+                btn.innerHTML = originalBtnText;
+                btn.disabled = false;
+            }
         }
 
-        function extractShipData(text) {
+        function convertClaudeResponseToShipData(claudeData) {
             const result = {
                 match_confidence: 0,
                 identified_ship_id: null,
@@ -4872,57 +4940,110 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     services_to_add: [],
                     notes_delta: null
                 },
-                uncertainty_note: null
+                uncertainty_note: null,
+                contacts: [],
+                rawClaudeData: claudeData
             };
 
-            // 1. Extract vessel name
-            const vesselName = extractVesselName(text);
-            if (vesselName) {
-                result.updates.name = vesselName;
+            // Map vessel name
+            if (claudeData.vesselName) {
+                result.updates.name = claudeData.vesselName.toUpperCase();
 
                 // Try to match with existing ships
-                const matchedShip = findMatchingShip(vesselName);
+                const matchedShip = findMatchingShip(claudeData.vesselName);
                 if (matchedShip) {
                     result.matched_ship = matchedShip;
                     result.identified_ship_id = matchedShip.id;
-                    result.match_confidence = calculateMatchConfidence(vesselName, matchedShip.name);
+                    result.match_confidence = 0.9;
                 } else {
                     result.is_new_ship = true;
-                    result.match_confidence = 0.7; // New ship, name confidence
+                    result.match_confidence = 0.8;
                 }
             }
 
-            // 2. Extract dates (ETA, ETB, ETD)
-            const dates = extractDates(text);
-            if (dates.eta) result.updates.eta = dates.eta;
-            if (dates.etb) result.updates.etb = dates.etb;
-            if (dates.etd) result.updates.etd = dates.etd;
+            // Map dates
+            if (claudeData.eta) result.updates.eta = claudeData.eta;
+            if (claudeData.etb) result.updates.etb = claudeData.etb;
+            if (claudeData.etd) result.updates.etd = claudeData.etd;
 
-            // 3. Extract port
-            const port = extractPort(text);
-            if (port) result.updates.port = port;
+            // Map port
+            if (claudeData.port) result.updates.port = claudeData.port;
 
-            // 4. Determine status based on context
-            result.updates.status = determineStatus(text, dates);
+            // Map status
+            if (claudeData.status) result.updates.status = claudeData.status;
 
-            // 5. Extract services
-            result.updates.services_to_add = extractServices(text);
+            // Map cargo
+            if (claudeData.cargo && (claudeData.cargo.type || claudeData.cargo.weight)) {
+                result.updates.cargo = claudeData.cargo;
+            }
 
-            // 6. Extract cargo
-            const cargo = extractCargo(text);
-            if (cargo) result.updates.cargo = cargo;
+            // Map services
+            if (claudeData.services) {
+                const serviceMap = {
+                    water: 'מים מתוקים',
+                    bunker: 'דלק',
+                    crewChange: 'החלפת צוות',
+                    provisions: 'ציוד ומזון',
+                    sludge: 'פינוי שמנים',
+                    repairs: 'תיקונים'
+                };
 
-            // 7. Extract notes (master name, contact info, etc.)
-            const notes = extractNotes(text);
-            if (notes) result.updates.notes_delta = notes;
+                for (const [key, hebrewName] of Object.entries(serviceMap)) {
+                    if (claudeData.services[key]) {
+                        result.updates.services_to_add.push(hebrewName);
+                    }
+                }
 
-            // 8. Check for uncertainty markers
-            result.uncertainty_note = checkUncertainty(text);
+                if (claudeData.services.other && Array.isArray(claudeData.services.other)) {
+                    result.updates.services_to_add.push(...claudeData.services.other);
+                }
+            }
 
-            // Update confidence based on data extracted
-            if (!vesselName) result.match_confidence = 0.3;
-            else if (dates.eta || dates.etb) result.match_confidence = Math.min(result.match_confidence + 0.1, 1);
+            // Map notes
+            if (claudeData.notes && claudeData.notes.length > 0) {
+                result.updates.notes_delta = claudeData.notes.join('\n');
+            }
 
+            // Map contacts
+            if (claudeData.contacts && claudeData.contacts.length > 0) {
+                result.contacts = claudeData.contacts;
+            }
+
+            // Map confidence
+            if (claudeData.confidence) {
+                const confidenceMap = { high: 0.95, medium: 0.75, low: 0.5 };
+                result.match_confidence = confidenceMap[claudeData.confidence] || 0.7;
+            }
+
+            // Determine status based on extracted data if not explicitly set
+            if (!result.updates.status && result.updates.eta) {
+                result.updates.status = 'At Sea';
+            }
+
+            return result;
+        }
+
+        function extractShipData(text) {
+            // Legacy function - kept for compatibility but now using Claude AI
+            // This is called as fallback only
+            const result = {
+                match_confidence: 0,
+                identified_ship_id: null,
+                matched_ship: null,
+                is_new_ship: false,
+                updates: {
+                    name: null,
+                    status: null,
+                    eta: null,
+                    etb: null,
+                    etd: null,
+                    port: null,
+                    cargo: null,
+                    services_to_add: [],
+                    notes_delta: null
+                },
+                uncertainty_note: 'נא להשתמש בניתוח Claude AI לתוצאות טובות יותר'
+            };
             return result;
         }
 
@@ -5860,8 +5981,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById(`tallyInput${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
         }
 
-        // API endpoint for Claude analysis
-        const CLAUDE_API_ENDPOINT = '/api/analyze-tally';
+        // API endpoint for Claude analysis (using unified endpoint)
+        const CLAUDE_API_ENDPOINT = '/api/analyze';
 
         async function parseTallyText() {
             const text = document.getElementById('tallyTextArea').value.trim();
@@ -5880,7 +6001,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 const response = await fetch(CLAUDE_API_ENDPOINT, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ type: 'text', content: text })
+                    body: JSON.stringify({ parseType: 'tally', content: text })
                 });
 
                 const data = await response.json();
@@ -6193,7 +6314,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        type: 'image',
+                        parseType: 'tally',
                         imageBase64: base64Data,
                         mimeType: mimeType
                     })
@@ -6308,7 +6429,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        type: 'image',
+                        parseType: 'tally',
                         imageBase64: base64Data,
                         mimeType: mimeType
                     })
