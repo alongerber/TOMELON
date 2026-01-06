@@ -807,6 +807,319 @@
             border-color: var(--danger);
         }
 
+        /* ======================== EMAIL PARSER MODULE ======================== */
+        .email-parser-view {
+            display: none;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+            padding: var(--spacing-xl);
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .email-parser-view.active {
+            display: flex;
+        }
+
+        .parser-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            flex: 1;
+            min-height: 0;
+        }
+
+        .parser-input-section,
+        .parser-output-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--glass-border);
+        }
+
+        .parser-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .parser-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .parser-section-title svg {
+            color: var(--primary);
+        }
+
+        .email-textarea {
+            flex: 1;
+            min-height: 300px;
+            padding: var(--spacing-md);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: none;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .email-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .email-textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .parse-btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .parse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--primary-glow);
+        }
+
+        .parse-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .parsed-result {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .parsed-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            gap: var(--spacing-md);
+        }
+
+        .parsed-empty svg {
+            opacity: 0.3;
+        }
+
+        .confidence-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .confidence-high {
+            background: var(--success-glow);
+            color: var(--success);
+        }
+
+        .confidence-medium {
+            background: var(--warning-glow);
+            color: var(--warning);
+        }
+
+        .confidence-low {
+            background: var(--danger-glow);
+            color: var(--danger);
+        }
+
+        .parsed-field {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+        }
+
+        .parsed-field-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .parsed-field-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .parsed-field-value {
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .parsed-field-apply {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .parsed-field-apply:hover {
+            background: var(--primary-dark);
+        }
+
+        .parsed-field-apply.applied {
+            background: var(--success);
+        }
+
+        .parsed-services {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .parsed-service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+        }
+
+        .parsed-service-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .parsed-service-type {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .parsed-service-details {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .uncertainty-note {
+            padding: var(--spacing-md);
+            background: var(--warning-glow);
+            border: 1px solid var(--warning);
+            border-radius: var(--radius-md);
+            color: var(--warning);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+
+        .apply-all-btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .apply-all-btn:hover {
+            background: var(--success-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--success-glow);
+        }
+
+        .apply-all-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ship-selector {
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .ship-selector label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .ship-selector select {
+            padding: var(--spacing-sm);
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .new-ship-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--primary-glow);
+            color: var(--primary);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1200px) {
+            .parser-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Form Styles */
         .form-group {
             display: flex;
@@ -1912,6 +2225,13 @@
                     </svg>
                     <span>מבט מהיר</span>
                 </div>
+                <div class="nav-item" onclick="switchToParserView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    <span>ניתוח הודעות</span>
+                </div>
             </nav>
 
             <div class="sidebar-section">
@@ -2060,6 +2380,81 @@
                 <!-- Ships Grid -->
                 <div class="ships-grid" id="shipsGrid">
                     <!-- Ships will be rendered here -->
+                </div>
+
+                <!-- Email Parser View -->
+                <div class="email-parser-view" id="emailParserView">
+                    <div class="parser-section-header">
+                        <h2 class="parser-section-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            ניתוח הודעות אוטומטי
+                        </h2>
+                    </div>
+
+                    <div class="parser-container">
+                        <!-- Input Section -->
+                        <div class="parser-input-section">
+                            <div class="parser-section-header">
+                                <h3 class="parser-section-title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    הדבק הודעה / אימייל
+                                </h3>
+                            </div>
+                            <textarea
+                                class="email-textarea"
+                                id="emailInput"
+                                placeholder="הדבק כאן את תוכן האימייל או ההודעה...
+
+לדוגמה:
+From: Lady Zehma <mvladyzehma@gmail.com>
+Subject: ETA to Haifa - 6 Hrs Notice
+
+Dear Agency,
+ETA to Haifa plt stn: 04.01.2026 / 14:00 lt
+Need 50 tons fresh water
+Crew change: 2 joining, 3 leaving
+
+Best Regards,
+Captain"></textarea>
+                            <button class="parse-btn" onclick="parseEmailMessage()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="m21 21-4.35-4.35"/>
+                                </svg>
+                                נתח הודעה
+                            </button>
+                        </div>
+
+                        <!-- Output Section -->
+                        <div class="parser-output-section">
+                            <div class="parser-section-header">
+                                <h3 class="parser-section-title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                    </svg>
+                                    תוצאות ניתוח
+                                </h3>
+                            </div>
+                            <div class="parsed-result" id="parsedResult">
+                                <div class="parsed-empty">
+                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                        <polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                    <span>הדבק הודעה ולחץ "נתח הודעה" לקבלת תוצאות</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -3166,6 +3561,10 @@
             document.querySelector('.tabs').style.display = 'flex';
             document.querySelector('.stats-grid').style.display = 'grid';
 
+            // הסתר את תצוגת הפרסר והצג את הגריד
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('shipsGrid').style.display = 'grid';
+
             currentTab = 'all'; // אפס לטאב "כל האניות"
             // אפס את כפתורי הטאבים למצב ברירת מחדל
             document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
@@ -3184,14 +3583,879 @@
             // הסר 'active' מכל כפתורי הניווט הראשי
             document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
             // הוסף 'active' לכפתור "מבט מהיר"
-            document.querySelector('.nav-menu .nav-item:last-of-type').classList.add('active');
+            document.querySelectorAll('.nav-menu .nav-item')[1].classList.add('active');
 
             // הסתר את הטאבים והסטטיסטיקות שאינם רלוונטיים
             document.querySelector('.tabs').style.display = 'none';
             document.querySelector('.stats-grid').style.display = 'none';
 
+            // הסתר את תצוגת הפרסר והצג את הגריד
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('shipsGrid').style.display = 'grid';
+
             currentTab = 'quick'; // עדכן את המצב הנוכחי
             renderQuickView(); // רנדר את תצוגת "מבט מהיר"
+        }
+
+        function switchToParserView() {
+            // הסר 'active' מכל כפתורי הניווט הראשי
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            // הוסף 'active' לכפתור "ניתוח הודעות"
+            document.querySelectorAll('.nav-menu .nav-item')[2].classList.add('active');
+
+            // הסתר את הטאבים והסטטיסטיקות
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+
+            // הסתר את הגריד הרגיל והצג את תצוגת הפרסר
+            document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('emailParserView').classList.add('active');
+
+            currentTab = 'parser';
+        }
+
+        // ==================== EMAIL PARSER MODULE ====================
+        let lastParsedData = null;
+
+        function parseEmailMessage() {
+            const emailText = document.getElementById('emailInput').value.trim();
+            if (!emailText) {
+                showToast('נא להדביק הודעה לניתוח', 'warning');
+                return;
+            }
+
+            const parsedData = extractShipData(emailText);
+            lastParsedData = parsedData;
+            displayParsedResult(parsedData);
+        }
+
+        function extractShipData(text) {
+            const result = {
+                match_confidence: 0,
+                identified_ship_id: null,
+                matched_ship: null,
+                is_new_ship: false,
+                updates: {
+                    name: null,
+                    status: null,
+                    eta: null,
+                    etb: null,
+                    etd: null,
+                    port: null,
+                    cargo: null,
+                    services_to_add: [],
+                    notes_delta: null
+                },
+                uncertainty_note: null
+            };
+
+            // 1. Extract vessel name
+            const vesselName = extractVesselName(text);
+            if (vesselName) {
+                result.updates.name = vesselName;
+
+                // Try to match with existing ships
+                const matchedShip = findMatchingShip(vesselName);
+                if (matchedShip) {
+                    result.matched_ship = matchedShip;
+                    result.identified_ship_id = matchedShip.id;
+                    result.match_confidence = calculateMatchConfidence(vesselName, matchedShip.name);
+                } else {
+                    result.is_new_ship = true;
+                    result.match_confidence = 0.7; // New ship, name confidence
+                }
+            }
+
+            // 2. Extract dates (ETA, ETB, ETD)
+            const dates = extractDates(text);
+            if (dates.eta) result.updates.eta = dates.eta;
+            if (dates.etb) result.updates.etb = dates.etb;
+            if (dates.etd) result.updates.etd = dates.etd;
+
+            // 3. Extract port
+            const port = extractPort(text);
+            if (port) result.updates.port = port;
+
+            // 4. Determine status based on context
+            result.updates.status = determineStatus(text, dates);
+
+            // 5. Extract services
+            result.updates.services_to_add = extractServices(text);
+
+            // 6. Extract cargo
+            const cargo = extractCargo(text);
+            if (cargo) result.updates.cargo = cargo;
+
+            // 7. Extract notes (master name, contact info, etc.)
+            const notes = extractNotes(text);
+            if (notes) result.updates.notes_delta = notes;
+
+            // 8. Check for uncertainty markers
+            result.uncertainty_note = checkUncertainty(text);
+
+            // Update confidence based on data extracted
+            if (!vesselName) result.match_confidence = 0.3;
+            else if (dates.eta || dates.etb) result.match_confidence = Math.min(result.match_confidence + 0.1, 1);
+
+            return result;
+        }
+
+        function extractVesselName(text) {
+            // Common patterns for vessel names
+            const patterns = [
+                /(?:M\/?V|MV|m\.v\.|mv)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?(?:\s*\/|\s*$|\s*\n|\s*<)/i,
+                /(?:vessel|ship|from)[\s:]+["']?([A-Z][A-Za-z\s\-\.]+?)["']?(?:\s*\/|\s*$|\s*\n)/i,
+                /Subject:.*?(?:M\/?V|MV|m\.v\.)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?/i,
+                /^(?:M\/?V|MV|m\.v\.)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?/im
+            ];
+
+            for (const pattern of patterns) {
+                const match = text.match(pattern);
+                if (match && match[1]) {
+                    // Clean up the name
+                    let name = match[1].trim()
+                        .replace(/\s+/g, ' ')
+                        .replace(/[<>]/g, '')
+                        .replace(/\s*\/\s*$/, '')
+                        .replace(/\s*Msg.*$/i, '')
+                        .trim();
+
+                    // Validate it looks like a ship name
+                    if (name.length >= 3 && name.length <= 50 && /^[A-Za-z]/.test(name)) {
+                        return name.toUpperCase();
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        function findMatchingShip(vesselName) {
+            if (!vesselName || !ships || ships.length === 0) return null;
+
+            const normalizedSearch = vesselName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            // Try exact match first
+            let match = ships.find(s =>
+                s.name && s.name.toLowerCase().replace(/[^a-z0-9]/g, '') === normalizedSearch
+            );
+            if (match) return match;
+
+            // Try partial match
+            match = ships.find(s => {
+                if (!s.name) return false;
+                const shipName = s.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+                return shipName.includes(normalizedSearch) || normalizedSearch.includes(shipName);
+            });
+            if (match) return match;
+
+            // Try fuzzy match (at least 70% similarity)
+            for (const ship of ships) {
+                if (!ship.name) continue;
+                const similarity = calculateSimilarity(
+                    vesselName.toLowerCase(),
+                    ship.name.toLowerCase()
+                );
+                if (similarity > 0.7) {
+                    return ship;
+                }
+            }
+
+            return null;
+        }
+
+        function calculateSimilarity(str1, str2) {
+            const longer = str1.length > str2.length ? str1 : str2;
+            const shorter = str1.length > str2.length ? str2 : str1;
+
+            if (longer.length === 0) return 1.0;
+
+            const costs = [];
+            for (let i = 0; i <= shorter.length; i++) {
+                let lastValue = i;
+                for (let j = 0; j <= longer.length; j++) {
+                    if (i === 0) {
+                        costs[j] = j;
+                    } else if (j > 0) {
+                        let newValue = costs[j - 1];
+                        if (shorter.charAt(i - 1) !== longer.charAt(j - 1)) {
+                            newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+                        }
+                        costs[j - 1] = lastValue;
+                        lastValue = newValue;
+                    }
+                }
+                if (i > 0) costs[longer.length] = lastValue;
+            }
+
+            return (longer.length - costs[longer.length]) / longer.length;
+        }
+
+        function calculateMatchConfidence(extractedName, matchedName) {
+            const similarity = calculateSimilarity(
+                extractedName.toLowerCase(),
+                matchedName.toLowerCase()
+            );
+            return Math.round(similarity * 100) / 100;
+        }
+
+        function extractDates(text) {
+            const result = { eta: null, etb: null, etd: null };
+            const currentYear = new Date().getFullYear();
+
+            // Patterns for different date formats
+            const datePatterns = [
+                // DD.MM.YYYY / HH:MM or DD/MM/YYYY HH:MM
+                /(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})[\s\/]*(?:at\s*)?(\d{1,2})[:\.](\d{2})/gi,
+                // DD.MM / HH:MM (no year)
+                /(\d{1,2})[.\/](\d{1,2})[\s\/]+(\d{1,2})[:\.](\d{2})/g,
+                // YYYY-MM-DD HH:MM (ISO-ish)
+                /(\d{4})-(\d{2})-(\d{2})[\sT](\d{2}):(\d{2})/g
+            ];
+
+            // Find ETA
+            const etaMatch = text.match(/ETA[^:]*:?\s*[^\d]*(\d{1,2}[.\/]\d{1,2}[.\/]?\d{0,4}[\s\/]*(?:at\s*)?(?:\d{1,2}[:\.]?\d{2})?)/i);
+            if (etaMatch) {
+                const parsed = parseDateTime(etaMatch[1], currentYear);
+                if (parsed) result.eta = parsed;
+            }
+
+            // Find ETB
+            const etbMatch = text.match(/ETB[^:]*:?\s*[^\d]*(\d{1,2}[.\/]\d{1,2}[.\/]?\d{0,4}[\s\/]*(?:at\s*)?(?:\d{1,2}[:\.]?\d{2})?)/i);
+            if (etbMatch) {
+                const parsed = parseDateTime(etbMatch[1], currentYear);
+                if (parsed) result.etb = parsed;
+            }
+
+            // Find ETD
+            const etdMatch = text.match(/ETD[^:]*:?\s*[^\d]*(\d{1,2}[.\/]\d{1,2}[.\/]?\d{0,4}[\s\/]*(?:at\s*)?(?:\d{1,2}[:\.]?\d{2})?)/i);
+            if (etdMatch) {
+                const parsed = parseDateTime(etdMatch[1], currentYear);
+                if (parsed) result.etd = parsed;
+            }
+
+            return result;
+        }
+
+        function parseDateTime(dateStr, defaultYear) {
+            if (!dateStr) return null;
+
+            // Clean up the string
+            dateStr = dateStr.trim().replace(/\s+/g, ' ');
+
+            // Try DD.MM.YYYY HH:MM format
+            let match = dateStr.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})[\s\/]*(?:at\s*)?(\d{1,2})[:\.](\d{2})/i);
+            if (match) {
+                let year = parseInt(match[3]);
+                if (year < 100) year += 2000;
+                const date = new Date(year, parseInt(match[2]) - 1, parseInt(match[1]), parseInt(match[4]), parseInt(match[5]));
+                return date.toISOString();
+            }
+
+            // Try DD.MM HH:MM format (no year)
+            match = dateStr.match(/(\d{1,2})[.\/](\d{1,2})[\s\/]+(\d{1,2})[:\.](\d{2})/);
+            if (match) {
+                let year = defaultYear;
+                const month = parseInt(match[2]) - 1;
+                const day = parseInt(match[1]);
+                // If the date is in the past, assume next year
+                const testDate = new Date(year, month, day);
+                if (testDate < new Date()) {
+                    year++;
+                }
+                const date = new Date(year, month, day, parseInt(match[3]), parseInt(match[4]));
+                return date.toISOString();
+            }
+
+            // Try DD.MM.YYYY format (no time)
+            match = dateStr.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})/);
+            if (match) {
+                let year = parseInt(match[3]);
+                if (year < 100) year += 2000;
+                const date = new Date(year, parseInt(match[2]) - 1, parseInt(match[1]), 0, 0);
+                return date.toISOString();
+            }
+
+            return null;
+        }
+
+        function extractPort(text) {
+            const israeliPorts = ['haifa', 'ashdod', 'eilat', 'ashkelon', 'חיפה', 'אשדוד', 'אילת', 'אשקלון'];
+            const textLower = text.toLowerCase();
+
+            for (const port of israeliPorts) {
+                if (textLower.includes(port)) {
+                    // Return normalized Hebrew name
+                    const portMap = {
+                        'haifa': 'חיפה', 'חיפה': 'חיפה',
+                        'ashdod': 'אשדוד', 'אשדוד': 'אשדוד',
+                        'eilat': 'אילת', 'אילת': 'אילת',
+                        'ashkelon': 'אשקלון', 'אשקלון': 'אשקלון'
+                    };
+                    return portMap[port] || port;
+                }
+            }
+
+            return null;
+        }
+
+        function determineStatus(text, dates) {
+            const textLower = text.toLowerCase();
+
+            // Check for explicit status mentions
+            if (textLower.includes('sailed') || textLower.includes('departed') || textLower.includes('הפלגה')) {
+                return 'Sailed';
+            }
+            if (textLower.includes('berthing') || textLower.includes('alongside') || textLower.includes('עוגנת')) {
+                return 'At Port';
+            }
+            if (textLower.includes('operation') || textLower.includes('discharging') || textLower.includes('loading') ||
+                textLower.includes('פריקה') || textLower.includes('טעינה')) {
+                return 'Under Operation';
+            }
+
+            // Infer from dates
+            if (dates.eta && !dates.etb) {
+                return 'At Sea';
+            }
+            if (dates.etb && !dates.etd) {
+                return 'At Port';
+            }
+
+            // Check for notice patterns (6 hrs notice usually means approaching)
+            if (text.match(/\d+\s*(?:hrs?|hours?)\s*notice/i)) {
+                return 'At Sea';
+            }
+
+            return 'At Sea'; // Default
+        }
+
+        function extractServices(text) {
+            const services = [];
+            const textLower = text.toLowerCase();
+
+            // Water supply
+            const waterMatch = text.match(/(\d+)\s*(?:tons?|טון|t\.?)\s*(?:of\s*)?(?:fresh\s*)?water/i) ||
+                              text.match(/water[:\s]+(\d+)\s*(?:tons?|טון|t\.?)/i) ||
+                              text.match(/מים[:\s]+(\d+)\s*טון/);
+            if (waterMatch) {
+                services.push({
+                    type: 'water',
+                    status: 'requested',
+                    details: { amount: parseInt(waterMatch[1]) }
+                });
+            } else if (textLower.includes('fresh water') || textLower.includes('water supply') || textLower.includes('מים')) {
+                services.push({
+                    type: 'water',
+                    status: 'requested',
+                    details: { amount: null }
+                });
+            }
+
+            // Crew change
+            const crewMatch = text.match(/crew\s*(?:change)?[:\s]*(\d+)\s*(?:joining|on|נכנסים)[,\s]*(\d+)\s*(?:leaving|off|יוצאים)/i) ||
+                             text.match(/(\d+)\s*(?:joining|on|נכנסים)[,\s]*(\d+)\s*(?:leaving|off|יוצאים)/i) ||
+                             text.match(/חילוף\s*צוות[:\s]*(\d+)\s*נכנסים[,\s]*(\d+)\s*יוצאים/);
+            if (crewMatch) {
+                services.push({
+                    type: 'crew_change',
+                    status: 'requested',
+                    details: {
+                        crewIn: parseInt(crewMatch[1]),
+                        crewOut: parseInt(crewMatch[2])
+                    }
+                });
+            } else if (textLower.includes('crew change') || textLower.includes('חילוף צוות')) {
+                services.push({
+                    type: 'crew_change',
+                    status: 'requested',
+                    details: { crewIn: null, crewOut: null }
+                });
+            }
+
+            // Package/Parcel
+            const packageMatch = text.match(/(?:package|parcel|חבילה)[:\s]*(?:(\d+(?:\.\d+)?)\s*(?:kg|ק"ג|קג))?/i);
+            if (packageMatch || textLower.includes('package') || textLower.includes('parcel') || textLower.includes('חבילה')) {
+                const details = {};
+                if (packageMatch && packageMatch[1]) {
+                    details.weight = parseFloat(packageMatch[1]);
+                }
+                // Try to find tracking number
+                const trackingMatch = text.match(/(?:tracking|מספר מעקב)[:\s]*([A-Z0-9]+)/i);
+                if (trackingMatch) {
+                    details.tracking = trackingMatch[1];
+                }
+                services.push({
+                    type: 'package',
+                    status: 'requested',
+                    details: details
+                });
+            }
+
+            // Sludge
+            const sludgeMatch = text.match(/sludge[:\s]*(\d+)\s*(?:m3|מ"ק|cbm)/i);
+            if (sludgeMatch || textLower.includes('sludge')) {
+                services.push({
+                    type: 'sludge',
+                    status: 'requested',
+                    details: { amount: sludgeMatch ? parseInt(sludgeMatch[1]) : null }
+                });
+            }
+
+            // Bilge
+            const bilgeMatch = text.match(/bilge[:\s]*(\d+)\s*(?:m3|מ"ק|cbm)/i);
+            if (bilgeMatch || textLower.includes('bilge')) {
+                services.push({
+                    type: 'bilge',
+                    status: 'requested',
+                    details: { amount: bilgeMatch ? parseInt(bilgeMatch[1]) : null }
+                });
+            }
+
+            return services;
+        }
+
+        function extractCargo(text) {
+            const cargoPatterns = [
+                /cargo[:\s]+([^,\n]+)/i,
+                /מטען[:\s]+([^,\n]+)/,
+                /loading[:\s]+([^,\n]+)/i,
+                /discharging[:\s]+([^,\n]+)/i
+            ];
+
+            for (const pattern of cargoPatterns) {
+                const match = text.match(pattern);
+                if (match && match[1]) {
+                    return match[1].trim();
+                }
+            }
+
+            // Common cargo types
+            const cargoTypes = ['fertilizer', 'grain', 'coal', 'steel', 'cement', 'דשנים', 'תבואה', 'פחם', 'פלדה', 'מלט'];
+            const textLower = text.toLowerCase();
+            for (const cargo of cargoTypes) {
+                if (textLower.includes(cargo.toLowerCase())) {
+                    return cargo;
+                }
+            }
+
+            return null;
+        }
+
+        function extractNotes(text) {
+            const notes = [];
+
+            // Master/Captain name
+            const masterMatch = text.match(/(?:master|captain|capt\.?|רב חובל)[:\s]+([A-Za-z\s\.]+?)(?:\n|$|<)/i);
+            if (masterMatch) {
+                notes.push(`Master: ${masterMatch[1].trim()}`);
+            }
+
+            // Phone number
+            const phoneMatch = text.match(/(?:mobile|phone|tel|טלפון)[:\s]*([+\d\s\-()]+)/i);
+            if (phoneMatch) {
+                notes.push(`Tel: ${phoneMatch[1].trim()}`);
+            }
+
+            // Notice period
+            const noticeMatch = text.match(/(\d+)\s*(?:hrs?|hours?)\s*notice/i);
+            if (noticeMatch) {
+                notes.push(`${noticeMatch[1]} Hrs Notice`);
+            }
+
+            return notes.length > 0 ? notes.join('. ') : null;
+        }
+
+        function checkUncertainty(text) {
+            const uncertaintyMarkers = [
+                { pattern: /iagw|if all goes well/i, message: 'ETA מותנה ב-"אם הכל ילך כשורה"' },
+                { pattern: /wp|weather permitting/i, message: 'תלוי בתנאי מזג האוויר' },
+                { pattern: /approx|approximately|בערך/i, message: 'זמן משוער' },
+                { pattern: /tbc|to be confirmed/i, message: 'דורש אישור' },
+                { pattern: /subject to/i, message: 'כפוף לשינויים' }
+            ];
+
+            const uncertainties = [];
+            for (const marker of uncertaintyMarkers) {
+                if (marker.pattern.test(text)) {
+                    uncertainties.push(marker.message);
+                }
+            }
+
+            return uncertainties.length > 0 ? uncertainties.join(', ') : null;
+        }
+
+        function displayParsedResult(data) {
+            const container = document.getElementById('parsedResult');
+
+            if (!data.updates.name && !data.updates.eta && data.updates.services_to_add.length === 0) {
+                container.innerHTML = `
+                    <div class="uncertainty-note">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                        <span>לא נמצאו נתונים רלוונטיים בהודעה. נסה להדביק הודעה עם מידע על אנייה.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+
+            // Confidence badge
+            const confidenceClass = data.match_confidence >= 0.8 ? 'high' : data.match_confidence >= 0.5 ? 'medium' : 'low';
+            html += `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
+                    <span class="confidence-badge confidence-${confidenceClass}">
+                        רמת התאמה: ${Math.round(data.match_confidence * 100)}%
+                    </span>
+                    ${data.is_new_ship ? '<span class="new-ship-indicator">אנייה חדשה</span>' : ''}
+                </div>
+            `;
+
+            // Ship selector
+            html += `
+                <div class="ship-selector">
+                    <label>בחר אנייה לעדכון:</label>
+                    <select id="targetShipSelect" onchange="updateApplyButtons()">
+                        ${data.is_new_ship ? '<option value="new">+ הוסף אנייה חדשה</option>' : ''}
+                        ${data.matched_ship ? `<option value="${data.matched_ship.id}" selected>${data.matched_ship.name}</option>` : ''}
+                        ${ships.filter(s => !data.matched_ship || s.id !== data.matched_ship.id).map(s =>
+                            `<option value="${s.id}">${s.name}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+            `;
+
+            // Vessel name
+            if (data.updates.name) {
+                html += createParsedField('שם אנייה', data.updates.name, 'name');
+            }
+
+            // Status
+            if (data.updates.status) {
+                const statusText = {
+                    'At Sea': 'בדרך',
+                    'At Port': 'על עוגן',
+                    'Under Operation': 'בפריקה',
+                    'Sailed': 'הפליגה'
+                };
+                html += createParsedField('סטטוס', statusText[data.updates.status] || data.updates.status, 'status', data.updates.status);
+            }
+
+            // Port
+            if (data.updates.port) {
+                html += createParsedField('נמל', data.updates.port, 'port');
+            }
+
+            // ETA
+            if (data.updates.eta) {
+                const etaDate = new Date(data.updates.eta);
+                html += createParsedField('ETA', formatDateTimeHebrew(etaDate), 'eta', data.updates.eta);
+            }
+
+            // ETB
+            if (data.updates.etb) {
+                const etbDate = new Date(data.updates.etb);
+                html += createParsedField('ETB', formatDateTimeHebrew(etbDate), 'etb', data.updates.etb);
+            }
+
+            // ETD
+            if (data.updates.etd) {
+                const etdDate = new Date(data.updates.etd);
+                html += createParsedField('ETD', formatDateTimeHebrew(etdDate), 'etd', data.updates.etd);
+            }
+
+            // Cargo
+            if (data.updates.cargo) {
+                html += createParsedField('מטען', data.updates.cargo, 'cargo');
+            }
+
+            // Services
+            if (data.updates.services_to_add.length > 0) {
+                html += `
+                    <div class="parsed-field">
+                        <div class="parsed-field-header">
+                            <span class="parsed-field-label">שירותים נדרשים</span>
+                        </div>
+                        <div class="parsed-services">
+                            ${data.updates.services_to_add.map((service, index) => `
+                                <div class="parsed-service-item">
+                                    <div class="parsed-service-info">
+                                        <span class="parsed-service-type">${getServiceTypeName(service.type)}</span>
+                                        <span class="parsed-service-details">${formatServiceDetails(service)}</span>
+                                    </div>
+                                    <button class="parsed-field-apply" onclick="applyService(${index})">
+                                        הוסף
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Notes
+            if (data.updates.notes_delta) {
+                html += createParsedField('הערות חדשות', data.updates.notes_delta, 'notes');
+            }
+
+            // Uncertainty note
+            if (data.uncertainty_note) {
+                html += `
+                    <div class="uncertainty-note">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <span>${data.uncertainty_note}</span>
+                    </div>
+                `;
+            }
+
+            // Apply all button
+            html += `
+                <button class="apply-all-btn" onclick="applyAllUpdates()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    החל את כל העדכונים
+                </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function createParsedField(label, value, fieldKey, rawValue = null) {
+            return `
+                <div class="parsed-field" data-field="${fieldKey}">
+                    <div class="parsed-field-header">
+                        <span class="parsed-field-label">${label}</span>
+                        <button class="parsed-field-apply" onclick="applyField('${fieldKey}', '${rawValue || value}')">
+                            החל
+                        </button>
+                    </div>
+                    <span class="parsed-field-value">${value}</span>
+                </div>
+            `;
+        }
+
+        function formatDateTimeHebrew(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+
+        function formatServiceDetails(service) {
+            switch (service.type) {
+                case 'water':
+                    return service.details.amount ? `${service.details.amount} טון` : 'כמות לא צוינה';
+                case 'crew_change':
+                    const inOut = [];
+                    if (service.details.crewIn) inOut.push(`${service.details.crewIn} נכנסים`);
+                    if (service.details.crewOut) inOut.push(`${service.details.crewOut} יוצאים`);
+                    return inOut.length > 0 ? inOut.join(', ') : 'פרטים לא צוינו';
+                case 'package':
+                    const parts = [];
+                    if (service.details.weight) parts.push(`${service.details.weight} ק"ג`);
+                    if (service.details.tracking) parts.push(`מעקב: ${service.details.tracking}`);
+                    return parts.length > 0 ? parts.join(', ') : 'פרטים לא צוינו';
+                case 'sludge':
+                case 'bilge':
+                    return service.details.amount ? `${service.details.amount} מ"ק` : 'כמות לא צוינה';
+                default:
+                    return '';
+            }
+        }
+
+        function applyField(fieldKey, value) {
+            const shipId = document.getElementById('targetShipSelect').value;
+
+            if (shipId === 'new') {
+                showToast('יש לבחור אנייה קיימת או להשתמש ב"החל את כל העדכונים" להוספת אנייה חדשה', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) {
+                showToast('אנייה לא נמצאה', 'error');
+                return;
+            }
+
+            // Apply the specific field
+            switch (fieldKey) {
+                case 'name':
+                    ship.name = value;
+                    break;
+                case 'status':
+                    ship.status = value;
+                    ensureChecklistForStatus(ship);
+                    break;
+                case 'eta':
+                    ship.eta = value;
+                    break;
+                case 'etb':
+                    ship.etb = {
+                        type: 'specific',
+                        sortDate: value,
+                        displayValue: formatDateTimeHebrew(new Date(value))
+                    };
+                    break;
+                case 'etd':
+                    ship.etd = value;
+                    break;
+                case 'port':
+                    ship.port = value;
+                    break;
+                case 'cargo':
+                    ship.cargo = value;
+                    break;
+                case 'notes':
+                    ship.notes = value + (ship.notes ? '\n---\n' + ship.notes : '');
+                    break;
+            }
+
+            saveData();
+            renderShips();
+
+            // Mark button as applied
+            const btn = event.target;
+            btn.textContent = 'הוחל ✓';
+            btn.classList.add('applied');
+
+            showToast(`שדה "${fieldKey}" עודכן בהצלחה`, 'success');
+            addActivity('עדכון מניתוח', `עודכן ${fieldKey} לאנייה ${ship.name}`);
+        }
+
+        function applyService(serviceIndex) {
+            const shipId = document.getElementById('targetShipSelect').value;
+
+            if (shipId === 'new') {
+                showToast('יש לבחור אנייה קיימת', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) {
+                showToast('אנייה לא נמצאה', 'error');
+                return;
+            }
+
+            const service = lastParsedData.updates.services_to_add[serviceIndex];
+            if (!service) return;
+
+            // Initialize services array if needed
+            ship.services = ship.services || [];
+
+            // Add the service with a unique ID
+            const newService = {
+                id: 'service_' + Date.now(),
+                type: service.type,
+                status: 'requested',
+                details: service.details,
+                createdAt: new Date().toISOString()
+            };
+
+            ship.services.push(newService);
+            saveData();
+
+            // Mark button as applied
+            const btn = event.target;
+            btn.textContent = 'נוסף ✓';
+            btn.classList.add('applied');
+
+            showToast(`שירות ${getServiceTypeName(service.type)} נוסף בהצלחה`, 'success');
+            addActivity('שירות חדש', `נוסף ${getServiceTypeName(service.type)} לאנייה ${ship.name}`);
+        }
+
+        function applyAllUpdates() {
+            const shipId = document.getElementById('targetShipSelect').value;
+            let ship;
+
+            if (shipId === 'new') {
+                // Create new ship
+                ship = createShipObject({
+                    name: lastParsedData.updates.name || 'אנייה חדשה',
+                    status: lastParsedData.updates.status || 'At Sea'
+                });
+                ships.push(ship);
+            } else {
+                ship = ships.find(s => s.id === shipId);
+                if (!ship) {
+                    showToast('אנייה לא נמצאה', 'error');
+                    return;
+                }
+            }
+
+            // Apply all updates
+            const updates = lastParsedData.updates;
+
+            if (updates.name) ship.name = updates.name;
+            if (updates.status) {
+                ship.status = updates.status;
+                ensureChecklistForStatus(ship);
+            }
+            if (updates.eta) ship.eta = updates.eta;
+            if (updates.etb) {
+                ship.etb = {
+                    type: 'specific',
+                    sortDate: updates.etb,
+                    displayValue: formatDateTimeHebrew(new Date(updates.etb))
+                };
+            }
+            if (updates.etd) ship.etd = updates.etd;
+            if (updates.port) ship.port = updates.port;
+            if (updates.cargo) ship.cargo = updates.cargo;
+            if (updates.notes_delta) {
+                ship.notes = updates.notes_delta + (ship.notes ? '\n---\n' + ship.notes : '');
+            }
+
+            // Add services
+            if (updates.services_to_add.length > 0) {
+                ship.services = ship.services || [];
+                for (const service of updates.services_to_add) {
+                    ship.services.push({
+                        id: 'service_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        type: service.type,
+                        status: 'requested',
+                        details: service.details,
+                        createdAt: new Date().toISOString()
+                    });
+                }
+            }
+
+            saveData();
+            renderShips();
+
+            showToast(shipId === 'new' ? 'אנייה חדשה נוספה בהצלחה!' : 'כל העדכונים הוחלו בהצלחה!', 'success');
+            addActivity(shipId === 'new' ? 'אנייה חדשה' : 'עדכון מניתוח', `${ship.name} עודכנה מניתוח הודעה`);
+
+            // Clear the form and show success
+            document.getElementById('emailInput').value = '';
+            document.getElementById('parsedResult').innerHTML = `
+                <div style="text-align: center; padding: var(--spacing-xl); color: var(--success);">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: var(--spacing-md);">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <h3>העדכונים הוחלו בהצלחה!</h3>
+                    <p style="color: var(--text-secondary); margin-top: var(--spacing-sm);">
+                        ${ship.name} עודכנה במערכת
+                    </p>
+                    <button class="btn btn-secondary" onclick="switchToDashboardView()" style="margin-top: var(--spacing-lg);">
+                        חזור ללוח הבקרה
+                    </button>
+                </div>
+            `;
+        }
+
+        function updateApplyButtons() {
+            // This function can be used to update button states when ship selection changes
         }
 
         function updateStats() {
