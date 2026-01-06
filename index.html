@@ -1120,6 +1120,381 @@
             }
         }
 
+        /* ======================== CONTACTS & EMAIL MANAGEMENT ======================== */
+        .contacts-view {
+            display: none;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+            padding: var(--spacing-xl);
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .contacts-view.active {
+            display: flex;
+        }
+
+        .contacts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .contacts-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .contacts-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+        }
+
+        @media (max-width: 1200px) {
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .contacts-section {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .contacts-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            transition: all 200ms;
+        }
+
+        .contact-item:hover {
+            border-color: var(--primary);
+            background: var(--bg-tertiary);
+        }
+
+        .contact-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-glow);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .contact-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .contact-email {
+            font-size: 12px;
+            color: var(--text-secondary);
+            direction: ltr;
+            text-align: right;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .contact-type {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            background: var(--bg-tertiary);
+            color: var(--text-tertiary);
+            margin-right: var(--spacing-sm);
+        }
+
+        .contact-type.agent { background: var(--primary-glow); color: var(--primary); }
+        .contact-type.port { background: var(--success-glow); color: var(--success); }
+        .contact-type.owner { background: var(--warning-glow); color: var(--warning); }
+        .contact-type.charterer { background: #9333ea20; color: #9333ea; }
+        .contact-type.receiver { background: #ec489920; color: #ec4899; }
+
+        .contact-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+            opacity: 0;
+            transition: opacity 200ms;
+        }
+
+        .contact-item:hover .contact-actions {
+            opacity: 1;
+        }
+
+        .contact-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms;
+        }
+
+        .contact-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .contact-btn.delete:hover {
+            background: var(--danger);
+        }
+
+        .group-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .group-item:hover {
+            border-color: var(--primary);
+            background: var(--bg-tertiary);
+        }
+
+        .group-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .group-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .group-count {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .group-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        /* Email Composer */
+        .email-composer {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .composer-recipients {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            min-height: 44px;
+            align-items: center;
+        }
+
+        .recipient-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: 4px 8px;
+            background: var(--primary-glow);
+            color: var(--primary);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+        }
+
+        .recipient-tag .remove {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .recipient-tag .remove:hover {
+            opacity: 1;
+        }
+
+        .recipient-tag.group {
+            background: var(--success-glow);
+            color: var(--success);
+        }
+
+        .add-recipient-btn {
+            padding: 4px 12px;
+            background: transparent;
+            border: 1px dashed var(--glass-border);
+            border-radius: var(--radius-full);
+            color: var(--text-tertiary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .add-recipient-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .email-preview {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .open-outlook-btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            transition: all 200ms;
+        }
+
+        .open-outlook-btn:hover {
+            background: #106ebe;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 120, 212, 0.3);
+        }
+
+        .checkbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background 200ms;
+        }
+
+        .checkbox-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-tertiary);
+        }
+
+        .empty-state svg {
+            opacity: 0.3;
+            margin-bottom: var(--spacing-md);
+        }
+
         /* Form Styles */
         .form-group {
             display: flex;
@@ -2232,6 +2607,15 @@
                     </svg>
                     <span>ניתוח הודעות</span>
                 </div>
+                <div class="nav-item" onclick="switchToContactsView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>אנשי קשר</span>
+                </div>
             </nav>
 
             <div class="sidebar-section">
@@ -2454,6 +2838,139 @@ Captain"></textarea>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Contacts & Email Management View -->
+                <div class="contacts-view" id="contactsView">
+                    <div class="contacts-header">
+                        <h2 class="contacts-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            ניהול אנשי קשר וקבוצות מייל
+                        </h2>
+                        <div class="contacts-actions">
+                            <button class="btn btn-secondary" onclick="openAddContactModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="8.5" cy="7" r="4"/>
+                                    <line x1="20" y1="8" x2="20" y2="14"/>
+                                    <line x1="23" y1="11" x2="17" y2="11"/>
+                                </svg>
+                                איש קשר חדש
+                            </button>
+                            <button class="btn btn-primary" onclick="openAddGroupModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                קבוצה חדשה
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="contacts-grid">
+                        <!-- Contacts Section -->
+                        <div class="contacts-section">
+                            <div class="section-header">
+                                <h3 class="section-title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    אנשי קשר
+                                </h3>
+                                <span class="contacts-count" id="contactsCount">0</span>
+                            </div>
+                            <input type="text" class="search-input" id="contactSearch" placeholder="חיפוש איש קשר..." oninput="filterContacts()">
+                            <div class="contacts-list" id="contactsList">
+                                <div class="empty-state">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    <p>אין אנשי קשר עדיין</p>
+                                    <button class="btn btn-primary btn-sm" onclick="openAddContactModal()">הוסף איש קשר</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Groups Section -->
+                        <div class="contacts-section">
+                            <div class="section-header">
+                                <h3 class="section-title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                    קבוצות מייל
+                                </h3>
+                                <span class="contacts-count" id="groupsCount">0</span>
+                            </div>
+                            <div class="contacts-list" id="groupsList">
+                                <div class="empty-state">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                    <p>אין קבוצות עדיין</p>
+                                    <button class="btn btn-primary btn-sm" onclick="openAddGroupModal()">צור קבוצה</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Composer Section -->
+                    <div class="email-composer" id="emailComposer">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                                הכנת דוח למשלוח
+                            </h3>
+                            <select id="shipSelectForEmail" class="form-group select" onchange="updateEmailPreview()" style="width: auto; padding: 6px 12px;">
+                                <option value="">בחר אנייה...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>נמענים:</label>
+                            <div class="composer-recipients" id="composerRecipients">
+                                <button class="add-recipient-btn" onclick="openRecipientSelector()">+ הוסף נמענים</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>נושא:</label>
+                            <input type="text" id="emailSubject" placeholder="נושא ההודעה..." onchange="updateEmailPreview()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>תצוגה מקדימה:</label>
+                            <div class="email-preview" id="emailPreview">
+                                בחר אנייה ונמענים ליצירת הדוח...
+                            </div>
+                        </div>
+
+                        <button class="open-outlook-btn" onclick="openInOutlook()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            פתח ב-Outlook
+                        </button>
                     </div>
                 </div>
             </div>
@@ -3561,8 +4078,9 @@ Captain"></textarea>
             document.querySelector('.tabs').style.display = 'flex';
             document.querySelector('.stats-grid').style.display = 'grid';
 
-            // הסתר את תצוגת הפרסר והצג את הגריד
+            // הסתר את תצוגות אחרות והצג את הגריד
             document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.remove('active');
             document.getElementById('shipsGrid').style.display = 'grid';
 
             currentTab = 'all'; // אפס לטאב "כל האניות"
@@ -3589,8 +4107,9 @@ Captain"></textarea>
             document.querySelector('.tabs').style.display = 'none';
             document.querySelector('.stats-grid').style.display = 'none';
 
-            // הסתר את תצוגת הפרסר והצג את הגריד
+            // הסתר את תצוגות אחרות והצג את הגריד
             document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.remove('active');
             document.getElementById('shipsGrid').style.display = 'grid';
 
             currentTab = 'quick'; // עדכן את המצב הנוכחי
@@ -3607,8 +4126,9 @@ Captain"></textarea>
             document.querySelector('.tabs').style.display = 'none';
             document.querySelector('.stats-grid').style.display = 'none';
 
-            // הסתר את הגריד הרגיל והצג את תצוגת הפרסר
+            // הסתר תצוגות אחרות והצג את תצוגת הפרסר
             document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('contactsView').classList.remove('active');
             document.getElementById('emailParserView').classList.add('active');
 
             currentTab = 'parser';
@@ -4477,6 +4997,687 @@ Captain"></textarea>
 
         function updateApplyButtons() {
             // This function can be used to update button states when ship selection changes
+        }
+
+        // ==================== CONTACTS & EMAIL MANAGEMENT ====================
+        let contacts = [];
+        let emailGroups = [];
+        let selectedRecipients = [];
+
+        // Contact types
+        const contactTypes = {
+            agent: { label: 'סוכן', class: 'agent' },
+            port: { label: 'נמל', class: 'port' },
+            owner: { label: 'בעלים', class: 'owner' },
+            charterer: { label: 'שוכר', class: 'charterer' },
+            receiver: { label: 'מקבל', class: 'receiver' },
+            other: { label: 'אחר', class: '' }
+        };
+
+        function switchToContactsView() {
+            // Remove 'active' from all nav items
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            // Add 'active' to contacts nav item
+            document.querySelectorAll('.nav-menu .nav-item')[3].classList.add('active');
+
+            // Hide tabs and stats
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+
+            // Hide other views, show contacts view
+            document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.add('active');
+
+            currentTab = 'contacts';
+            loadContacts();
+            loadEmailGroups();
+            populateShipSelector();
+        }
+
+        function loadContacts() {
+            // Load from Firestore
+            db.collection('contacts').orderBy('name').onSnapshot(snapshot => {
+                contacts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderContacts();
+            }, error => {
+                console.error('Error loading contacts:', error);
+                // Fallback to localStorage
+                const saved = localStorage.getItem('shipops_contacts');
+                contacts = saved ? JSON.parse(saved) : [];
+                renderContacts();
+            });
+        }
+
+        function loadEmailGroups() {
+            // Load from Firestore
+            db.collection('emailGroups').orderBy('name').onSnapshot(snapshot => {
+                emailGroups = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderGroups();
+            }, error => {
+                console.error('Error loading groups:', error);
+                // Fallback to localStorage
+                const saved = localStorage.getItem('shipops_emailGroups');
+                emailGroups = saved ? JSON.parse(saved) : [];
+                renderGroups();
+            });
+        }
+
+        function saveContacts() {
+            localStorage.setItem('shipops_contacts', JSON.stringify(contacts));
+        }
+
+        function saveEmailGroups() {
+            localStorage.setItem('shipops_emailGroups', JSON.stringify(emailGroups));
+        }
+
+        function renderContacts() {
+            const list = document.getElementById('contactsList');
+            const count = document.getElementById('contactsCount');
+
+            if (!contacts || contacts.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <p>אין אנשי קשר עדיין</p>
+                        <button class="btn btn-primary btn-sm" onclick="openAddContactModal()">הוסף איש קשר</button>
+                    </div>
+                `;
+                count.textContent = '0';
+                return;
+            }
+
+            count.textContent = contacts.length;
+            list.innerHTML = contacts.map(contact => `
+                <div class="contact-item" data-id="${contact.id}">
+                    <div class="contact-info">
+                        <span class="contact-name">${contact.name}</span>
+                        <span class="contact-email">${contact.email}</span>
+                    </div>
+                    <span class="contact-type ${contactTypes[contact.type]?.class || ''}">${contactTypes[contact.type]?.label || contact.type}</span>
+                    <div class="contact-actions">
+                        <button class="contact-btn" onclick="editContact('${contact.id}')" title="ערוך">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </button>
+                        <button class="contact-btn delete" onclick="deleteContact('${contact.id}')" title="מחק">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderGroups() {
+            const list = document.getElementById('groupsList');
+            const count = document.getElementById('groupsCount');
+
+            if (!emailGroups || emailGroups.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <p>אין קבוצות עדיין</p>
+                        <button class="btn btn-primary btn-sm" onclick="openAddGroupModal()">צור קבוצה</button>
+                    </div>
+                `;
+                count.textContent = '0';
+                return;
+            }
+
+            count.textContent = emailGroups.length;
+            list.innerHTML = emailGroups.map(group => {
+                const memberCount = group.contactIds ? group.contactIds.length : 0;
+                return `
+                    <div class="group-item" onclick="selectGroup('${group.id}')">
+                        <div class="group-info">
+                            <span class="group-name">${group.name}</span>
+                            <span class="group-count">${memberCount} אנשי קשר</span>
+                        </div>
+                        <div class="group-actions">
+                            <button class="contact-btn" onclick="event.stopPropagation(); editGroup('${group.id}')" title="ערוך">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </button>
+                            <button class="contact-btn delete" onclick="event.stopPropagation(); deleteGroup('${group.id}')" title="מחק">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterContacts() {
+            const search = document.getElementById('contactSearch').value.toLowerCase();
+            const items = document.querySelectorAll('#contactsList .contact-item');
+
+            items.forEach(item => {
+                const name = item.querySelector('.contact-name').textContent.toLowerCase();
+                const email = item.querySelector('.contact-email').textContent.toLowerCase();
+                item.style.display = (name.includes(search) || email.includes(search)) ? 'flex' : 'none';
+            });
+        }
+
+        function openAddContactModal() {
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'הוספת איש קשר חדש';
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="form-group">
+                        <label>שם:</label>
+                        <input type="text" id="contactName" placeholder="שם איש הקשר">
+                    </div>
+                    <div class="form-group">
+                        <label>אימייל:</label>
+                        <input type="email" id="contactEmail" placeholder="email@example.com" dir="ltr">
+                    </div>
+                    <div class="form-group">
+                        <label>חברה:</label>
+                        <input type="text" id="contactCompany" placeholder="שם החברה">
+                    </div>
+                    <div class="form-group">
+                        <label>סוג:</label>
+                        <select id="contactType">
+                            <option value="agent">סוכן</option>
+                            <option value="port">נמל</option>
+                            <option value="owner">בעלים</option>
+                            <option value="charterer">שוכר</option>
+                            <option value="receiver">מקבל</option>
+                            <option value="other">אחר</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
+                        <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                        <button class="btn btn-primary" onclick="saveNewContact()">שמור</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        async function saveNewContact() {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const company = document.getElementById('contactCompany').value.trim();
+            const type = document.getElementById('contactType').value;
+
+            if (!name || !email) {
+                showToast('נא למלא שם ואימייל', 'warning');
+                return;
+            }
+
+            const newContact = {
+                name,
+                email,
+                company,
+                type,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await db.collection('contacts').add(newContact);
+                showToast('איש קשר נוסף בהצלחה', 'success');
+            } catch (error) {
+                console.error('Error saving contact:', error);
+                // Fallback to local
+                newContact.id = 'contact_' + Date.now();
+                contacts.push(newContact);
+                saveContacts();
+                renderContacts();
+                showToast('איש קשר נוסף (מקומי)', 'success');
+            }
+
+            closeModal();
+        }
+
+        function editContact(contactId) {
+            const contact = contacts.find(c => c.id === contactId);
+            if (!contact) return;
+
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'עריכת איש קשר';
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="form-group">
+                        <label>שם:</label>
+                        <input type="text" id="contactName" value="${contact.name || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>אימייל:</label>
+                        <input type="email" id="contactEmail" value="${contact.email || ''}" dir="ltr">
+                    </div>
+                    <div class="form-group">
+                        <label>חברה:</label>
+                        <input type="text" id="contactCompany" value="${contact.company || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>סוג:</label>
+                        <select id="contactType">
+                            ${Object.entries(contactTypes).map(([key, val]) =>
+                                `<option value="${key}" ${contact.type === key ? 'selected' : ''}>${val.label}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
+                        <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                        <button class="btn btn-primary" onclick="updateContact('${contactId}')">שמור</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        async function updateContact(contactId) {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const company = document.getElementById('contactCompany').value.trim();
+            const type = document.getElementById('contactType').value;
+
+            if (!name || !email) {
+                showToast('נא למלא שם ואימייל', 'warning');
+                return;
+            }
+
+            try {
+                await db.collection('contacts').doc(contactId).update({ name, email, company, type });
+                showToast('איש קשר עודכן', 'success');
+            } catch (error) {
+                console.error('Error updating contact:', error);
+                const idx = contacts.findIndex(c => c.id === contactId);
+                if (idx !== -1) {
+                    contacts[idx] = { ...contacts[idx], name, email, company, type };
+                    saveContacts();
+                    renderContacts();
+                }
+                showToast('איש קשר עודכן (מקומי)', 'success');
+            }
+
+            closeModal();
+        }
+
+        async function deleteContact(contactId) {
+            if (!confirm('האם למחוק את איש הקשר?')) return;
+
+            try {
+                await db.collection('contacts').doc(contactId).delete();
+                showToast('איש קשר נמחק', 'success');
+            } catch (error) {
+                console.error('Error deleting contact:', error);
+                contacts = contacts.filter(c => c.id !== contactId);
+                saveContacts();
+                renderContacts();
+                showToast('איש קשר נמחק (מקומי)', 'success');
+            }
+        }
+
+        function openAddGroupModal() {
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'יצירת קבוצת מייל חדשה';
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="form-group">
+                        <label>שם הקבוצה:</label>
+                        <input type="text" id="groupName" placeholder="לדוגמה: אשדוד - ARM Shipping">
+                    </div>
+                    <div class="form-group">
+                        <label>בחר אנשי קשר:</label>
+                        <div class="checkbox-list" id="groupContactsList">
+                            ${contacts.map(c => `
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="gc_${c.id}" value="${c.id}">
+                                    <label for="gc_${c.id}">${c.name} (${c.email})</label>
+                                </div>
+                            `).join('')}
+                            ${contacts.length === 0 ? '<p style="color: var(--text-tertiary); text-align: center;">אין אנשי קשר. הוסף אנשי קשר קודם.</p>' : ''}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
+                        <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                        <button class="btn btn-primary" onclick="saveNewGroup()">צור קבוצה</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        async function saveNewGroup() {
+            const name = document.getElementById('groupName').value.trim();
+            const checkboxes = document.querySelectorAll('#groupContactsList input[type="checkbox"]:checked');
+            const contactIds = Array.from(checkboxes).map(cb => cb.value);
+
+            if (!name) {
+                showToast('נא להזין שם לקבוצה', 'warning');
+                return;
+            }
+
+            if (contactIds.length === 0) {
+                showToast('נא לבחור לפחות איש קשר אחד', 'warning');
+                return;
+            }
+
+            const newGroup = {
+                name,
+                contactIds,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await db.collection('emailGroups').add(newGroup);
+                showToast('קבוצה נוצרה בהצלחה', 'success');
+            } catch (error) {
+                console.error('Error saving group:', error);
+                newGroup.id = 'group_' + Date.now();
+                emailGroups.push(newGroup);
+                saveEmailGroups();
+                renderGroups();
+                showToast('קבוצה נוצרה (מקומי)', 'success');
+            }
+
+            closeModal();
+        }
+
+        function editGroup(groupId) {
+            const group = emailGroups.find(g => g.id === groupId);
+            if (!group) return;
+
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'עריכת קבוצה';
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="form-group">
+                        <label>שם הקבוצה:</label>
+                        <input type="text" id="groupName" value="${group.name || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>בחר אנשי קשר:</label>
+                        <div class="checkbox-list" id="groupContactsList">
+                            ${contacts.map(c => `
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="gc_${c.id}" value="${c.id}" ${group.contactIds?.includes(c.id) ? 'checked' : ''}>
+                                    <label for="gc_${c.id}">${c.name} (${c.email})</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
+                        <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                        <button class="btn btn-primary" onclick="updateGroup('${groupId}')">שמור</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        async function updateGroup(groupId) {
+            const name = document.getElementById('groupName').value.trim();
+            const checkboxes = document.querySelectorAll('#groupContactsList input[type="checkbox"]:checked');
+            const contactIds = Array.from(checkboxes).map(cb => cb.value);
+
+            if (!name) {
+                showToast('נא להזין שם לקבוצה', 'warning');
+                return;
+            }
+
+            try {
+                await db.collection('emailGroups').doc(groupId).update({ name, contactIds });
+                showToast('קבוצה עודכנה', 'success');
+            } catch (error) {
+                console.error('Error updating group:', error);
+                const idx = emailGroups.findIndex(g => g.id === groupId);
+                if (idx !== -1) {
+                    emailGroups[idx] = { ...emailGroups[idx], name, contactIds };
+                    saveEmailGroups();
+                    renderGroups();
+                }
+                showToast('קבוצה עודכנה (מקומי)', 'success');
+            }
+
+            closeModal();
+        }
+
+        async function deleteGroup(groupId) {
+            if (!confirm('האם למחוק את הקבוצה?')) return;
+
+            try {
+                await db.collection('emailGroups').doc(groupId).delete();
+                showToast('קבוצה נמחקה', 'success');
+            } catch (error) {
+                console.error('Error deleting group:', error);
+                emailGroups = emailGroups.filter(g => g.id !== groupId);
+                saveEmailGroups();
+                renderGroups();
+                showToast('קבוצה נמחקה (מקומי)', 'success');
+            }
+        }
+
+        function selectGroup(groupId) {
+            const group = emailGroups.find(g => g.id === groupId);
+            if (!group) return;
+
+            // Add all group contacts to selected recipients
+            group.contactIds.forEach(contactId => {
+                const contact = contacts.find(c => c.id === contactId);
+                if (contact && !selectedRecipients.find(r => r.id === contact.id)) {
+                    selectedRecipients.push({ ...contact, fromGroup: group.name });
+                }
+            });
+
+            renderRecipients();
+            updateEmailPreview();
+            showToast(`נוספו ${group.contactIds.length} נמענים מקבוצה "${group.name}"`, 'success');
+        }
+
+        function openRecipientSelector() {
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'בחירת נמענים';
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-lg);">
+                    <div>
+                        <h4 style="margin-bottom: var(--spacing-sm);">קבוצות מייל</h4>
+                        <div class="checkbox-list">
+                            ${emailGroups.map(g => `
+                                <div class="checkbox-item" onclick="addGroupToRecipients('${g.id}')">
+                                    <span style="flex: 1;">📁 ${g.name} (${g.contactIds?.length || 0})</span>
+                                    <button class="btn btn-sm btn-primary">הוסף</button>
+                                </div>
+                            `).join('')}
+                            ${emailGroups.length === 0 ? '<p style="color: var(--text-tertiary);">אין קבוצות</p>' : ''}
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: var(--spacing-sm);">אנשי קשר</h4>
+                        <div class="checkbox-list" style="max-height: 250px;">
+                            ${contacts.map(c => `
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="rec_${c.id}" value="${c.id}" ${selectedRecipients.find(r => r.id === c.id) ? 'checked' : ''}>
+                                    <label for="rec_${c.id}">${c.name} (${c.email})</label>
+                                </div>
+                            `).join('')}
+                            ${contacts.length === 0 ? '<p style="color: var(--text-tertiary);">אין אנשי קשר</p>' : ''}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="closeModal()">סגור</button>
+                        <button class="btn btn-primary" onclick="applySelectedRecipients()">החל</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        function addGroupToRecipients(groupId) {
+            selectGroup(groupId);
+            closeModal();
+            openRecipientSelector(); // Reopen to show updated state
+        }
+
+        function applySelectedRecipients() {
+            const checkboxes = document.querySelectorAll('.checkbox-list input[type="checkbox"]:checked');
+            selectedRecipients = [];
+
+            checkboxes.forEach(cb => {
+                const contact = contacts.find(c => c.id === cb.value);
+                if (contact) {
+                    selectedRecipients.push(contact);
+                }
+            });
+
+            renderRecipients();
+            updateEmailPreview();
+            closeModal();
+        }
+
+        function renderRecipients() {
+            const container = document.getElementById('composerRecipients');
+
+            if (selectedRecipients.length === 0) {
+                container.innerHTML = '<button class="add-recipient-btn" onclick="openRecipientSelector()">+ הוסף נמענים</button>';
+                return;
+            }
+
+            container.innerHTML = selectedRecipients.map(r => `
+                <span class="recipient-tag ${r.fromGroup ? 'group' : ''}">
+                    ${r.name}
+                    <span class="remove" onclick="removeRecipient('${r.id}')">&times;</span>
+                </span>
+            `).join('') + '<button class="add-recipient-btn" onclick="openRecipientSelector()">+</button>';
+        }
+
+        function removeRecipient(contactId) {
+            selectedRecipients = selectedRecipients.filter(r => r.id !== contactId);
+            renderRecipients();
+            updateEmailPreview();
+        }
+
+        function populateShipSelector() {
+            const select = document.getElementById('shipSelectForEmail');
+            if (!select) return;
+
+            select.innerHTML = '<option value="">בחר אנייה...</option>' +
+                ships.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        }
+
+        function updateEmailPreview() {
+            const shipId = document.getElementById('shipSelectForEmail')?.value;
+            const ship = ships.find(s => s.id === shipId);
+            const preview = document.getElementById('emailPreview');
+            const subjectInput = document.getElementById('emailSubject');
+
+            if (!ship) {
+                preview.textContent = 'בחר אנייה ונמענים ליצירת הדוח...';
+                return;
+            }
+
+            // Generate subject
+            const today = new Date().toLocaleDateString('en-GB');
+            const subject = `${ship.name} ${ship.voyage || ''} - Daily Report ${today}`;
+            if (subjectInput) subjectInput.value = subject;
+
+            // Generate email body
+            const body = generateEmailBody(ship);
+            preview.textContent = body;
+        }
+
+        function generateEmailBody(ship) {
+            const today = new Date().toLocaleDateString('en-GB');
+            const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+            let body = `Daily Report\n${today} ${time}\n\n`;
+            body += `Vessel: ${ship.name}\n`;
+            if (ship.voyage) body += `Voyage: ${ship.voyage}\n`;
+            body += `Port: ${ship.port || 'N/A'}\n\n`;
+
+            if (ship.cargo) {
+                body += `Cargo (declared):\n${ship.cargo}\n\n`;
+            }
+
+            // Add timeline if exists
+            if (ship.eta) {
+                const etaDate = new Date(ship.eta);
+                body += `ETA: ${etaDate.toLocaleDateString('en-GB')} ${etaDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}\n`;
+            }
+            if (ship.etb?.displayValue) {
+                body += `ETB: ${ship.etb.displayValue}\n`;
+            }
+
+            body += `Status: ${ship.status}\n\n`;
+
+            // Add services if any
+            if (ship.services && ship.services.length > 0) {
+                body += `Services:\n`;
+                ship.services.forEach(s => {
+                    body += `- ${getServiceTypeName(s.type)}: ${formatServiceDetails(s)} (${s.status})\n`;
+                });
+                body += '\n';
+            }
+
+            if (ship.notes) {
+                body += `Notes:\n${ship.notes}\n\n`;
+            }
+
+            body += `Best Regards`;
+
+            return body;
+        }
+
+        function openInOutlook() {
+            if (selectedRecipients.length === 0) {
+                showToast('נא לבחור נמענים', 'warning');
+                return;
+            }
+
+            const shipId = document.getElementById('shipSelectForEmail')?.value;
+            if (!shipId) {
+                showToast('נא לבחור אנייה', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            const emails = selectedRecipients.map(r => r.email).join(',');
+            const subject = document.getElementById('emailSubject')?.value || '';
+            const body = generateEmailBody(ship);
+
+            // Create mailto link
+            const mailtoLink = `mailto:${emails}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            // Open in Outlook/default mail client
+            window.location.href = mailtoLink;
+
+            showToast('נפתח ב-Outlook...', 'success');
+            addActivity('דוח מייל', `הוכן דוח לאנייה ${ship.name}`);
         }
 
         function updateStats() {
