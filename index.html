@@ -3705,8 +3705,10 @@ Captain"></textarea>
             const patterns = [
                 /(?:M\/?V|MV|m\.v\.|mv)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?(?:\s*\/|\s*$|\s*\n|\s*<)/i,
                 /(?:vessel|ship|from)[\s:]+["']?([A-Z][A-Za-z\s\-\.]+?)["']?(?:\s*\/|\s*$|\s*\n)/i,
-                /Subject:.*?(?:M\/?V|MV|m\.v\.)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?/i,
-                /^(?:M\/?V|MV|m\.v\.)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?/im
+                /Subject:.*?(?:M\/?V|MV|m\.v\.|VESSEL)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?/i,
+                /^(?:M\/?V|MV|m\.v\.|VESSEL)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?/im,
+                /VESSEL[\s:]+["']?([A-Z][A-Za-z\s\-\.]+?)["']?(?:\s*\/|\s*$|\s*\n|\s*,)/i,
+                /(?:RE|FW|Fwd)[\s:]+.*?(?:M\/?V|MV|VESSEL)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?/i
             ];
 
             for (const pattern of patterns) {
@@ -3880,19 +3882,38 @@ Captain"></textarea>
         }
 
         function extractPort(text) {
-            const israeliPorts = ['haifa', 'ashdod', 'eilat', 'ashkelon', 'חיפה', 'אשדוד', 'אילת', 'אשקלון'];
             const textLower = text.toLowerCase();
 
-            for (const port of israeliPorts) {
-                if (textLower.includes(port)) {
-                    // Return normalized Hebrew name
-                    const portMap = {
-                        'haifa': 'חיפה', 'חיפה': 'חיפה',
-                        'ashdod': 'אשדוד', 'אשדוד': 'אשדוד',
-                        'eilat': 'אילת', 'אילת': 'אילת',
-                        'ashkelon': 'אשקלון', 'אשקלון': 'אשקלון'
-                    };
-                    return portMap[port] || port;
+            // Port mapping with all variations
+            const portMap = {
+                // חיפה ונמליה
+                'haifa': 'חיפה',
+                'חיפה': 'חיפה',
+                'מספנות': 'מספנות ישראל',
+                'מספנות ישראל': 'מספנות ישראל',
+                'israel shipyards': 'מספנות ישראל',
+                'shipyards': 'מספנות ישראל',
+                'נמל המפרץ': 'נמל המפרץ',
+                'bay port': 'נמל המפרץ',
+                'haifa bay': 'נמל המפרץ',
+                // אשדוד
+                'ashdod': 'אשדוד',
+                'אשדוד': 'אשדוד',
+                'נמל הדרום': 'נמל הדרום',
+                'south port': 'נמל הדרום',
+                // אחרים
+                'eilat': 'אילת',
+                'אילת': 'אילת',
+                'ashkelon': 'אשקלון',
+                'אשקלון': 'אשקלון'
+            };
+
+            // Check for port mentions (longer patterns first for better matching)
+            const sortedPorts = Object.keys(portMap).sort((a, b) => b.length - a.length);
+
+            for (const port of sortedPorts) {
+                if (textLower.includes(port.toLowerCase())) {
+                    return portMap[port];
                 }
             }
 
