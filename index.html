@@ -4852,10 +4852,13 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             }
 
             // Show loading state
-            const btn = document.querySelector('.parse-btn');
-            const originalBtnText = btn.innerHTML;
-            btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;margin-left:8px;"></div> מנתח עם Claude AI...';
-            btn.disabled = true;
+            const btn = document.querySelector('.parse-btn') || document.querySelector('button[onclick*="parseEmailMessage"]');
+            let originalBtnText = '';
+            if (btn) {
+                originalBtnText = btn.innerHTML;
+                btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;margin-left:8px;"></div> מנתח עם Claude AI...';
+                btn.disabled = true;
+            }
 
             // Show loading in results area
             document.getElementById('parsedResultsContainer').innerHTML = `
@@ -4918,8 +4921,10 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     </div>
                 `;
             } finally {
-                btn.innerHTML = originalBtnText;
-                btn.disabled = false;
+                if (btn) {
+                    btn.innerHTML = originalBtnText;
+                    btn.disabled = false;
+                }
             }
         }
 
