@@ -2562,6 +2562,435 @@
             display: flex;
             justify-content: space-between;
         }
+
+        /* ======================== DISCHARGE TRACKING VIEW ======================== */
+        .discharge-view {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+        .discharge-view.active {
+            display: block;
+        }
+        .discharge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        .discharge-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .discharge-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+        .discharge-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+        @media (max-width: 1200px) {
+            .discharge-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .discharge-section {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+        }
+        .discharge-section-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Tally Input Methods */
+        .tally-input-tabs {
+            display: flex;
+            gap: var(--spacing-xs);
+            background: var(--bg-secondary);
+            padding: var(--spacing-xs);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+        }
+        .tally-input-tab {
+            flex: 1;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text-tertiary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+        .tally-input-tab:hover {
+            color: var(--text-secondary);
+            background: var(--bg-hover);
+        }
+        .tally-input-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        .tally-input-content {
+            display: none;
+        }
+        .tally-input-content.active {
+            display: block;
+        }
+
+        /* File Drop Zone */
+        .tally-drop-zone {
+            border: 2px dashed var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-2xl);
+            text-align: center;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .tally-drop-zone:hover,
+        .tally-drop-zone.dragover {
+            border-color: var(--primary);
+            background: var(--bg-hover);
+        }
+        .tally-drop-zone svg {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-tertiary);
+        }
+        .tally-drop-zone p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+        .tally-drop-zone span {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* Text Input */
+        .tally-text-input {
+            width: 100%;
+            min-height: 200px;
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: vertical;
+            direction: ltr;
+            text-align: left;
+        }
+        .tally-text-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+        .tally-text-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        /* Parse Button */
+        .parse-tally-btn {
+            width: 100%;
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            transition: all 200ms;
+        }
+        .parse-tally-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        /* Parsed Tally Results */
+        .tally-results {
+            margin-top: var(--spacing-lg);
+        }
+        .tally-result-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        .tally-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        .tally-result-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .tally-result-date {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .tally-shift-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 100px 100px;
+            gap: var(--spacing-md);
+            padding: var(--spacing-sm);
+            border-bottom: 1px solid var(--glass-border);
+            font-size: 13px;
+        }
+        .tally-shift-row:last-child {
+            border-bottom: none;
+        }
+        .tally-shift-row.header {
+            font-weight: 600;
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+        .tally-shift-name {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        .tally-cargo-details {
+            color: var(--text-secondary);
+        }
+        .tally-quantity {
+            text-align: left;
+            direction: ltr;
+            font-family: 'Courier New', monospace;
+        }
+        .tally-weight {
+            text-align: left;
+            direction: ltr;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Remarks Section */
+        .tally-remarks {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            border-right: 3px solid var(--warning);
+        }
+        .tally-remarks-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--warning);
+            margin-bottom: var(--spacing-xs);
+        }
+        .tally-remarks-text {
+            color: var(--text-secondary);
+            font-size: 13px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Progress Tracking */
+        .discharge-progress {
+            margin-top: var(--spacing-lg);
+        }
+        .progress-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        .progress-stat {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+        }
+        .progress-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .progress-stat-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: var(--spacing-xs);
+        }
+        .progress-bar-container {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-full);
+            height: 24px;
+            overflow: hidden;
+            margin-bottom: var(--spacing-md);
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: var(--radius-full);
+            transition: width 500ms ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Daily Log */
+        .daily-log {
+            margin-top: var(--spacing-lg);
+        }
+        .daily-log-item {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-sm);
+        }
+        .daily-log-date {
+            min-width: 80px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 13px;
+        }
+        .daily-log-details {
+            flex: 1;
+        }
+        .daily-log-cargo {
+            display: flex;
+            gap: var(--spacing-lg);
+            font-size: 13px;
+            margin-bottom: var(--spacing-xs);
+        }
+        .daily-log-cargo span {
+            color: var(--text-secondary);
+        }
+        .daily-log-cargo strong {
+            color: var(--text-primary);
+            margin-right: var(--spacing-xs);
+        }
+        .daily-log-remarks {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-style: italic;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Ship Selection for Discharge */
+        .discharge-ship-selector {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        .discharge-ship-selector select {
+            flex: 1;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .discharge-ship-selector select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Apply Tally Button */
+        .apply-tally-btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            transition: all 200ms;
+        }
+        .apply-tally-btn:hover {
+            background: var(--success-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--success-glow);
+        }
+        .apply-tally-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Image Preview */
+        .tally-image-preview {
+            margin-top: var(--spacing-md);
+            max-height: 300px;
+            overflow: auto;
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+        }
+        .tally-image-preview img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Processing Indicator */
+        .tally-processing {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-xl);
+            color: var(--text-secondary);
+        }
+        .tally-processing.active {
+            display: flex;
+        }
+        .tally-processing .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 
     <!-- Firebase SDK (compat version for classic script) -->
@@ -2615,6 +3044,14 @@
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
                     </svg>
                     <span>אנשי קשר</span>
+                </div>
+                <div class="nav-item" onclick="switchToDischargeView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    <span>מעקב פריקה</span>
                 </div>
             </nav>
 
@@ -2973,6 +3410,258 @@ Captain"></textarea>
                         </button>
                     </div>
                 </div>
+
+                <!-- Discharge Tracking View -->
+                <div class="discharge-view" id="dischargeView">
+                    <div class="discharge-header">
+                        <h2 class="discharge-title">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                            מעקב פריקה - Discharge Tracking
+                        </h2>
+                        <div class="discharge-actions">
+                            <button class="btn btn-secondary" onclick="clearTallyData()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                                נקה נתונים
+                            </button>
+                            <button class="btn btn-primary" onclick="exportDischargeReport()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                ייצוא דוח
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ship Selection -->
+                    <div class="discharge-ship-selector">
+                        <label style="font-weight: 600; color: var(--text-primary);">בחר אנייה:</label>
+                        <select id="dischargeShipSelect" onchange="loadDischargeData()">
+                            <option value="">-- בחר אנייה --</option>
+                        </select>
+                    </div>
+
+                    <div class="discharge-grid">
+                        <!-- Tally Input Section -->
+                        <div class="discharge-section">
+                            <h3 class="discharge-section-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10 9 9 9 8 9"/>
+                                </svg>
+                                קליטת טאלי יומי
+                            </h3>
+
+                            <!-- Input Method Tabs -->
+                            <div class="tally-input-tabs">
+                                <button class="tally-input-tab active" onclick="switchTallyInputTab('text')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                    טקסט
+                                </button>
+                                <button class="tally-input-tab" onclick="switchTallyInputTab('image')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                    תמונה
+                                </button>
+                                <button class="tally-input-tab" onclick="switchTallyInputTab('pdf')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <path d="M9 15h6"/>
+                                    </svg>
+                                    PDF
+                                </button>
+                            </div>
+
+                            <!-- Text Input -->
+                            <div class="tally-input-content active" id="tallyInputText">
+                                <textarea class="tally-text-input" id="tallyTextArea" placeholder="Paste tally report here...
+
+Example format:
+Date: 15/01/2024
+Shift 1 (07:00-15:00): Gang 1-2
+- Steel coils: 150 units, 2,450 MT
+- Breakbulk: 45 units, 890 MT
+
+Shift 2 (15:00-23:00): Gang 1-3
+- Steel coils: 180 units, 2,890 MT
+
+Remarks: Rain stopped operations 14:30-15:15"></textarea>
+                                <button class="parse-tally-btn" onclick="parseTallyText()">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    נתח טאלי
+                                </button>
+                            </div>
+
+                            <!-- Image Input -->
+                            <div class="tally-input-content" id="tallyInputImage">
+                                <div class="tally-drop-zone" id="imageDropZone" onclick="document.getElementById('tallyImageInput').click()">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                    <p>גרור תמונה לכאן או לחץ לבחירה</p>
+                                    <span>PNG, JPG, JPEG (מקסימום 10MB)</span>
+                                </div>
+                                <input type="file" id="tallyImageInput" accept="image/*" style="display: none;" onchange="handleTallyImage(event)">
+                                <div class="tally-image-preview" id="tallyImagePreview" style="display: none;"></div>
+                                <div class="tally-processing" id="imageProcessing">
+                                    <div class="spinner"></div>
+                                    <span>מעבד תמונה...</span>
+                                </div>
+                                <button class="parse-tally-btn" id="parseImageBtn" onclick="parseImageTally()" style="display: none;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    נתח תמונה
+                                </button>
+                            </div>
+
+                            <!-- PDF Input -->
+                            <div class="tally-input-content" id="tallyInputPdf">
+                                <div class="tally-drop-zone" id="pdfDropZone" onclick="document.getElementById('tallyPdfInput').click()">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <path d="M9 15h6"/>
+                                    </svg>
+                                    <p>גרור קובץ PDF לכאן או לחץ לבחירה</p>
+                                    <span>PDF (מקסימום 10MB)</span>
+                                </div>
+                                <input type="file" id="tallyPdfInput" accept=".pdf" style="display: none;" onchange="handleTallyPdf(event)">
+                                <div class="tally-processing" id="pdfProcessing">
+                                    <div class="spinner"></div>
+                                    <span>מעבד PDF...</span>
+                                </div>
+                                <div id="pdfFileName" style="margin-top: var(--spacing-md); color: var(--text-secondary); display: none;"></div>
+                                <button class="parse-tally-btn" id="parsePdfBtn" onclick="parsePdfTally()" style="display: none;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    נתח PDF
+                                </button>
+                            </div>
+
+                            <!-- Parsed Results -->
+                            <div class="tally-results" id="tallyResults" style="display: none;">
+                                <h4 style="color: var(--text-primary); margin-bottom: var(--spacing-md);">תוצאות ניתוח:</h4>
+                                <div class="tally-result-card">
+                                    <div class="tally-result-header">
+                                        <span class="tally-result-title" id="parsedTallyDate">--</span>
+                                        <span class="tally-result-date" id="parsedTallyTime">--</span>
+                                    </div>
+                                    <div class="tally-shift-row header">
+                                        <span>משמרת</span>
+                                        <span>מטען</span>
+                                        <span>כמות</span>
+                                        <span>משקל (MT)</span>
+                                    </div>
+                                    <div id="parsedShiftsContainer">
+                                        <!-- Shifts will be rendered here -->
+                                    </div>
+                                    <div class="tally-remarks" id="parsedRemarks" style="display: none;">
+                                        <div class="tally-remarks-title">Remarks / Events</div>
+                                        <div class="tally-remarks-text" id="parsedRemarksText"></div>
+                                    </div>
+                                </div>
+                                <button class="apply-tally-btn" onclick="applyTallyToShip()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    החל על האנייה
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Progress Tracking Section -->
+                        <div class="discharge-section">
+                            <h3 class="discharge-section-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                </svg>
+                                התקדמות פריקה
+                            </h3>
+
+                            <div class="discharge-progress">
+                                <div class="progress-summary">
+                                    <div class="progress-stat">
+                                        <div class="progress-stat-value" id="totalDischarged">0</div>
+                                        <div class="progress-stat-label">טון שנפרקו</div>
+                                    </div>
+                                    <div class="progress-stat">
+                                        <div class="progress-stat-value" id="totalUnits">0</div>
+                                        <div class="progress-stat-label">יחידות</div>
+                                    </div>
+                                    <div class="progress-stat">
+                                        <div class="progress-stat-value" id="totalDays">0</div>
+                                        <div class="progress-stat-label">ימי פריקה</div>
+                                    </div>
+                                    <div class="progress-stat">
+                                        <div class="progress-stat-value" id="avgPerDay">0</div>
+                                        <div class="progress-stat-label">ממוצע ליום (MT)</div>
+                                    </div>
+                                </div>
+
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" id="dischargeProgressBar" style="width: 0%;">0%</div>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary); margin-bottom: var(--spacing-lg);">
+                                    <span>נפרק: <span id="dischargedAmount">0</span> MT</span>
+                                    <span>נותר: <span id="remainingAmount">0</span> MT</span>
+                                    <span>סה"כ: <span id="totalCargo">0</span> MT</span>
+                                </div>
+                            </div>
+
+                            <!-- Daily Log -->
+                            <div class="daily-log">
+                                <h4 style="color: var(--text-primary); margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-sm);">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                    יומן פריקה יומי
+                                </h4>
+                                <div id="dailyLogContainer">
+                                    <div class="empty-state">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                            <line x1="16" y1="2" x2="16" y2="6"/>
+                                            <line x1="8" y1="2" x2="8" y2="6"/>
+                                            <line x1="3" y1="10" x2="21" y2="10"/>
+                                        </svg>
+                                        <p>אין נתוני פריקה עדיין</p>
+                                        <span>קלוט טאלי יומי להתחלת מעקב</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </main>
 
@@ -3279,6 +3968,7 @@ Captain"></textarea>
             updateStats();
             updateActivities();
             setupEventListeners();
+            setupDropZones(); // Setup drag and drop for tally input
         }
 
         function setupEventListeners() {
@@ -4081,6 +4771,7 @@ Captain"></textarea>
             // הסתר את תצוגות אחרות והצג את הגריד
             document.getElementById('emailParserView').classList.remove('active');
             document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
             document.getElementById('shipsGrid').style.display = 'grid';
 
             currentTab = 'all'; // אפס לטאב "כל האניות"
@@ -4110,6 +4801,7 @@ Captain"></textarea>
             // הסתר את תצוגות אחרות והצג את הגריד
             document.getElementById('emailParserView').classList.remove('active');
             document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
             document.getElementById('shipsGrid').style.display = 'grid';
 
             currentTab = 'quick'; // עדכן את המצב הנוכחי
@@ -4129,6 +4821,7 @@ Captain"></textarea>
             // הסתר תצוגות אחרות והצג את תצוגת הפרסר
             document.getElementById('shipsGrid').style.display = 'none';
             document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
             document.getElementById('emailParserView').classList.add('active');
 
             currentTab = 'parser';
@@ -5027,12 +5720,710 @@ Captain"></textarea>
             // Hide other views, show contacts view
             document.getElementById('shipsGrid').style.display = 'none';
             document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
             document.getElementById('contactsView').classList.add('active');
 
             currentTab = 'contacts';
             loadContacts();
             loadEmailGroups();
             populateShipSelector();
+        }
+
+        // ==================== Discharge Tracking View ====================
+        let currentTallyData = null;
+        let currentImageData = null;
+        let currentPdfData = null;
+
+        function switchToDischargeView() {
+            // Remove 'active' from all nav items
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            // Add 'active' to discharge nav item (index 4)
+            document.querySelectorAll('.nav-menu .nav-item')[4].classList.add('active');
+
+            // Hide tabs and stats
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+
+            // Hide other views, show discharge view
+            document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.add('active');
+
+            currentTab = 'discharge';
+            populateDischargeShipSelector();
+        }
+
+        function populateDischargeShipSelector() {
+            const select = document.getElementById('dischargeShipSelect');
+            select.innerHTML = '<option value="">-- בחר אנייה --</option>';
+
+            // Filter ships that are at port or under operation
+            const relevantShips = ships.filter(s =>
+                s.status === 'At Port' || s.status === 'Under Operation'
+            );
+
+            relevantShips.forEach(ship => {
+                const option = document.createElement('option');
+                option.value = ship.id;
+                option.textContent = ship.name;
+                select.appendChild(option);
+            });
+
+            // Also add all other ships
+            const otherShips = ships.filter(s =>
+                s.status !== 'At Port' && s.status !== 'Under Operation'
+            );
+
+            if (otherShips.length > 0 && relevantShips.length > 0) {
+                const separator = document.createElement('option');
+                separator.disabled = true;
+                separator.textContent = '── אניות אחרות ──';
+                select.appendChild(separator);
+            }
+
+            otherShips.forEach(ship => {
+                const option = document.createElement('option');
+                option.value = ship.id;
+                option.textContent = ship.name;
+                select.appendChild(option);
+            });
+        }
+
+        function loadDischargeData() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                resetDischargeView();
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            // Load discharge data from ship or initialize
+            const dischargeData = ship.dischargeData || {
+                totalCargo: ship.cargo?.weight || 0,
+                discharged: 0,
+                units: 0,
+                dailyLog: [],
+                remarks: []
+            };
+
+            updateDischargeProgress(dischargeData, ship);
+            renderDailyLog(dischargeData.dailyLog);
+        }
+
+        function resetDischargeView() {
+            document.getElementById('totalDischarged').textContent = '0';
+            document.getElementById('totalUnits').textContent = '0';
+            document.getElementById('totalDays').textContent = '0';
+            document.getElementById('avgPerDay').textContent = '0';
+            document.getElementById('dischargeProgressBar').style.width = '0%';
+            document.getElementById('dischargeProgressBar').textContent = '0%';
+            document.getElementById('dischargedAmount').textContent = '0';
+            document.getElementById('remainingAmount').textContent = '0';
+            document.getElementById('totalCargo').textContent = '0';
+            document.getElementById('dailyLogContainer').innerHTML = `
+                <div class="empty-state">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    <p>אין נתוני פריקה עדיין</p>
+                    <span>קלוט טאלי יומי להתחלת מעקב</span>
+                </div>
+            `;
+        }
+
+        function switchTallyInputTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tally-input-tab').forEach(t => t.classList.remove('active'));
+            event.target.closest('.tally-input-tab').classList.add('active');
+
+            // Update content visibility
+            document.querySelectorAll('.tally-input-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`tallyInput${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+        }
+
+        function parseTallyText() {
+            const text = document.getElementById('tallyTextArea').value.trim();
+            if (!text) {
+                showToast('אנא הכנס טקסט לניתוח', 'warning');
+                return;
+            }
+
+            const parsed = extractTallyData(text);
+            if (parsed) {
+                currentTallyData = parsed;
+                displayParsedTally(parsed);
+                showToast('הטאלי נותח בהצלחה', 'success');
+            } else {
+                showToast('לא ניתן לנתח את הטאלי', 'error');
+            }
+        }
+
+        function extractTallyData(text) {
+            const result = {
+                date: null,
+                shifts: [],
+                totalQuantity: 0,
+                totalWeight: 0,
+                remarks: []
+            };
+
+            // Extract date
+            const datePatterns = [
+                /(?:Date|DATE|תאריך)[:\s]*(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})/i,
+                /(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})/
+            ];
+
+            for (const pattern of datePatterns) {
+                const dateMatch = text.match(pattern);
+                if (dateMatch) {
+                    result.date = dateMatch[1];
+                    break;
+                }
+            }
+
+            // If no date found, use today
+            if (!result.date) {
+                const today = new Date();
+                result.date = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+            }
+
+            // Extract shifts
+            const shiftPatterns = [
+                /(?:Shift|SHIFT|משמרת)\s*(\d+)[^:]*[:\s]*(?:Gang|GANG|כנופייה)[s]?\s*([\d\-,\s]+)/gi,
+                /(?:Shift|SHIFT|משמרת)\s*(\d+)\s*\(([^\)]+)\)/gi
+            ];
+
+            const lines = text.split('\n');
+            let currentShift = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+
+                // Check for shift header
+                const shiftMatch = line.match(/(?:Shift|SHIFT|משמרת)\s*(\d+)/i);
+                if (shiftMatch) {
+                    if (currentShift) {
+                        result.shifts.push(currentShift);
+                    }
+
+                    // Extract time if present
+                    const timeMatch = line.match(/\(([^\)]+)\)/);
+                    const gangMatch = line.match(/(?:Gang|GANG|כנופייה)[s]?\s*([\d\-,\s]+)/i);
+
+                    currentShift = {
+                        name: `Shift ${shiftMatch[1]}`,
+                        time: timeMatch ? timeMatch[1] : '',
+                        gangs: gangMatch ? gangMatch[1].trim() : '',
+                        cargo: [],
+                        quantity: 0,
+                        weight: 0
+                    };
+                    continue;
+                }
+
+                // Check for cargo lines (start with - or have units/MT)
+                if (currentShift) {
+                    const cargoMatch = line.match(/[-•]?\s*([^:]+)[:\s]+(\d+[\d,\.]*)\s*(?:units?|pcs?|יחידות)?[,\s]+(\d+[\d,\.]*)\s*(?:MT|tons?|טון)?/i);
+                    if (cargoMatch) {
+                        const quantity = parseFloat(cargoMatch[2].replace(/,/g, ''));
+                        const weight = parseFloat(cargoMatch[3].replace(/,/g, ''));
+
+                        currentShift.cargo.push({
+                            type: cargoMatch[1].trim(),
+                            quantity: quantity,
+                            weight: weight
+                        });
+                        currentShift.quantity += quantity;
+                        currentShift.weight += weight;
+                        result.totalQuantity += quantity;
+                        result.totalWeight += weight;
+                    }
+
+                    // Also try simpler pattern
+                    const simpleMatch = line.match(/(\d+[\d,\.]*)\s*(?:units?|pcs?|יחידות)[,\s]+(\d+[\d,\.]*)\s*(?:MT|tons?|טון)/i);
+                    if (simpleMatch && !cargoMatch) {
+                        const quantity = parseFloat(simpleMatch[1].replace(/,/g, ''));
+                        const weight = parseFloat(simpleMatch[2].replace(/,/g, ''));
+
+                        currentShift.cargo.push({
+                            type: 'Cargo',
+                            quantity: quantity,
+                            weight: weight
+                        });
+                        currentShift.quantity += quantity;
+                        currentShift.weight += weight;
+                        result.totalQuantity += quantity;
+                        result.totalWeight += weight;
+                    }
+                }
+
+                // Check for remarks
+                const remarksMatch = line.match(/(?:Remarks?|REMARKS?|הערות)[:\s]*(.*)/i);
+                if (remarksMatch && remarksMatch[1].trim()) {
+                    result.remarks.push(remarksMatch[1].trim());
+                }
+            }
+
+            // Add last shift
+            if (currentShift) {
+                result.shifts.push(currentShift);
+            }
+
+            // If no shifts found, try to extract total values
+            if (result.shifts.length === 0) {
+                const totalMatch = text.match(/(?:Total|TOTAL|סה"כ)[:\s]*(\d+[\d,\.]*)\s*(?:units?)?[,\s]+(\d+[\d,\.]*)\s*(?:MT)?/i);
+                if (totalMatch) {
+                    result.totalQuantity = parseFloat(totalMatch[1].replace(/,/g, ''));
+                    result.totalWeight = parseFloat(totalMatch[2].replace(/,/g, ''));
+                    result.shifts.push({
+                        name: 'Total',
+                        time: '',
+                        gangs: '',
+                        cargo: [{ type: 'Cargo', quantity: result.totalQuantity, weight: result.totalWeight }],
+                        quantity: result.totalQuantity,
+                        weight: result.totalWeight
+                    });
+                }
+            }
+
+            // Extract any additional remarks
+            const allRemarks = text.match(/(?:Rain|Breakdown|Stoppage|Delay|Weather|Accident|stopped|commenced|completed)[^\.]*\./gi);
+            if (allRemarks) {
+                allRemarks.forEach(r => {
+                    if (!result.remarks.includes(r.trim())) {
+                        result.remarks.push(r.trim());
+                    }
+                });
+            }
+
+            return result.shifts.length > 0 || result.totalWeight > 0 ? result : null;
+        }
+
+        function displayParsedTally(data) {
+            document.getElementById('tallyResults').style.display = 'block';
+            document.getElementById('parsedTallyDate').textContent = data.date || 'לא זוהה תאריך';
+            document.getElementById('parsedTallyTime').textContent = new Date().toLocaleTimeString('he-IL');
+
+            const container = document.getElementById('parsedShiftsContainer');
+            container.innerHTML = '';
+
+            data.shifts.forEach(shift => {
+                const cargoDetails = shift.cargo.map(c => c.type).join(', ') || 'Cargo';
+                const row = document.createElement('div');
+                row.className = 'tally-shift-row';
+                row.innerHTML = `
+                    <span class="tally-shift-name">${shift.name}</span>
+                    <span class="tally-cargo-details">${cargoDetails}</span>
+                    <span class="tally-quantity">${shift.quantity.toLocaleString()}</span>
+                    <span class="tally-weight">${shift.weight.toLocaleString()} MT</span>
+                `;
+                container.appendChild(row);
+            });
+
+            // Add total row
+            const totalRow = document.createElement('div');
+            totalRow.className = 'tally-shift-row';
+            totalRow.style.borderTop = '2px solid var(--primary)';
+            totalRow.style.fontWeight = '600';
+            totalRow.innerHTML = `
+                <span>סה"כ</span>
+                <span></span>
+                <span class="tally-quantity">${data.totalQuantity.toLocaleString()}</span>
+                <span class="tally-weight">${data.totalWeight.toLocaleString()} MT</span>
+            `;
+            container.appendChild(totalRow);
+
+            // Show remarks if any
+            if (data.remarks.length > 0) {
+                document.getElementById('parsedRemarks').style.display = 'block';
+                document.getElementById('parsedRemarksText').textContent = data.remarks.join('\n');
+            } else {
+                document.getElementById('parsedRemarks').style.display = 'none';
+            }
+        }
+
+        // Drag and drop for image
+        function setupDropZones() {
+            const imageDropZone = document.getElementById('imageDropZone');
+            const pdfDropZone = document.getElementById('pdfDropZone');
+
+            if (imageDropZone) {
+                imageDropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    imageDropZone.classList.add('dragover');
+                });
+                imageDropZone.addEventListener('dragleave', () => {
+                    imageDropZone.classList.remove('dragover');
+                });
+                imageDropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    imageDropZone.classList.remove('dragover');
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        handleTallyImageFile(file);
+                    }
+                });
+            }
+
+            if (pdfDropZone) {
+                pdfDropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    pdfDropZone.classList.add('dragover');
+                });
+                pdfDropZone.addEventListener('dragleave', () => {
+                    pdfDropZone.classList.remove('dragover');
+                });
+                pdfDropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    pdfDropZone.classList.remove('dragover');
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type === 'application/pdf') {
+                        handleTallyPdfFile(file);
+                    }
+                });
+            }
+        }
+
+        function handleTallyImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleTallyImageFile(file);
+            }
+        }
+
+        function handleTallyImageFile(file) {
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('הקובץ גדול מדי (מקסימום 10MB)', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImageData = e.target.result;
+
+                // Show preview
+                const preview = document.getElementById('tallyImagePreview');
+                preview.style.display = 'block';
+                preview.innerHTML = `<img src="${currentImageData}" alt="Tally Image">`;
+
+                // Show parse button
+                document.getElementById('parseImageBtn').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function parseImageTally() {
+            if (!currentImageData) {
+                showToast('אנא העלה תמונה קודם', 'warning');
+                return;
+            }
+
+            document.getElementById('imageProcessing').classList.add('active');
+
+            // For now, show a message that OCR requires external service
+            // In production, this would call an OCR API
+            setTimeout(() => {
+                document.getElementById('imageProcessing').classList.remove('active');
+                showToast('לעיבוד תמונות נדרש שירות OCR חיצוני. אנא העתק את הטקסט ידנית.', 'info');
+
+                // Switch to text tab
+                document.querySelectorAll('.tally-input-tab').forEach(t => t.classList.remove('active'));
+                document.querySelector('.tally-input-tab').classList.add('active');
+                document.querySelectorAll('.tally-input-content').forEach(c => c.classList.remove('active'));
+                document.getElementById('tallyInputText').classList.add('active');
+            }, 1500);
+        }
+
+        function handleTallyPdf(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleTallyPdfFile(file);
+            }
+        }
+
+        function handleTallyPdfFile(file) {
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('הקובץ גדול מדי (מקסימום 10MB)', 'error');
+                return;
+            }
+
+            currentPdfData = file;
+            document.getElementById('pdfFileName').style.display = 'block';
+            document.getElementById('pdfFileName').innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-left: 8px;">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                ${file.name}
+            `;
+            document.getElementById('parsePdfBtn').style.display = 'flex';
+        }
+
+        function parsePdfTally() {
+            if (!currentPdfData) {
+                showToast('אנא העלה קובץ PDF קודם', 'warning');
+                return;
+            }
+
+            document.getElementById('pdfProcessing').classList.add('active');
+
+            // For PDF parsing, we would use pdf.js or similar
+            // For now, show a message
+            setTimeout(() => {
+                document.getElementById('pdfProcessing').classList.remove('active');
+                showToast('לעיבוד PDF נדרשת ספריית pdf.js. אנא העתק את הטקסט ידנית.', 'info');
+
+                // Switch to text tab
+                document.querySelectorAll('.tally-input-tab').forEach(t => t.classList.remove('active'));
+                document.querySelector('.tally-input-tab').classList.add('active');
+                document.querySelectorAll('.tally-input-content').forEach(c => c.classList.remove('active'));
+                document.getElementById('tallyInputText').classList.add('active');
+            }, 1500);
+        }
+
+        function applyTallyToShip() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                showToast('אנא בחר אנייה קודם', 'warning');
+                return;
+            }
+
+            if (!currentTallyData) {
+                showToast('אין נתוני טאלי להחלה', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            // Initialize discharge data if not exists
+            if (!ship.dischargeData) {
+                ship.dischargeData = {
+                    totalCargo: ship.cargo?.weight || 0,
+                    discharged: 0,
+                    units: 0,
+                    dailyLog: [],
+                    remarks: []
+                };
+            }
+
+            // Add today's tally to the log
+            const logEntry = {
+                date: currentTallyData.date,
+                timestamp: new Date().toISOString(),
+                shifts: currentTallyData.shifts,
+                quantity: currentTallyData.totalQuantity,
+                weight: currentTallyData.totalWeight,
+                remarks: currentTallyData.remarks
+            };
+
+            ship.dischargeData.dailyLog.push(logEntry);
+            ship.dischargeData.discharged += currentTallyData.totalWeight;
+            ship.dischargeData.units += currentTallyData.totalQuantity;
+            ship.dischargeData.remarks = [...ship.dischargeData.remarks, ...currentTallyData.remarks];
+
+            // Update in Firestore
+            db.collection('ships').doc(ship.id).update({
+                dischargeData: ship.dischargeData
+            }).then(() => {
+                showToast('נתוני הטאלי נוספו בהצלחה', 'success');
+                addActivity('עדכון פריקה', `נוספו ${currentTallyData.totalWeight.toLocaleString()} MT לאנייה ${ship.name}`);
+
+                // Update display
+                updateDischargeProgress(ship.dischargeData, ship);
+                renderDailyLog(ship.dischargeData.dailyLog);
+
+                // Clear current data
+                currentTallyData = null;
+                document.getElementById('tallyResults').style.display = 'none';
+                document.getElementById('tallyTextArea').value = '';
+            }).catch(error => {
+                console.error('Error updating discharge data:', error);
+                showToast('שגיאה בשמירת הנתונים', 'error');
+            });
+        }
+
+        function updateDischargeProgress(data, ship) {
+            const totalCargo = data.totalCargo || ship.cargo?.weight || 0;
+            const discharged = data.discharged || 0;
+            const remaining = Math.max(0, totalCargo - discharged);
+            const percentage = totalCargo > 0 ? Math.min(100, (discharged / totalCargo) * 100) : 0;
+            const days = data.dailyLog?.length || 0;
+            const avgPerDay = days > 0 ? Math.round(discharged / days) : 0;
+
+            document.getElementById('totalDischarged').textContent = discharged.toLocaleString();
+            document.getElementById('totalUnits').textContent = (data.units || 0).toLocaleString();
+            document.getElementById('totalDays').textContent = days;
+            document.getElementById('avgPerDay').textContent = avgPerDay.toLocaleString();
+
+            document.getElementById('dischargeProgressBar').style.width = `${percentage}%`;
+            document.getElementById('dischargeProgressBar').textContent = `${Math.round(percentage)}%`;
+
+            document.getElementById('dischargedAmount').textContent = discharged.toLocaleString();
+            document.getElementById('remainingAmount').textContent = remaining.toLocaleString();
+            document.getElementById('totalCargo').textContent = totalCargo.toLocaleString();
+        }
+
+        function renderDailyLog(dailyLog) {
+            const container = document.getElementById('dailyLogContainer');
+
+            if (!dailyLog || dailyLog.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        <p>אין נתוני פריקה עדיין</p>
+                        <span>קלוט טאלי יומי להתחלת מעקב</span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+
+            // Sort by date descending
+            const sortedLog = [...dailyLog].sort((a, b) =>
+                new Date(b.timestamp) - new Date(a.timestamp)
+            );
+
+            sortedLog.forEach(entry => {
+                const item = document.createElement('div');
+                item.className = 'daily-log-item';
+                item.innerHTML = `
+                    <div class="daily-log-date">${entry.date}</div>
+                    <div class="daily-log-details">
+                        <div class="daily-log-cargo">
+                            <span><strong>כמות:</strong> ${entry.quantity.toLocaleString()} יחידות</span>
+                            <span><strong>משקל:</strong> ${entry.weight.toLocaleString()} MT</span>
+                            <span><strong>משמרות:</strong> ${entry.shifts.length}</span>
+                        </div>
+                        ${entry.remarks.length > 0 ? `<div class="daily-log-remarks">${entry.remarks.join(' | ')}</div>` : ''}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function clearTallyData() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                // Just clear the form
+                currentTallyData = null;
+                currentImageData = null;
+                currentPdfData = null;
+                document.getElementById('tallyResults').style.display = 'none';
+                document.getElementById('tallyTextArea').value = '';
+                document.getElementById('tallyImagePreview').style.display = 'none';
+                document.getElementById('parseImageBtn').style.display = 'none';
+                document.getElementById('pdfFileName').style.display = 'none';
+                document.getElementById('parsePdfBtn').style.display = 'none';
+                showToast('הטופס נוקה', 'info');
+                return;
+            }
+
+            if (!confirm('האם אתה בטוח שברצונך למחוק את כל נתוני הפריקה לאנייה זו?')) {
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            ship.dischargeData = {
+                totalCargo: ship.cargo?.weight || 0,
+                discharged: 0,
+                units: 0,
+                dailyLog: [],
+                remarks: []
+            };
+
+            db.collection('ships').doc(ship.id).update({
+                dischargeData: ship.dischargeData
+            }).then(() => {
+                showToast('נתוני הפריקה נמחקו', 'success');
+                loadDischargeData();
+            }).catch(error => {
+                console.error('Error clearing discharge data:', error);
+                showToast('שגיאה במחיקת הנתונים', 'error');
+            });
+        }
+
+        function exportDischargeReport() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                showToast('אנא בחר אנייה', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship || !ship.dischargeData) {
+                showToast('אין נתוני פריקה לייצוא', 'warning');
+                return;
+            }
+
+            const data = ship.dischargeData;
+            const totalCargo = data.totalCargo || 0;
+            const discharged = data.discharged || 0;
+            const remaining = totalCargo - discharged;
+            const percentage = totalCargo > 0 ? ((discharged / totalCargo) * 100).toFixed(1) : 0;
+
+            let report = `DISCHARGE REPORT\n`;
+            report += `================\n\n`;
+            report += `Vessel: ${ship.name}\n`;
+            report += `Port: ${ship.port || 'N/A'}\n`;
+            report += `Generated: ${new Date().toLocaleString('en-GB')}\n\n`;
+            report += `SUMMARY\n`;
+            report += `-------\n`;
+            report += `Total Cargo: ${totalCargo.toLocaleString()} MT\n`;
+            report += `Discharged: ${discharged.toLocaleString()} MT (${percentage}%)\n`;
+            report += `Remaining: ${remaining.toLocaleString()} MT\n`;
+            report += `Total Units: ${(data.units || 0).toLocaleString()}\n`;
+            report += `Days of Discharge: ${data.dailyLog?.length || 0}\n`;
+            report += `Average per Day: ${data.dailyLog?.length > 0 ? Math.round(discharged / data.dailyLog.length).toLocaleString() : 0} MT\n\n`;
+
+            if (data.dailyLog && data.dailyLog.length > 0) {
+                report += `DAILY LOG\n`;
+                report += `---------\n`;
+                data.dailyLog.forEach(entry => {
+                    report += `\n${entry.date}:\n`;
+                    report += `  Quantity: ${entry.quantity.toLocaleString()} units\n`;
+                    report += `  Weight: ${entry.weight.toLocaleString()} MT\n`;
+                    report += `  Shifts: ${entry.shifts.length}\n`;
+                    if (entry.remarks.length > 0) {
+                        report += `  Remarks: ${entry.remarks.join('; ')}\n`;
+                    }
+                });
+            }
+
+            if (data.remarks && data.remarks.length > 0) {
+                report += `\nALL REMARKS\n`;
+                report += `-----------\n`;
+                data.remarks.forEach(r => {
+                    report += `- ${r}\n`;
+                });
+            }
+
+            // Create and download file
+            const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Discharge_Report_${ship.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('הדוח יוצא בהצלחה', 'success');
         }
 
         function loadContacts() {
