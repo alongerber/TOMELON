@@ -5847,20 +5847,59 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById(`tallyInput${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
         }
 
-        function parseTallyText() {
+        // API endpoint for Claude analysis
+        const CLAUDE_API_ENDPOINT = '/api/analyze-tally';
+
+        async function parseTallyText() {
             const text = document.getElementById('tallyTextArea').value.trim();
             if (!text) {
                 showToast('אנא הכנס טקסט לניתוח', 'warning');
                 return;
             }
 
-            const parsed = extractTallyData(text);
-            if (parsed) {
-                currentTallyData = parsed;
-                displayParsedTally(parsed);
-                showToast('הטאלי נותח בהצלחה', 'success');
-            } else {
-                showToast('לא ניתן לנתח את הטאלי', 'error');
+            // Show loading state
+            const btn = document.querySelector('#tallyInputText .parse-tally-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;"></div> מנתח עם Claude AI...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(CLAUDE_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'text', content: text })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'API error');
+                }
+
+                if (data.parsed) {
+                    currentTallyData = data.parsed;
+                    displayParsedTally(data.parsed);
+                    showToast('הטאלי נותח בהצלחה עם Claude AI', 'success');
+                } else if (data.raw) {
+                    showToast('התקבל ניתוח אך לא בפורמט מובנה', 'warning');
+                    console.log('Raw Claude response:', data.raw);
+                } else {
+                    throw new Error('No parsed data returned');
+                }
+            } catch (error) {
+                console.error('Claude API error:', error);
+                showToast(`שגיאה בניתוח: ${error.message}`, 'error');
+
+                // Fallback to local parsing
+                const localParsed = extractTallyData(text);
+                if (localParsed) {
+                    currentTallyData = localParsed;
+                    displayParsedTally(localParsed);
+                    showToast('נותח עם ניתוח מקומי (fallback)', 'info');
+                }
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
             }
         }
 
@@ -6118,26 +6157,58 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             reader.readAsDataURL(file);
         }
 
-        function parseImageTally() {
+        async function parseImageTally() {
             if (!currentImageData) {
                 showToast('אנא העלה תמונה קודם', 'warning');
                 return;
             }
 
             document.getElementById('imageProcessing').classList.add('active');
+            document.querySelector('#imageProcessing span').textContent = 'מנתח תמונה עם Claude Vision...';
 
-            // For now, show a message that OCR requires external service
-            // In production, this would call an OCR API
-            setTimeout(() => {
+            try {
+                // Extract base64 data and mime type from data URL
+                const matches = currentImageData.match(/^data:(.+);base64,(.+)$/);
+                if (!matches) {
+                    throw new Error('Invalid image data');
+                }
+
+                const mimeType = matches[1];
+                const base64Data = matches[2];
+
+                const response = await fetch(CLAUDE_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'image',
+                        imageBase64: base64Data,
+                        mimeType: mimeType
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'API error');
+                }
+
+                if (data.parsed) {
+                    currentTallyData = data.parsed;
+                    displayParsedTally(data.parsed);
+                    document.getElementById('tallyResults').style.display = 'block';
+                    showToast('התמונה נותחה בהצלחה עם Claude Vision', 'success');
+                } else if (data.raw) {
+                    showToast('התקבל ניתוח אך לא בפורמט מובנה', 'warning');
+                    console.log('Raw Claude response:', data.raw);
+                } else {
+                    throw new Error('No parsed data returned');
+                }
+            } catch (error) {
+                console.error('Claude Vision API error:', error);
+                showToast(`שגיאה בניתוח תמונה: ${error.message}`, 'error');
+            } finally {
                 document.getElementById('imageProcessing').classList.remove('active');
-                showToast('לעיבוד תמונות נדרש שירות OCR חיצוני. אנא העתק את הטקסט ידנית.', 'info');
-
-                // Switch to text tab
-                document.querySelectorAll('.tally-input-tab').forEach(t => t.classList.remove('active'));
-                document.querySelector('.tally-input-tab').classList.add('active');
-                document.querySelectorAll('.tally-input-content').forEach(c => c.classList.remove('active'));
-                document.getElementById('tallyInputText').classList.add('active');
-            }, 1500);
+            }
         }
 
         function handleTallyPdf(event) {
@@ -6165,26 +6236,105 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('parsePdfBtn').style.display = 'flex';
         }
 
-        function parsePdfTally() {
+        async function parsePdfTally() {
             if (!currentPdfData) {
                 showToast('אנא העלה קובץ PDF קודם', 'warning');
                 return;
             }
 
             document.getElementById('pdfProcessing').classList.add('active');
+            document.querySelector('#pdfProcessing span').textContent = 'ממיר PDF לתמונה...';
 
-            // For PDF parsing, we would use pdf.js or similar
-            // For now, show a message
-            setTimeout(() => {
+            try {
+                // Load PDF.js if not already loaded
+                if (typeof pdfjsLib === 'undefined') {
+                    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                }
+
+                // Read PDF file as array buffer
+                const arrayBuffer = await currentPdfData.arrayBuffer();
+
+                // Load PDF document
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+                // Get first page
+                const page = await pdf.getPage(1);
+
+                // Set scale for good quality
+                const scale = 2;
+                const viewport = page.getViewport({ scale });
+
+                // Create canvas
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                // Render page to canvas
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+
+                document.querySelector('#pdfProcessing span').textContent = 'מנתח עם Claude Vision...';
+
+                // Convert canvas to base64
+                const imageDataUrl = canvas.toDataURL('image/png');
+                const matches = imageDataUrl.match(/^data:(.+);base64,(.+)$/);
+
+                if (!matches) {
+                    throw new Error('Failed to convert PDF to image');
+                }
+
+                const mimeType = matches[1];
+                const base64Data = matches[2];
+
+                // Send to Claude Vision
+                const response = await fetch(CLAUDE_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'image',
+                        imageBase64: base64Data,
+                        mimeType: mimeType
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'API error');
+                }
+
+                if (data.parsed) {
+                    currentTallyData = data.parsed;
+                    displayParsedTally(data.parsed);
+                    document.getElementById('tallyResults').style.display = 'block';
+                    showToast('ה-PDF נותח בהצלחה עם Claude Vision', 'success');
+                } else if (data.raw) {
+                    showToast('התקבל ניתוח אך לא בפורמט מובנה', 'warning');
+                    console.log('Raw Claude response:', data.raw);
+                } else {
+                    throw new Error('No parsed data returned');
+                }
+            } catch (error) {
+                console.error('PDF parsing error:', error);
+                showToast(`שגיאה בניתוח PDF: ${error.message}`, 'error');
+            } finally {
                 document.getElementById('pdfProcessing').classList.remove('active');
-                showToast('לעיבוד PDF נדרשת ספריית pdf.js. אנא העתק את הטקסט ידנית.', 'info');
+            }
+        }
 
-                // Switch to text tab
-                document.querySelectorAll('.tally-input-tab').forEach(t => t.classList.remove('active'));
-                document.querySelector('.tally-input-tab').classList.add('active');
-                document.querySelectorAll('.tally-input-content').forEach(c => c.classList.remove('active'));
-                document.getElementById('tallyInputText').classList.add('active');
-            }, 1500);
+        // Helper to dynamically load scripts
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
         }
 
         function applyTallyToShip() {
