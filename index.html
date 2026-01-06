@@ -1,0 +1,4467 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ship Operations Premium | מערכת ניהול אניות</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <style>
+        /* ======================== DESIGN TOKENS ======================== */
+        :root {
+            /* Premium Colors */
+            --primary: #0066FF;
+            --primary-dark: #0052CC;
+            --primary-light: #3385FF;
+            --primary-glow: rgba(0, 102, 255, 0.3);
+            
+            --success: #00D084;
+            --success-dark: #00A866;
+            --success-glow: rgba(0, 208, 132, 0.3);
+            
+            --warning: #FFB800;
+            --warning-dark: #E6A600;
+            --warning-glow: rgba(255, 184, 0, 0.3);
+            
+            --danger: #FF3366;
+            --danger-dark: #E6004C;
+            --danger-glow: rgba(255, 51, 102, 0.3);
+            
+            /* Dark Theme */
+            --bg-primary: #0A0B0D;
+            --bg-secondary: #12141A;
+            --bg-tertiary: #1A1D24;
+            --bg-card: #1F232B;
+            --bg-hover: rgba(255, 255, 255, 0.03);
+            --bg-active: rgba(255, 255, 255, 0.06);
+            
+            /* Glass */
+            --glass: rgba(255, 255, 255, 0.02);
+            --glass-heavy: rgba(255, 255, 255, 0.04);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            
+            /* Text */
+            --text-primary: #FFFFFF;
+            --text-secondary: #B4B9C4;
+            --text-tertiary: #7A8091;
+            --text-muted: #4A4F5C;
+            
+            /* Spacing */
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --spacing-2xl: 48px;
+            
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 14px;
+            --radius-xl: 20px;
+            --radius-full: 9999px;
+            
+            /* Shadows */
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.5);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Heebo', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        /* ======================== BACKGROUND ======================== */
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background: 
+                radial-gradient(circle at 20% 50%, var(--primary-glow) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, var(--success-glow) 0%, transparent 50%);
+            opacity: 0.1;
+        }
+
+        .grid-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background-image: 
+                linear-gradient(var(--glass-border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--glass-border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.15;
+        }
+
+        /* ======================== LAYOUT ======================== */
+        .app-container {
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .sidebar-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-gradient, linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%));
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px var(--primary-glow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .logo-text {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .logo-subtitle {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Navigation */
+        .nav-menu {
+            flex: 1;
+            padding: var(--spacing-md);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 200ms;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .nav-item:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--bg-active);
+            color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        /* Header */
+        .header {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            padding: var(--spacing-md) var(--spacing-xl);
+        }
+
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .header-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-lg);
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 200ms;
+        }
+
+        .btn:hover::before {
+            opacity: 1;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--primary);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: var(--danger-dark);
+            box-shadow: 0 6px 20px var(--danger-glow);
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            justify-content: center;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            position: relative;
+            overflow: hidden;
+            transition: all 300ms;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: var(--primary);
+            opacity: 0.05;
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .stat-value {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-trend {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: var(--spacing-sm);
+            padding: 4px 8px;
+            background: var(--bg-hover);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .stat-trend.up { color: var(--success); }
+        .stat-trend.down { color: var(--danger); }
+
+        /* Content Area */
+        .content {
+            flex: 1;
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: var(--spacing-xs);
+            background: var(--bg-card);
+            padding: var(--spacing-xs);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .tab {
+            flex: 1;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--text-tertiary);
+            font-family: inherit;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms;
+            position: relative;
+        }
+
+        .tab:hover {
+            color: var(--text-secondary);
+            background: var(--bg-hover);
+        }
+
+        .tab.active {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .tab-badge {
+            display: inline-block;
+            min-width: 20px;
+            padding: 2px 6px;
+            margin-right: var(--spacing-sm);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .tab.active .tab-badge {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Ships Grid */
+        .ships-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: var(--spacing-lg);
+        }
+
+        /* Ship Card */
+        .ship-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            transition: all 300ms;
+            position: relative;
+        }
+
+        .ship-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--primary);
+            opacity: 0;
+            transition: opacity 200ms;
+        }
+
+        .ship-card.urgent::before {
+            opacity: 1;
+            background: var(--danger);
+        }
+
+        .ship-card.warning::before {
+            opacity: 1;
+            background: var(--warning);
+        }
+
+        .ship-card.success::before {
+            opacity: 1;
+            background: var(--success);
+        }
+
+        .ship-card:hover {
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .ship-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .ship-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .ship-name {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .ship-voyage {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        .ship-status {
+            padding: 4px 12px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .status-at-sea {
+            color: #60A5FA;
+            background: rgba(96, 165, 250, 0.1);
+        }
+
+        .status-at-port {
+            color: #FBBF24;
+            background: rgba(251, 191, 36, 0.1);
+        }
+
+        .status-under-operation {
+            color: #34D399;
+            background: rgba(52, 211, 153, 0.1);
+        }
+
+        .status-sailed {
+            color: var(--text-tertiary);
+            background: var(--bg-secondary);
+        }
+
+        .ship-body {
+            padding: var(--spacing-lg);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-top: var(--spacing-lg);
+        }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+            font-size: 12px;
+        }
+
+        .progress-label {
+            color: var(--text-tertiary);
+        }
+
+        .progress-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-full);
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+            border-radius: var(--radius-full);
+            transition: width 500ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Quick Actions */
+        .quick-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+            margin-top: var(--spacing-lg);
+        }
+
+        .quick-action {
+            flex: 1;
+            padding: var(--spacing-sm);
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            text-align: center;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .quick-action:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        /* Activity Feed - Hidden by default */
+        .activity-feed {
+            position: fixed;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 320px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--glass-border);
+            transform: translateX(100%);
+            transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .activity-feed.active {
+            transform: translateX(0);
+        }
+
+        .activity-header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .activity-title {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .activity-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .activity-close:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+
+        .activity-content {
+            padding: var(--spacing-lg);
+        }
+
+        .activity-item {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--bg-card);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .activity-body {
+            flex: 1;
+        }
+
+        .activity-text {
+            font-size: 14px;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-2xl);
+            color: var(--text-tertiary);
+        }
+
+        .empty-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto var(--spacing-lg);
+            opacity: 0.3;
+        }
+
+        .empty-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .empty-text {
+            margin-bottom: var(--spacing-xl);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            transition: opacity 300ms;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-xl);
+            animation: modalSlide 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes modalSlide {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            padding: var(--spacing-lg);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .modal-close {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .modal-close:hover {
+            background: var(--danger);
+            border-color: var(--danger);
+        }
+
+        /* Form Styles */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            padding: var(--spacing-sm);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 200ms;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .form-group input[type="checkbox"] {
+            width: auto;
+            margin-right: var(--spacing-sm);
+        }
+
+        /* Checklist Styles */
+        .checklist-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+        }
+
+        .checklist-section h4 {
+            margin: 0 0 var(--spacing-md) 0;
+            color: var(--text-primary);
+            font-size: 16px;
+        }
+
+        .checklist-items {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background: var(--bg-card);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .checklist-item:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--primary);
+        }
+
+        .checklist-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+        }
+
+        .checklist-text {
+            flex: 1;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .checklist-item input[type="checkbox"]:checked + .checklist-text {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+
+        .task-due {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            background: var(--bg-secondary);
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            margin-left: auto;
+        }
+
+        .task-due.urgent {
+            background: var(--danger);
+            color: white;
+        }
+
+        .task-due.warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .task-item.urgent {
+            border-left: 3px solid var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+
+        .task-item.warning {
+            border-left: 3px solid var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .task-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .task-due {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 4px;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .task-due.urgent {
+            background: var(--danger);
+            color: white;
+        }
+
+        .task-due.warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .task-checkbox {
+            margin-right: var(--spacing-xs);
+            cursor: pointer;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s ease;
+        }
+
+        .task-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .task-item.completed {
+            opacity: 0.6;
+        }
+
+        .task-item.completed .task-name {
+            text-decoration: line-through;
+            color: var(--text-tertiary);
+        }
+
+        .task-item.completed .task-due {
+            background: var(--success);
+            color: white;
+        }
+
+
+
+
+
+
+
+        /* Full width layout for main content */
+        .main-content {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Ensure full width display */
+        body {
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .main-content {
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        #shipsGrid {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .checklist-item.warning {
+            border-left: 3px solid var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .task-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-tertiary);
+        }
+
+        .task-indicator.urgent {
+            background: var(--danger);
+        }
+
+        .task-indicator.warning {
+            background: var(--warning);
+        }
+
+        /* Archive Styles */
+        .ship-card.archived {
+            opacity: 0.7;
+            background: var(--bg-secondary);
+            border-color: var(--text-tertiary);
+        }
+
+        .ship-card.archived .ship-name {
+            color: var(--text-tertiary);
+        }
+
+        /* File Status Indicator */
+        .file-status {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: var(--spacing-sm) var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .file-status-content {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .file-status svg {
+            color: var(--primary);
+        }
+
+        .file-status span {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed;
+            top: var(--spacing-lg);
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+        }
+
+        .toast {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-lg);
+            margin-bottom: var(--spacing-md);
+            min-width: 300px;
+            animation: toastSlide 300ms cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes toastSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .toast.success {
+            border-color: var(--success);
+            background: linear-gradient(135deg, var(--bg-card), rgba(0, 208, 132, 0.1));
+        }
+
+        .toast.error {
+            border-color: var(--danger);
+            background: linear-gradient(135deg, var(--bg-card), rgba(255, 51, 102, 0.1));
+        }
+
+        .toast.warning {
+            border-color: var(--warning);
+            background: linear-gradient(135deg, var(--bg-card), rgba(255, 184, 0, 0.1));
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-full);
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .ships-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                position: fixed;
+                right: -260px;
+                z-index: 100;
+            }
+            
+            .sidebar.active {
+                right: 0;
+            }
+            
+            .main-content {
+                margin-right: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        /* --- Quick View Redesign --- */
+        .quick-view-container {
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .quick-view-header {
+            display: flex;
+            align-items: center;
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-tertiary);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            flex-direction: row-reverse; /* תיקון: הופך את סדר העמודות */
+        }
+
+        .ship-name-header {
+            flex: 0 0 250px;
+            padding-left: var(--spacing-md);
+            text-align: left;
+        }
+
+        .tasks-header {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+        }
+
+        .tasks-header span {
+            padding: 0 var(--spacing-sm);
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-primary);
+            letter-spacing: 0.5px;
+        }
+
+        .ship-row {
+            border-bottom: 1px solid var(--glass-border);
+            transition: background-color 0.2s ease;
+        }
+
+        .ship-row:last-child {
+            border-bottom: none;
+        }
+
+        .ship-row:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .ship-main-info {
+            display: flex;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+            cursor: pointer;
+            flex-direction: row-reverse; /* תיקון: הופך את סדר העמודות */
+        }
+
+        .ship-name-quick-view {
+            flex: 0 0 250px;
+            padding-left: var(--spacing-md);
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: left;
+        }
+
+        .task-dots-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            justify-items: center;
+        }
+
+        .task-dot {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            position: relative;
+        }
+
+        .task-dot:hover {
+            transform: scale(1.2);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* --- צבעי הסטטוסים --- */
+        .task-dot.pending {
+            background-color: var(--danger);
+            box-shadow: 0 0 10px var(--danger-glow);
+        }
+        .task-dot.in-progress {
+            background-color: var(--warning);
+            box-shadow: 0 0 10px var(--warning-glow);
+        }
+        .task-dot.done {
+            background-color: var(--success);
+            box-shadow: 0 0 10px var(--success-glow);
+        }
+
+        /* --- אזור ההרחבה --- */
+        .expandable-details {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.4s ease;
+            background-color: var(--bg-primary);
+            color: var(--text-secondary);
+            padding: 0 var(--spacing-lg);
+            text-align: left; /* יישור הפרטים לשמאל */
+        }
+
+        .ship-row.expanded .expandable-details {
+            max-height: 200px;
+            padding: var(--spacing-lg);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        /* --- Ship Card Redesign --- */
+        .ship-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 13px;
+            background: var(--bg-secondary);
+            padding: var(--spacing-sm);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+        }
+
+        .info-item .info-icon {
+            flex-shrink: 0;
+            width: 18px;
+            height: 18px;
+            color: var(--text-tertiary);
+        }
+
+        .info-item div {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .info-item .info-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+        }
+
+        .info-item .info-value {
+            font-weight: 500;
+            color: var(--text-primary);
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .quick-actions .quick-action {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        /* --- Animated Image Logo --- */
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: var(--spacing-md) 0;
+        }
+
+        .animated-logo {
+            max-width: 180px;
+            height: auto;
+            filter: drop-shadow(0 0 8px var(--primary-glow));
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            animation: elegantFloat 6s infinite ease-in-out, glowPulse 4s infinite ease-in-out;
+        }
+
+        .animated-logo:hover {
+            transform: scale(1.05);
+            filter: drop-shadow(0 0 20px var(--primary));
+        }
+
+        /* Sailing Animation */
+        @keyframes elegantFloat {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        /* Glow Pulse Animation */
+        @keyframes glowPulse {
+            0%, 100% {
+                filter: drop-shadow(0 0 8px var(--primary-glow));
+            }
+            50% {
+                filter: drop-shadow(0 0 16px var(--primary));
+            }
+        }
+
+        .trader-toggle {
+            display: flex;
+            gap: var(--spacing-xs);
+            margin-top: var(--spacing-md);
+            background: var(--bg-secondary);
+            padding: 4px;
+            border-radius: var(--radius-md);
+        }
+        .trader-toggle .toggle-btn {
+            flex: 1;
+            padding: var(--spacing-sm) 0;
+            border: none;
+            background: transparent;
+            color: var(--text-tertiary);
+            font-size: 14px;
+            font-weight: 700;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .trader-toggle .toggle-btn:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .trader-toggle .toggle-btn.active {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        /* --- Sidebar Statistics Redesign --- */
+        .sidebar-section {
+            padding: 0 var(--spacing-md) var(--spacing-md);
+            border-top: 1px solid var(--glass-border);
+            margin-top: var(--spacing-md);
+        }
+
+        .sidebar-title {
+            color: var(--text-tertiary);
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: var(--spacing-lg) 0 var(--spacing-md);
+        }
+
+        /* Redesign stats grid for a vertical layout inside the sidebar */
+        .stats-grid {
+            grid-template-columns: 1fr; /* Force a single column */
+            gap: var(--spacing-md);
+            margin-bottom: 0;
+        }
+
+        /* Make individual stat cards more compact */
+        .stat-card {
+            padding: var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-card:hover {
+            transform: translateX(2px); /* Subtle hover effect for sidebar */
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 0;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            text-align: left;
+        }
+
+        /* Hide the trend indicators in the compact sidebar view */
+        .stat-trend {
+            display: none;
+        }
+
+        /* --- Ship Card Readability & Hierarchy Improvements --- */
+
+        /* Make data values larger and bolder */
+        .info-item .info-value {
+            font-size: 15px;
+            font-weight: 700; /* Bolder */
+        }
+
+        /* Make data labels smaller and less prominent */
+        .info-item .info-label {
+            font-size: 10px;
+            opacity: 0.8;
+        }
+
+        /* Adjust trader toggle for its new location */
+        .quick-actions .trader-toggle {
+            margin-top: 0;
+            flex: 1.5; /* Give it slightly more space than other buttons */
+            padding: 2px;
+        }
+        .quick-actions .trader-toggle .toggle-btn {
+            padding: var(--spacing-sm) 0;
+        }
+
+        /* --- Subtle Status Coloring for Ship Cards --- */
+
+        /* Green tint for "Under Operation" */
+        .ship-card.card-status-under-operation {
+            background-color: rgba(0, 208, 132, 0.1); /* Gentle green background */
+            border-color: var(--success-dark);
+        }
+
+        /* Red tint for "At Port" */
+        .ship-card.card-status-at-port {
+            background-color: rgba(255, 51, 102, 0.08); /* Gentle red background */
+            border-color: var(--danger-dark);
+        }
+
+        /* Blue tint for "At Sea" */
+        .ship-card.card-status-at-sea {
+            background-color: rgba(0, 102, 255, 0.1); /* Gentle blue background */
+            border-color: var(--primary-dark);
+        }
+
+        /* "Sailed" ships will not have a special rule, 
+           so they will keep the default dark background as requested. */
+
+        /* --- Service Indicators on Ship Card --- */
+        .service-indicators {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-sm);
+            margin-bottom: var(--spacing-md);
+        }
+
+        .indicator-item {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: 4px 10px;
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .indicator-item.water {
+            background: linear-gradient(45deg, var(--primary-dark), var(--primary));
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        .indicator-item.package {
+            background: linear-gradient(45deg, var(--warning-dark), var(--warning));
+            box-shadow: 0 2px 8px var(--warning-glow);
+        }
+
+        /* --- Quick View Enhancements --- */
+        .quick-view-title {
+            color: var(--text-primary);
+            font-size: 18px;
+            margin-bottom: var(--spacing-md);
+            padding-bottom: var(--spacing-sm);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .quick-view-table {
+            background-color: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm);
+        }
+
+        .ship-details-header {
+            flex: 0 0 250px;
+            padding-left: var(--spacing-md);
+            text-align: right;
+        }
+
+        .ship-details-quick-view {
+            flex: 0 0 250px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: var(--spacing-xs);
+            padding-right: var(--spacing-md);
+        }
+
+        .ship-name-quick-view {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .ship-meta-quick-view {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .quick-view-port {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .tasks-header.sailed-tasks {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        .task-dots-container.sailed-tasks {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        /* --- Compact Quick View --- */
+        .ship-main-info-compact {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            flex-direction: row-reverse; /* תיקון: הופך את סדר העמודות */
+        }
+
+        .ship-details-compact {
+            width: 250px;
+            max-width: 250px;
+            min-width: 250px;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding-left: var(--spacing-md);
+            text-align: right;
+        }
+
+        .ship-name-quick-view {
+            width: 120px;
+            max-width: 120px;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: right;
+        }
+
+        .ship-status-compact {
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .ship-details-compact .quick-view-port {
+            min-width: 70px;
+            max-width: 70px;
+            text-align: right;
+        }
+
+        .task-dots-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            justify-items: center;
+        }
+
+        /* --- Smart Search Bar --- */
+        .search-bar-container {
+            position: relative;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .search-icon {
+            position: absolute;
+            top: 50%;
+            right: var(--spacing-md);
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+            z-index: 1;
+        }
+
+        .smart-search-input {
+            width: 100%;
+            padding: var(--spacing-md) var(--spacing-2xl) var(--spacing-md) var(--spacing-md);
+            padding-right: 50px; /* Space for the icon */
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            font-size: 16px;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .smart-search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .smart-search-input:focus {
+            border-color: var(--primary);
+            background: var(--bg-secondary);
+            box-shadow: 0 0 0 4px var(--primary-glow);
+        }
+
+        /* --- Success Button --- */
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+        .btn-success:hover {
+            background: var(--success-dark);
+            box-shadow: 0 6px 20px var(--success-glow);
+        }
+
+        /* --- Service Management Modal Styles --- */
+        .service-item {
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            transition: all 0.2s ease;
+        }
+        .service-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .service-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xs);
+        }
+        .service-item-header strong {
+            color: var(--text-primary);
+        }
+        .service-status {
+            font-size: 11px;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            text-transform: capitalize;
+        }
+        /* צבעים לסטטוסים */
+        .service-item.requested .service-status { background: var(--bg-card); color: var(--text-tertiary); }
+        .service-item.in-progress .service-status { background: var(--warning); color: var(--bg-primary); }
+        .service-item.completed .service-status { background: var(--success); color: var(--bg-primary); }
+        .service-item.cancelled .service-status { background: var(--danger); color: white; }
+
+        .service-item-body {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .service-item-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+        .btn-sm { /* כפתורים קטנים יותר לפעולות */
+            padding: 4px 10px;
+            font-size: 12px;
+        }
+
+        /* --- General Service Indicator --- */
+        .indicator-item.general-service {
+            background: linear-gradient(45deg, var(--warning-dark), var(--warning));
+            box-shadow: 0 2px 8px var(--warning-glow);
+        }
+
+        /* --- Services Center Module --- */
+        .services-center-container {
+            padding: var(--spacing-lg);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+        }
+        .services-center-container h1 {
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+        .services-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+        .service-list-item {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+        }
+        .service-list-item .service-item-header strong:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+        .service-item-footer {
+            margin-top: var(--spacing-sm);
+            padding-top: var(--spacing-xs);
+            border-top: 1px solid var(--glass-border);
+            font-size: 12px;
+            color: var(--text-tertiary);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- Open Tasks View --- */
+        .open-tasks-container {
+            padding: var(--spacing-lg);
+            background-color: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+        }
+        .open-tasks-container h1 {
+            margin-bottom: var(--spacing-lg);
+            color: var(--text-primary);
+        }
+        .open-tasks-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--spacing-md);
+        }
+        .open-task-item {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-sm) var(--spacing-md);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+        .open-task-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .open-task-item.urgent { border-left: 4px solid var(--danger); }
+        .open-task-item.warning { border-left: 4px solid var(--warning); }
+        .open-task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .open-task-ship {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .open-task-ship .ship-status-compact {
+            display: inline-block;
+            margin-right: var(--spacing-sm);
+            vertical-align: middle;
+        }
+        .open-task-status.task-dot {
+            width: 12px;
+            height: 12px;
+            box-shadow: none;
+        }
+        .open-task-body {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+        .open-task-footer {
+            margin-top: var(--spacing-sm);
+            padding-top: var(--spacing-xs);
+            border-top: 1px solid var(--glass-border);
+            font-size: 11px;
+            color: var(--text-tertiary);
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+
+    <!-- Firebase SDK (compat version for classic script) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+</head>
+<body>
+    <!-- Background -->
+    <div class="bg-pattern"></div>
+    <div class="grid-overlay"></div>
+
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-container">
+                    <img src="logo/logo.png" alt="Ship Operations Premium Logo" class="animated-logo"/>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-item active" onclick="switchToDashboardView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"/>
+                        <rect x="14" y="3" width="7" height="7"/>
+                        <rect x="14" y="14" width="7" height="7"/>
+                        <rect x="3" y="14" width="7" height="7"/>
+                    </svg>
+                    <span>ראשי</span>
+                </div>
+                <div class="nav-item" onclick="switchToQuickView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2"/>
+                        <path d="M9 9h6M9 15h6"/>
+                    </svg>
+                    <span>מבט מהיר</span>
+                </div>
+            </nav>
+
+            <div class="sidebar-section">
+                <h4 class="sidebar-title">סטטיסטיקה</h4>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="totalShips">0</div>
+                        <div class="stat-label">סה״כ אניות</div>
+                        <div class="stat-trend up">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m5 12 7-7 7 7"/>
+                    </svg>
+                            <span>+2 היום</span>
+                </div>
+                </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="atSeaCount">0</div>
+                        <div class="stat-label">בדרך</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="atPortCount">0</div>
+                        <div class="stat-label">על עוגן</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="underOperationCount">0</div>
+                        <div class="stat-label">בפריקה</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="urgentTasks">0</div>
+                        <div class="stat-label">משימות דחופות</div>
+                        <div class="stat-trend down">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="m19 12-7 7-7-7"/>
+                    </svg>
+                            <span>-3 מאתמול</span>
+                </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- File Status Indicator -->
+            <div class="file-status" id="fileStatus" style="display: none;">
+                <div class="file-status-content">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                        <polyline points="14,2 14,8 20,8"/>
+                    </svg>
+                    <span id="fileStatusText">קובץ לא נטען</span>
+                    <button class="btn btn-sm btn-secondary" onclick="clearFileHandle()" title="נתק קובץ">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Header -->
+            <header class="header">
+                <div class="header-top">
+                    <h1 class="header-title">מערכת ניהול אניות</h1>
+                    <div class="header-actions">
+                        <button class="btn btn-secondary btn-icon" onclick="toggleActivityFeed()" title="פעילות אחרונה">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2v4m0 12v4m-8-8h4m12 0h4"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-secondary btn-icon" onclick="viewArchive()" title="צפייה בארכיון">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <path d="M3.27 6.96L12 12.01l8.73-5.05M12 22.08V12"/>
+                            </svg>
+                        </button>
+                        <button class="btn btn-secondary" onclick="clearLocalStorage()" title="ניקוי localStorage">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                            </svg>
+                            נקה נתונים
+                        </button>
+                        <button class="btn btn-success" onclick="addShipManually()" title="הוסף אנייה חדשה ידנית">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 5v14m-7-7h14"/>
+                            </svg>
+                            הוסף אנייה
+                        </button>
+                        <button class="btn btn-primary" onclick="importExcel()" title="ייבוא דוח Excel">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5 5 5 5-5m-5 5V3"/>
+                            </svg>
+                            ייבוא Excel
+                        </button>
+                        <div class="file-info" style="font-size: 12px; color: var(--text-tertiary); margin-top: var(--spacing-sm);">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 4px;">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M12 16v-4"/>
+                                <path d="M12 8h.01"/>
+                            </svg>
+                            דורש Chrome/Edge 86+ או Firefox 111+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="search-bar-container">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="search-icon">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <input type="text" id="smartSearchInput" class="smart-search-input" placeholder="חיפוש אנייה, סוכן, מטען, ETA/ETB...">
+                </div>
+
+            </header>
+
+            <!-- Content -->
+            <div class="content">
+                <!-- Tabs -->
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('all', this)">
+                        <span class="tab-badge" id="allBadge">0</span>
+                        כל האניות
+                    </button>
+                    <button class="tab" onclick="switchTab('under-operation', this)">
+                        <span class="tab-badge" id="underOperationBadge">0</span>
+                        בפריקה
+                    </button>
+                    <button class="tab" onclick="switchTab('at-port', this)">
+                        <span class="tab-badge" id="atPortBadge">0</span>
+                        על עוגן
+                    </button>
+                    <button class="tab" onclick="switchTab('at-sea', this)">
+                        <span class="tab-badge" id="atSeaBadge">0</span>
+                        בדרך
+                    </button>
+                    <button class="tab" onclick="switchTab('sailed', this)">
+                        <span class="tab-badge" id="sailedBadge">0</span>
+                        הפליגו
+                    </button>
+                    <button class="tab" onclick="switchTab('quick', this)">
+                        <span class="tab-badge" id="quickBadge">0</span>
+                        מבט מהיר
+                    </button>
+                </div>
+
+                <!-- Ships Grid -->
+                <div class="ships-grid" id="shipsGrid">
+                    <!-- Ships will be rendered here -->
+                </div>
+            </div>
+        </main>
+
+        <!-- Activity Feed (Hidden by default) -->
+        <aside class="activity-feed" id="activityFeed">
+            <div class="activity-header">
+                <h3 class="activity-title">פעילות אחרונה</h3>
+                <button class="activity-close" onclick="toggleActivityFeed()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="activity-content" id="activityContent">
+                <!-- Activities will be rendered here -->
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">כותרת</h2>
+                <button class="modal-close" onclick="closeModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Modal content -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- File Input -->
+    <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleFileUpload(event)">
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script>
+        // ==================== Firebase Setup ====================
+        // קוד החיבור שהמשתמש קיבל מגוגל
+        const firebaseConfig = {
+          apiKey: "AIzaSyAvp97Y1s-4lB6w6Z-mHnX_yIbEYlvZ0Yw",
+          authDomain: "shipux-a0d3a.firebaseapp.com",
+          projectId: "shipux-a0d3a",
+          storageBucket: "shipux-a0d3a.firebasestorage.app",
+          messagingSenderId: "355863179565",
+          appId: "1:355863179565:web:d25b818d15d56a198be3a4"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore(); // אתחול בסיס הנתונים
+        console.log("Firebase initialized successfully.");
+
+        // ==================== Global State ====================
+        let ships = [];
+        let activities = [];
+        let currentTab = 'all';
+        let currentUser = `User_${Date.now()}`;
+        let currentSearchTerm = '';
+
+        // ==================== Data Version & Constants ====================
+        let dataVersion = 1; // עולה בכל שמירה
+
+        const STATUS = {
+            AT_SEA: 'At Sea',
+            AT_PORT: 'At Port',
+            UNDER_OPERATION: 'Under Operation',
+            SAILED: 'Sailed',
+        };
+
+        const STATUS_UI_ORDER = [STATUS.UNDER_OPERATION, STATUS.AT_PORT, STATUS.AT_SEA, STATUS.SAILED];
+
+        const VESSEL_ID = (name, voyage) =>
+            `${(name||'').trim().toLowerCase().replace(/\s+/g,'-')}__${(voyage||'').trim().replace('/','-')}`;
+
+        const TRADERS = {
+            DAN: 'Dan Rinot',
+            MIKE: 'Mike'
+        };
+
+        // ==================== Ship Object Creation ====================
+        function createShipObject(baseData = {}) {
+            const ship = {
+                id: baseData.id || Date.now().toString(),
+                name: baseData.name || '',
+                voyage: baseData.voyage || '',
+                status: baseData.status || STATUS.AT_SEA,
+                port: baseData.port || '',
+                eta: baseData.eta || new Date().toISOString(),
+                cargo: baseData.cargo || '',
+                owner: baseData.owner || '',
+                supplier: baseData.supplier || '',
+                receivers: baseData.receivers || '',
+                trader: baseData.trader || '',
+                notes: baseData.notes || '',
+                
+                // Water supply fields
+                waterSupply: baseData.waterSupply ?? false,
+                waterAmount: baseData.waterAmount ?? null,
+                
+                // Package fields
+                package: baseData.package ?? false,
+                packageWeight: baseData.packageWeight ?? null,
+                
+                // Tracking
+                trackingNumber: baseData.trackingNumber ?? null,
+                
+                // Expected times
+                expected_berth_time: baseData.expected_berth_time ?? null,
+                expected_finish_time: baseData.expected_finish_time ?? null,
+                
+                // Trader flag
+                trader_flag: baseData.trader_flag ?? null,
+                
+                // Flags
+                flags: baseData.flags ?? { missing_in_today_report: false },
+                
+                // Version
+                version: baseData.version ?? 1,
+                
+                // Tasks (replaces checklist)
+                tasks: baseData.tasks || [],
+                
+                // Timestamps
+                createdAt: baseData.createdAt || new Date().toISOString(),
+                updatedAt: baseData.updatedAt || new Date().toISOString()
+            };
+            
+            return ship;
+        }
+
+        function ensureShipFields(ship) {
+            // Ensure all required fields exist with default values
+            ship.expected_berth_time ??= null;
+            ship.expected_finish_time ??= null;
+            ship.notes ??= '';
+            ship.waterSupply ??= false;
+            ship.waterAmount ??= null;
+            ship.package ??= false;
+            ship.packageWeight ??= null;
+            ship.trackingNumber ??= null;
+            ship.trader_flag ??= null;
+            ship.flags ??= { missing_in_today_report: false };
+            ship.version ??= 1;
+            
+            // Ensure tasks are properly set for current status
+            ensureChecklistForStatus(ship);
+            
+            return ship;
+        }
+
+        // ==================== Manual Ship Addition ====================
+        function addShipManually() {
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'הוספת אנייה חדשה';
+            body.innerHTML = `
+                <form id="addShipForm" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="form-group"><label>שם אנייה:</label><input type="text" name="name" required></div>
+                    <div class="form-group"><label>מסע (Voyage):</label><input type="text" name="voyage"></div>
+                    <div class="form-group"><label>סטטוס:</label><select name="status">${Object.values(STATUS).map(s => `<option value="${s}">${getStatusText(s)}</option>`).join('')}</select></div>
+                    <div class="form-group"><label>ETA:</label><input type="datetime-local" name="eta"></div>
+                    <div class="form-group"><label>נמל פריקה:</label><input type="text" name="port"></div>
+                    <div class="form-group"><label>מטען:</label><textarea name="cargo" rows="2"></textarea></div>
+
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                        <button type="submit" class="btn btn-primary">שמור אנייה</button>
+                    </div>
+                </form>
+            `;
+
+            modal.classList.add('active');
+
+            document.getElementById('addShipForm').onsubmit = function(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+
+                // יצירת אובייקט אנייה חדש
+                const newShip = createShipObject({
+                    name: data.name,
+                    voyage: data.voyage,
+                    status: data.status || STATUS.AT_SEA, // ברירת מחדל
+                    eta: data.eta ? new Date(data.eta).toISOString() : null,
+                    port: data.port,
+                    cargo: data.cargo,
+                    // הגדרת ID ייחודי
+                    id: VESSEL_ID(data.name, data.voyage) + '_' + Date.now(),
+                    // שדות ברירת מחדל נוספים
+                    createdAt: new Date().toISOString()
+                });
+
+                // ודא שכל השדות קיימים והצ'קליסט נוצר
+                const finalShip = ensureShipFields(newShip); 
+
+                // הוסף לרשימה ושמור ב-Firestore
+                ships.push(finalShip);
+                db.collection("ships").doc(finalShip.id).set(finalShip)
+                    .then(() => {
+                        showToast('אנייה חדשה נוספה בהצלחה', 'success');
+                        addActivity('הוספת אנייה', `נוספה אנייה חדשה: ${finalShip.name}`);
+                    })
+                    .catch(e => showToast('שגיאה בהוספת אנייה', 'error'));
+
+                // עדכן ממשק
+                if (currentTab !== 'quick') renderShips(); // אין לרנדר אם במבט מהיר
+                updateStats();
+                updateBadges();
+                closeModal();
+            };
+        }
+
+        // ==================== Task Templates ====================
+        const PRE_ARRIVAL = [
+            { key:'port_notice',        title:'הודעה לנמל',          due:'eta_minus_days:3',  statuses:[STATUS.AT_SEA] },
+            { key:'pre_arrivals',       title:'שליחת PRE ARRIVALS',  due:'at_sea_window',     statuses:[STATUS.AT_SEA] },
+            { key:'navy_approval',      title:'אישור חיל הים',       due:'eta_minus_days:2',  statuses:[STATUS.AT_SEA] },
+            { key:'docs_received',      title:'קבלת ניירת',          due:'at_sea_window',     statuses:[STATUS.AT_SEA] },
+            { key:'manifest_prepared',  title:'הכנת מניפסט',         due:'prefer_at_sea',     statuses:[STATUS.AT_SEA, STATUS.AT_PORT] },
+            { key:'discharge_approval', title:'אישור פריקה',         due:'prefer_at_sea',     statuses:[STATUS.AT_SEA, STATUS.AT_PORT] },
+            { key:'lashing_opening',    title:'אישור פתיחת לשינג',   due:'must_before_discharge', statuses:[STATUS.AT_SEA, STATUS.AT_PORT] }
+        ];
+
+        const POST_SAILED = [
+            { key:'send_sof', title:'שליחת SOF', due:'day0_to_day1', statuses:[STATUS.SAILED] },
+            { key:'send_nor', title:'שליחת NOR', due:'day0_to_day1', statuses:[STATUS.SAILED] }
+        ];
+
+        function buildChecklist(template) {
+            return template.map(t => ({
+                key: t.key, 
+                title: t.title, 
+                due: t.due, 
+                statuses: t.statuses,
+                status: 'pending', // חדש: שלושה מצבים: 'pending', 'in-progress', 'done'
+                doneBy: null, 
+                doneAt: null, 
+                lastUpdatedAt: null
+            }));
+        }
+
+        function ensureChecklistForStatus(ship) {
+            const currentTemplate = ship.status === STATUS.SAILED ? POST_SAILED : PRE_ARRIVAL;
+            const haveTemplate = Array.isArray(ship.tasks) && ship.tasks.every(x => x.key);
+            if (!haveTemplate) { 
+                ship.tasks = buildChecklist(currentTemplate); 
+                return; 
+            }
+            // שמירה על משימות שסומנו + הוספת חסרות/הסרת לא רלוונטיות
+            const nextKeys = new Set(currentTemplate.map(t=>t.key));
+            const currentMap = new Map(ship.tasks.map(t=>[t.key,t]));
+            ship.tasks = currentTemplate.map(t=>{
+                const keep = currentMap.get(t.key);
+                return keep ? { 
+                    ...keep, 
+                    title:t.title, 
+                    due:t.due, 
+                    statuses:t.statuses,
+                    // שמירה על הסטטוס הקיים או הגדרת ברירת מחדל
+                    status: keep.status || (keep.done ? 'done' : 'pending')
+                } : {
+                    key:t.key, 
+                    title:t.title, 
+                    due:t.due, 
+                    statuses:t.statuses, 
+                    status: 'pending', // חדש: סטטוס ברירת מחדל
+                    doneBy:null, 
+                    doneAt:null, 
+                    lastUpdatedAt:null 
+                };
+            });
+        }
+
+        // Steel Types
+        const steelTypes = [
+            'Steel', 'Rebars', 'Wire Rods', 'Coils', 'Plates', 'Beams', 'Pipes', 'Bars',
+            'Sheets', 'Aluminum', 'Metal', 'Galvanized', 'Billets', 'Angles', 'Channels'
+        ];
+
+        // Steel Whitelist for filtering
+        const STEEL_WHITELIST = [
+            'Alloyed Galvanized Wire','Alloyed Wire','Aluminum Billets','Aluminum Ingots','Aluminum Wire Rods',
+            'Galvanized Wire','Merchant Bars','Rebars in spools','Sheet Piles','Steel','Steel Angles','Steel Bars',
+            'Steel Beams','Steel Billets','Steel Billets In Bundles','Steel Channels','Steel Coils','Steel Debars',
+            'Steel Debars in Coils','Steel Piles','Steel Pipes','Steel Plates','Steel Products','Steel Profiles',
+            'Steel Rails','Steel Rebars','Steel Rebars in Coils','Steel Sections','Steel Sheets','Steel Stripes',
+            'Steel Welded Mesh','Steel Wire Rods','Steel Wire Rods in Coils','Stone Wool','Tear Drops','Wire Strand in Coils'
+        ].map(x=>x.toLowerCase());
+
+        // ==================== Initialize ====================
+        async function init() {
+            listenToData(); // התחל להאזין לשינויים מהענן
+            updateStats();
+            updateActivities();
+            setupEventListeners();
+        }
+
+        function setupEventListeners() {
+            // Keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    closeModal();
+                    const feed = document.getElementById('activityFeed');
+                    if (feed.classList.contains('active')) {
+                        toggleActivityFeed();
+                    }
+                }
+            });
+
+            // Smart search listener
+            const searchInput = document.getElementById('smartSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', (e) => {
+                    currentSearchTerm = e.target.value.toLowerCase();
+                    renderShips(); // רנדר מחדש את הרשימה עם כל הקלדה
+                });
+            }
+        }
+
+        // ==================== Real-time Data Listeners ====================
+        function listenToData() {
+            // האזנה לאניות פעילות
+            db.collection("ships").onSnapshot(snapshot => {
+                ships = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log("Real-time update: Ships loaded/updated:", ships.length);
+
+                // ודא שכל השדות קיימים
+                ships = ships.map(ship => ensureShipFields(ship));
+
+                // רנדר את התצוגה הנכונה
+                if (currentTab === 'quick') {
+                    renderQuickView();
+                } else {
+                    renderShips();
+                }
+                updateStats();
+                updateBadges();
+
+            }, error => {
+                console.error("Error fetching ships:", error);
+                showToast("שגיאה בסנכרון אניות", "error");
+            });
+
+            // האזנה לארכיון
+            db.collection("archived").onSnapshot(snapshot => {
+                archived = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log("Real-time update: Archived loaded/updated:", archived.length);
+            }, error => console.error("Error fetching archived ships:", error));
+
+            // האזנה לפעילויות
+            db.collection("activities").orderBy("time", "desc").limit(50).onSnapshot(snapshot => {
+                activities = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                console.log("Real-time update: Activities loaded/updated:", activities.length);
+                updateActivities();
+            }, error => console.error("Error fetching activities:", error));
+        }
+
+        // ==================== Data Management ====================
+        async function loadData() {
+            // Load data version
+            const savedVersion = localStorage.getItem('dataVersion');
+            if (savedVersion) {
+                dataVersion = parseInt(savedVersion);
+            }
+            
+            const saved = localStorage.getItem('shipsData');
+            if (saved) {
+                try {
+                    ships = JSON.parse(saved);
+                    // Ensure all ships have the new fields
+                    ships = ships.map(ship => ensureShipFields(ship));
+                    console.log('Loaded ships from localStorage:', ships.length);
+                } catch (e) {
+                    console.error('Error loading data:', e);
+                    ships = []; // No sample ships on error
+                    console.log('No ships loaded due to error');
+                }
+            } else {
+                // No ships by default - user must import data
+                ships = [];
+                console.log('No ships loaded - user must import data');
+            }
+
+            // Load activities
+            const savedActivities = localStorage.getItem('activities');
+            if (savedActivities) {
+                try {
+                    activities = JSON.parse(savedActivities);
+                } catch (e) {
+                    activities = [];
+                }
+            }
+            
+            // Load archived ships
+            const savedArchived = localStorage.getItem('archivedShips');
+            if (savedArchived) {
+                try {
+                    archived = JSON.parse(savedArchived);
+                } catch (e) {
+                    console.error('Error loading archived ships:', e);
+                    archived = [];
+                }
+            }
+        }
+
+        function saveData() {
+            // Increment data version on each save
+            dataVersion++;
+            
+            localStorage.setItem('shipsData', JSON.stringify(ships));
+            localStorage.setItem('activities', JSON.stringify(activities));
+            localStorage.setItem('lastSync', new Date().toISOString());
+            localStorage.setItem('dataVersion', dataVersion.toString());
+            localStorage.setItem('archivedShips', JSON.stringify(archived));
+            console.log(`Data saved. Version: ${dataVersion}, Ships: ${ships.length}, Archived: ${archived.length}`);
+        }
+
+        function syncData() {
+            const lastSync = localStorage.getItem('lastSync');
+            const localSync = sessionStorage.getItem('localSync');
+            if (lastSync !== localSync) {
+                loadData();
+                renderShips();
+                updateStats();
+                sessionStorage.setItem('localSync', lastSync);
+            }
+        }
+
+        function resetAllData() {
+            if (confirm('האם אתה בטוח שברצונך למחוק את כל הנתונים ולאפס את המערכת?')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                ships = [];
+                activities = [];
+                renderShips();
+                updateStats();
+                updateActivities();
+                showToast('המערכת אופסה בהצלחה', 'success');
+                addActivity('איפוס מערכת', 'כל הנתונים נמחקו');
+            }
+        }
+
+        function confirmReset() {
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            
+            title.textContent = 'אישור איפוס מערכת';
+            body.innerHTML = `
+                <div style="text-align: center; padding: var(--spacing-lg);">
+                    <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2" style="margin-bottom: var(--spacing-lg);">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <path d="M12 9v4m0 4h.01"/>
+                    </svg>
+                    <h3 style="margin-bottom: var(--spacing-md); color: var(--text-primary);">אזהרה: פעולה זו בלתי הפיכה!</h3>
+                    <p style="margin-bottom: var(--spacing-xl); color: var(--text-secondary);">
+                        כל הנתונים במערכת יימחקו לצמיתות:<br>
+                        • כל האניות<br>
+                        • כל המשימות<br>
+                        • כל ההיסטוריה<br>
+                        • כל ההגדרות
+                    </p>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: center;">
+                        <button class="btn btn-danger" onclick="resetAllData(); closeModal();">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 6h18m-2 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                            </svg>
+                            מחק הכל
+                        </button>
+                        <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        // ==================== Rendering ====================
+        function renderShips() {
+            console.log('renderShips called. currentTab:', currentTab);
+            
+            // FIX: If we're in quick view, call renderQuickView instead
+            if (currentTab === 'quick') {
+                console.log('Redirecting to renderQuickView');
+                return renderQuickView(); 
+            }
+            
+            const grid = document.getElementById('shipsGrid');
+            grid.style.display = ''; // איפוס התצוגה חזרה ל-grid
+
+            const filtered = filterShips();
+            
+            updateBadges();
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = `
+                    <div class="empty-state" style="grid-column: 1/-1;">
+                        <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M2 21l2-7h16l2 7M4 14V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10"/>
+                            <path d="M12 2v12"/>
+                        </svg>
+                        <div class="empty-title">אין אניות להצגה</div>
+                        <div class="empty-text">${ships.length === 0 ? 'לא נטענו אניות עדיין' : 'לא נמצאו אניות בסטטוס זה'}</div>
+                        <button class="btn btn-primary" onclick="importExcel()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4m4-5 5 5 5-5m-5 5V3"/>
+                            </svg>
+                            ייבא דוח Excel
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(ship => createShipCard(ship)).join('');
+        }
+
+        function renderQuickView() {
+            const grid = document.getElementById('shipsGrid');
+            grid.style.display = 'block';
+
+            const sailedShips = ships
+                .filter(s => s.status === STATUS.SAILED)
+                .sort((a, b) => a.name.localeCompare(b.name)); // אניות שהפליגו נשארות בסדר אלפביתי
+
+            const activeShips = ships
+                .filter(s => s.status !== STATUS.SAILED)
+                .sort((a, b) => {
+                    const priorityA = getSortPriority(a.status);
+                    const priorityB = getSortPriority(b.status);
+                    
+                    if (priorityA !== priorityB) {
+                        return priorityA - priorityB; // 1. מיין לפי עדיפות הסטטוס
+                    }
+                    
+                    // 2. אם הסטטוס זהה, מיין לפי ETA (המוקדם ראשון)
+                    // התייחס ל-ETA חסר כתאריך רחוק מאוד כדי שיופיע בסוף
+                    const etaA = a.eta ? new Date(a.eta) : new Date('9999-12-31');
+                    const etaB = b.eta ? new Date(b.eta) : new Date('9999-12-31');
+                    
+                    return etaA - etaB;
+                });
+
+            let finalHtml = '<div class="quick-view-container">';
+
+            // --- Group Active Ships by Status ---
+            const underOperationShips = activeShips.filter(s => s.status === STATUS.UNDER_OPERATION);
+            const atPortShips = activeShips.filter(s => s.status === STATUS.AT_PORT);
+            const atSeaShips = activeShips.filter(s => s.status === STATUS.AT_SEA);
+
+            const activeTasks = PRE_ARRIVAL.map(task => task.title);
+
+            // --- Table for Under Operation Ships ---
+            if (underOperationShips.length > 0) {
+                finalHtml += `
+                    <h4 class="quick-view-title">אניות בפריקה</h4>
+                    <div class="quick-view-table">
+                    <div class="quick-view-header">
+                            <div class="ship-details-header">אנייה</div>
+                            <div class="tasks-header">
+                                ${activeTasks.map(title => `<span>${title}</span>`).join('')}
+                            </div>
+                            </div>
+                        <div class="quick-view-body">
+                            ${underOperationShips.map(ship => {
+                                const taskMap = new Map((ship.tasks || []).map(t => [t.key, t]));
+                                return `
+                                <div class="ship-row" id="ship-row-${ship.id}">
+                                    <div class="ship-main-info-compact">
+                                        <div class="ship-details-compact">
+                                            <span class="ship-name-quick-view">${ship.name}</span>
+                                            <span class="ship-status-compact ${getStatusClass(ship.status)}">${getStatusText(ship.status)}</span>
+                                            <span class="quick-view-port">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                ${ship.port || '-'}
+                                            </span>
+                            </div>
+                                        <div class="task-dots-container">
+                                            ${PRE_ARRIVAL.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
+                        </div>
+                    </div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+            }
+
+            // --- Table for At Port Ships ---
+            if (atPortShips.length > 0) {
+                finalHtml += `
+                    <h4 class="quick-view-title" style="margin-top: var(--spacing-xl);">אניות על עוגן</h4>
+                    <div class="quick-view-table">
+                        <div class="quick-view-header">
+                            <div class="ship-details-header">אנייה</div>
+                            <div class="tasks-header">
+                                ${activeTasks.map(title => `<span>${title}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="quick-view-body">
+                            ${atPortShips.map(ship => {
+                                const taskMap = new Map((ship.tasks || []).map(t => [t.key, t]));
+                                return `
+                                <div class="ship-row" id="ship-row-${ship.id}">
+                                    <div class="ship-main-info-compact">
+                                        <div class="ship-details-compact">
+                                            <span class="ship-name-quick-view">${ship.name}</span>
+                                            <span class="ship-status-compact ${getStatusClass(ship.status)}">${getStatusText(ship.status)}</span>
+                                            <span class="quick-view-port">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                ${ship.port || '-'}
+                                            </span>
+                                        </div>
+                                        <div class="task-dots-container">
+                                            ${PRE_ARRIVAL.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
+                                        </div>
+                                    </div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+            }
+
+            // --- Table for At Sea Ships ---
+            if (atSeaShips.length > 0) {
+                finalHtml += `
+                    <h4 class="quick-view-title" style="margin-top: var(--spacing-xl);">אניות בדרך</h4>
+                    <div class="quick-view-table">
+                        <div class="quick-view-header">
+                            <div class="ship-details-header">אנייה</div>
+                            <div class="tasks-header">
+                                ${activeTasks.map(title => `<span>${title}</span>`).join('')}
+                        </div>
+                        </div>
+                        <div class="quick-view-body">
+                            ${atSeaShips.map(ship => {
+                                const taskMap = new Map((ship.tasks || []).map(t => [t.key, t]));
+                                return `
+                                <div class="ship-row" id="ship-row-${ship.id}">
+                                    <div class="ship-main-info-compact">
+                                        <div class="ship-details-compact">
+                                            <span class="ship-name-quick-view">${ship.name}</span>
+                                            <span class="ship-status-compact ${getStatusClass(ship.status)}">${getStatusText(ship.status)}</span>
+                                            <span class="quick-view-port">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                ${ship.port || '-'}
+                                            </span>
+                                        </div>
+                                        <div class="task-dots-container">
+                                            ${PRE_ARRIVAL.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
+                                        </div>
+                                    </div>
+                                </div>`;
+                            }).join('')}
+                        </div>
+                    </div>`;
+            }
+
+            // --- Table for Sailed Ships ---
+            if (sailedShips.length > 0) {
+                const sailedTasks = POST_SAILED.map(task => task.title);
+                finalHtml += `
+                    <h4 class="quick-view-title" style="margin-top: var(--spacing-xl);">אניות שהפליגו</h4>
+                    <div class="quick-view-table">
+                        <div class="quick-view-header">
+                            <div class="ship-details-header">אנייה</div>
+                            <div class="tasks-header sailed-tasks">
+                                ${sailedTasks.map(title => `<span>${title}</span>`).join('')}
+                            </div>
+                        </div>
+                        <div class="quick-view-body">
+                             ${sailedShips.map(ship => {
+                                const taskMap = new Map((ship.tasks || []).map(t => [t.key, t]));
+                                return `
+                                <div class="ship-row" id="ship-row-${ship.id}">
+                                    <div class="ship-main-info-compact">
+                                        <div class="ship-details-compact">
+                                            <span class="ship-name-quick-view">${ship.name}</span>
+                                            <span class="ship-status-compact ${getStatusClass(ship.status)}">${getStatusText(ship.status)}</span>
+                                            <span class="quick-view-port">
+                                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                                ${ship.port || '-'}
+                                            </span>
+                                        </div>
+                                        <div class="task-dots-container sailed-tasks">
+                                            ${POST_SAILED.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
+                                        </div>
+                                    </div>
+                                </div>`;
+                    }).join('')}
+                        </div>
+                    </div>`;
+            }
+
+            if (activeShips.length === 0 && sailedShips.length === 0) {
+                finalHtml += `<div class="empty-state" style="padding: var(--spacing-2xl); text-align: center;">אין אניות להצגה בתצוגה מהירה.</div>`;
+            }
+
+            finalHtml += '</div>'; // close .quick-view-container
+            grid.innerHTML = finalHtml;
+            document.getElementById('quickBadge').textContent = activeShips.length + sailedShips.length;
+        }
+
+        function cycleTaskStatus(event, shipId, taskKey) {
+            // מניעת הפעלת הרחבת השורה
+            event.stopPropagation();
+            
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            const task = ship.tasks.find(t => t.key === taskKey);
+            if (!task) return;
+
+            // שינוי הסטטוס במעגל: pending -> in-progress -> done -> pending
+            const statusCycle = ['pending', 'in-progress', 'done'];
+            const currentIndex = statusCycle.indexOf(task.status);
+            const nextIndex = (currentIndex + 1) % statusCycle.length;
+            task.status = statusCycle[nextIndex];
+            
+            // עדכון פרטי המשימה
+            task.lastUpdatedAt = new Date().toISOString();
+            if (task.status === 'done') {
+                task.doneAt = new Date().toISOString();
+                task.doneBy = currentUser;
+            } else {
+                task.doneAt = null;
+                task.doneBy = null;
+            }
+
+            // עדכון ל-Firestore
+            db.collection("ships").doc(ship.id).update({ 
+                tasks: ship.tasks, 
+                updatedAt: new Date().toISOString() 
+            }).then(() => {
+                // toast הוסר לבקשת המשתמש
+            }).catch(e => console.error(e));
+            
+            // הוספת פעילות
+            const statusText = task.status === 'pending' ? 'ממתין' : 
+                              task.status === 'in-progress' ? 'בטיפול' : 'הושלם';
+            addActivity('עדכון משימה', `שינוי סטטוס משימה: ${task.title} לאנייה: ${ship.name} - ${statusText}`);
+            
+            // בדוק אם כל משימות ההפלגה הושלמו
+            checkPostSailedTasksComplete(ship);
+        }
+
+        function toggleShipDetails(shipId) {
+            const shipRow = document.getElementById('ship-row-' + shipId);
+            if (!shipRow) return;
+            
+            // הוספה או הסרה של class expanded
+            shipRow.classList.toggle('expanded');
+        }
+
+        function filterShips(){
+            // 1. בצע סינון בסיסי לפי הטאב הנבחר
+            let base = currentTab === 'all' ? ships.slice()
+                        : currentTab === 'quick' ? ships.slice() // FIX: quick view shows all ships
+                        : ships.filter(s => {
+                            const map = {'at-sea':STATUS.AT_SEA, 'at-port':STATUS.AT_PORT, 'under-operation':STATUS.UNDER_OPERATION, 'sailed':STATUS.SAILED};
+                            return s.status === map[currentTab];
+                        });
+
+            // 2. בצע סינון נוסף לפי החיפוש החכם (אם יש)
+            if (currentSearchTerm) {
+                base = base.filter(ship => {
+                    const term = currentSearchTerm;
+                    
+                    // המרת תאריכים למחרוזת כדי שיהיו ניתנים לחיפוש
+                    const etaString = formatDate(ship.eta).toLowerCase();
+                    const etbString = (ship.etb && ship.etb.displayValue) ? ship.etb.displayValue.toLowerCase() : '';
+
+                    return (
+                        (ship.name && ship.name.toLowerCase().includes(term)) ||
+                        (ship.cargo && ship.cargo.toLowerCase().includes(term)) ||
+                        (ship.pic && ship.pic.toLowerCase().includes(term)) || // 'pic' הוא שדה הסוכן (Agent)
+                        (etaString.includes(term)) ||
+                        (etbString.includes(term))
+                    );
+                });
+            }
+            
+            // סדר לפי STATUS_UI_ORDER, ואז תתי-כללים
+            base.sort((a,b)=>{
+                const so = STATUS_UI_ORDER.indexOf(a.status) - STATUS_UI_ORDER.indexOf(b.status);
+                if (so!==0) return so;
+                if (a.status===STATUS.AT_SEA) return new Date(a.eta)-new Date(b.eta);
+                if (a.status===STATUS.UNDER_OPERATION) return (new Date(a.expected_finish_time||'9999') - new Date(b.expected_finish_time||'9999'));
+                if (a.status===STATUS.AT_PORT) return (new Date(a.expected_berth_time||a.eta||'9999') - new Date(b.expected_berth_time||b.eta||'9999'));
+                return 0; // SAILED: השאר
+            });
+            
+            return base;
+        }
+
+        function createShipCard(ship) {
+            const urgency = calculateUrgency(ship);
+            const progress = calculateProgress(ship);
+            const allTasks = ship.tasks || [];
+            const pendingTasks = allTasks.filter(t => t.status !== 'done').length;
+            
+            // Build service indicators HTML from the new services array
+            let serviceIndicatorsHtml = '';
+            const activeServices = ship.services || [];
+            // Filter active services (not completed or cancelled)
+            const pendingServices = activeServices.filter(s => s.status !== 'completed' && s.status !== 'cancelled');
+            
+            if (pendingServices.some(s => s.type === 'water')) {
+                const waterService = pendingServices.find(s => s.type === 'water');
+                serviceIndicatorsHtml += `
+                    <div class="indicator-item water">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+                        <span>מים (${waterService?.details?.amount || '?'})</span>
+                    </div>`;
+            }
+            if (pendingServices.some(s => s.type === 'package')) {
+                const packageCount = pendingServices.filter(s => s.type === 'package').length;
+                serviceIndicatorsHtml += `
+                    <div class="indicator-item package">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l2-1.14"/><path d="M16.5 9.4 7.55 4.24"/><path d="M3.29 7 12 12l8.71-5"/><path d="m12 22 8.71-5"/><circle cx="18" cy="15" r="3"/><path d="M20.6 17.5 22 19"/></svg>
+                        <span>חבילה (${packageCount})</span>
+                    </div>`;
+            }
+            
+            return `
+                <div class="ship-card ${urgency} card-${getStatusClass(ship.status)}" id="${ship.id}">
+                    <div class="ship-header">
+                        <div class="ship-title">
+                            <div>
+                                <div class="ship-name">${ship.name}</div>
+                                <div class="ship-voyage">${ship.voyage || ''}</div>
+                            </div>
+                            <div class="ship-status ${getStatusClass(ship.status)}">
+                                ${getStatusText(ship.status)}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ship-body">
+                        ${serviceIndicatorsHtml ? `<div class="service-indicators">${serviceIndicatorsHtml}</div>` : ''}
+                        <div class="ship-info-grid">
+                            <div class="info-item">
+                                <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                                <div>
+                                    <span class="info-label">נמל פריקה</span>
+                                <span class="info-value">${ship.port || '-'}</span>
+                            </div>
+                            </div>
+                            <div class="info-item">
+                                <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                                <div>
+                                    <span class="info-label">ETA</span>
+                                <span class="info-value">${formatDate(ship.eta)}</span>
+                            </div>
+                            </div>
+                            <div class="info-item">
+                               <svg class="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                                <div>
+                                    <span class="info-label">ETB</span>
+                                    <span class="info-value">${(ship.etb && ship.etb.displayValue) ? ship.etb.displayValue : formatETBDate(ship.expected_berth_time)}</span>
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="progress-container">
+                            <div class="progress-header">
+                                <span class="progress-label">התקדמות משימות</span>
+                                <span class="progress-value">${allTasks.length - pendingTasks} / ${allTasks.length} הושלמו</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+
+                        <div class="quick-actions">
+                            <div class="trader-toggle">
+                                <button class="toggle-btn ${ship.trader_flag === 'M' ? 'active' : ''}" onclick="setTraderFlag('${ship.id}', 'M', event)">M</button>
+                                <button class="toggle-btn ${ship.trader_flag === 'D' ? 'active' : ''}" onclick="setTraderFlag('${ship.id}', 'D', event)">D</button>
+                                <button class="toggle-btn ${!ship.trader_flag || ship.trader_flag === 'X' ? 'active' : ''}" onclick="setTraderFlag('${ship.id}', 'X', event)">X</button>
+                            </div>
+                            <button class="quick-action" onclick="editShip('${ship.id}')">
+                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                                <span>עריכה</span>
+                            </button>
+                            <button class="quick-action" onclick="openTasks('${ship.id}')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                                <span>משימות</span>
+                            </button>
+                            <button class="quick-action" onclick="openServices('${ship.id}')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                </svg>
+                                <span>שירותים</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function calculateUrgency(ship) {
+            const now = new Date();
+            const eta = new Date(ship.eta);
+            const days = Math.ceil((eta - now) / (1000 * 60 * 60 * 24));
+            
+            const urgentTasks = ship.checklist.filter(t => 
+                !t.completed && 
+                t.daysBefore && 
+                days <= t.daysBefore &&
+                t.statuses.includes(ship.status)
+            );
+            
+            if (urgentTasks.length > 0) {
+                if (days <= 1) return 'urgent';
+                if (days <= 3) return 'warning';
+            }
+            return 'success';
+        }
+
+        function getStatusClass(status) {
+            return 'status-' + status.toLowerCase().replace(' ', '-');
+        }
+
+        function calculateProgress(ship) {
+            const t = ship.tasks || [];
+            if (!t.length) return 0;
+            const done = t.filter(x => x.done).length;
+            return Math.round((done / t.length) * 100);
+        }
+
+        // ==================== File System Sync ====================
+        let fileHandle = null;
+
+
+
+
+
+        let archived = JSON.parse(localStorage.getItem('archivedShips')||'[]');
+
+        function daysUntil(dateISO){
+            const now = new Date();
+            const d = new Date(dateISO);
+            return Math.ceil((d - now) / (1000*60*60*24));
+        }
+
+        function taskUrgency(task, ship){
+            const eta = ship.eta;
+            if (!eta) return ''; // אין ETA -> לא צובע (אפשר 'warning' אם תרצה)
+            const n = daysUntil(eta);
+
+            switch(task.due){
+                case 'eta_minus_days:3': return n < 0 ? 'urgent' : (n <= 3 ? (n<=1?'urgent':'warning') : '');
+                case 'eta_minus_days:2': return n < 0 ? 'urgent' : (n <= 2 ? (n<=1?'urgent':'warning') : '');
+                case 'at_sea_window':     return (ship.status===STATUS.AT_SEA && n<=7) ? 'warning' : '';
+                case 'prefer_at_sea':     return (ship.status===STATUS.AT_PORT && task.status !== 'done') ? 'warning' : '';
+                case 'must_before_discharge':
+                    return (ship.status===STATUS.UNDER_OPERATION && task.status !== 'done') ? 'urgent' : '';
+                case 'day0_to_day1':      return (ship.status===STATUS.SAILED) ? 'warning' : '';
+                default: return '';
+            }
+        }
+
+        function getPendingTasks(ship){
+            return (ship.tasks||[]).filter(t=>t.status !== 'done');
+        }
+
+        function calculateUrgency(ship){
+            // אם יש משימה דחופה → 'urgent', אם יש אזהרה → 'warning', אחרת 'success'
+            const pend = getPendingTasks(ship);
+            if (pend.some(t=>taskUrgency(t,ship)==='urgent')) return 'urgent';
+            if (pend.some(t=>taskUrgency(t,ship)==='warning')) return 'warning';
+            return 'success';
+        }
+
+        function getStatusClass(status) {
+            return 'status-' + status.toLowerCase().replace(' ', '-');
+        }
+
+        function getStatusText(status) {
+            const map = {
+                'At Sea': 'בדרך',
+                'At Port': 'על עוגן',
+                'Under Operation': 'בפריקה',
+                'Sailed': 'הפליגה'
+            };
+            return map[status] || status;
+        }
+
+        function getSortPriority(status) {
+            switch (status) {
+                case STATUS.UNDER_OPERATION: return 1;
+                case STATUS.AT_PORT: return 2;
+                case STATUS.AT_SEA: return 3;
+                default: return 99; // אניות שהפליגו או סטטוס אחר יגיעו לסוף
+            }
+        }
+
+        function formatDate(date) {
+            if (!date) return '-';
+            
+            try {
+            const d = new Date(date);
+                if (isNaN(d.getTime())) return '-';
+                
+                return d.toLocaleDateString('he-IL', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                }) + ' ' + d.toLocaleTimeString('he-IL', { 
+                    hour: '2-digit', 
+                    minute: '2-digit',
+                    hour12: false
+                });
+            } catch (e) {
+                console.error('Error formatting date:', date, e);
+                return '-';
+            }
+        }
+
+        function formatETBDate(date) {
+            if (!date) return '-';
+            
+            // אם זה כבר מחרוזת עם פורמט מיוחד, החזר כפי שזה
+            if (typeof date === 'string') {
+                // בדוק אם זה מכיל מילות מפתח של משמרות או טווחים
+                if (date.includes('משמרת') || date.includes('בין') || date.includes('ל-') || 
+                    date.includes('/') || date.includes('א') || date.includes('ב') || date.includes('ג')) {
+                    return date;
+                }
+                
+                // אם זה תאריך בפורמט ISO, נסה לפרסר אותו
+                if (date.includes('T') || date.includes('-')) {
+                    try {
+                        const d = new Date(date);
+                        if (!isNaN(d.getTime())) {
+                            return d.toLocaleDateString('he-IL', {
+                                day: '2-digit',
+                                month: '2-digit',
+                                year: 'numeric'
+                            });
+                        }
+                    } catch (e) {
+                        // אם הפירסור נכשל, החזר את הטקסט המקורי
+                        return date;
+                    }
+                }
+                
+                // אם זה לא תאריך ISO, החזר את הטקסט המקורי
+                return date;
+            }
+            
+            try {
+                const d = new Date(date);
+                if (isNaN(d.getTime())) return '-';
+                
+                // החזר רק תאריך ללא שעה
+                return d.toLocaleDateString('he-IL', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                console.error('Error formatting ETB date:', date, e);
+                return '-';
+            }
+        }
+
+        // ==================== UI Actions ====================
+        function switchTab(tab, btn) {
+            // FIX: Handle the 'quick' view tab separately
+            if (tab === 'quick') {
+                // Find the sidebar nav item for quick view and activate it
+                document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+                document.querySelector('.nav-menu .nav-item:last-of-type').classList.add('active');
+                return switchToQuickView();
+            }
+
+            // Keep original logic for all other dashboard tabs
+            switchToDashboardView();
+            currentTab = tab;
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            btn.classList.add('active');
+            renderShips();
+        }
+
+        function switchToDashboardView() {
+            // הסר 'active' מכל כפתורי הניווט הראשי
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            // הוסף 'active' לכפתור "לוח בקרה"
+            document.querySelector('.nav-menu .nav-item:first-child').classList.add('active');
+
+            // הצג את הטאבים והסטטיסטיקות
+            document.querySelector('.tabs').style.display = 'flex';
+            document.querySelector('.stats-grid').style.display = 'grid';
+
+            currentTab = 'all'; // אפס לטאב "כל האניות"
+            // אפס את כפתורי הטאבים למצב ברירת מחדל
+            document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
+            document.querySelector('.tabs .tab:first-child').classList.add('active');
+
+            renderShips(); // רנדר מחדש את תצוגת הקלפים
+            
+            // פוקוס אוטומטי על שדה החיפוש
+            const searchInput = document.getElementById('smartSearchInput');
+            if (searchInput) {
+                searchInput.focus();
+            }
+        }
+
+        function switchToQuickView() {
+            // הסר 'active' מכל כפתורי הניווט הראשי
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            // הוסף 'active' לכפתור "מבט מהיר"
+            document.querySelector('.nav-menu .nav-item:last-of-type').classList.add('active');
+
+            // הסתר את הטאבים והסטטיסטיקות שאינם רלוונטיים
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+
+            currentTab = 'quick'; // עדכן את המצב הנוכחי
+            renderQuickView(); // רנדר את תצוגת "מבט מהיר"
+        }
+
+        function updateStats() {
+            document.getElementById('totalShips').textContent = ships.length;
+            document.getElementById('atSeaCount').textContent = ships.filter(s => s.status === 'At Sea').length;
+            document.getElementById('atPortCount').textContent = ships.filter(s => s.status === 'At Port').length;
+            document.getElementById('underOperationCount').textContent = ships.filter(s => s.status === 'Under Operation').length;
+            
+            // Calculate urgent tasks using the new task system
+            let urgentCount = 0;
+            ships.forEach(ship => {
+                if (ship.tasks && Array.isArray(ship.tasks)) {
+                    ship.tasks.forEach(task => {
+                        if (task.status !== 'done' && taskUrgency(task, ship) === 'urgent') {
+                        urgentCount++;
+                    }
+                });
+                }
+            });
+            document.getElementById('urgentTasks').textContent = urgentCount;
+        }
+
+        function updateBadges() {
+            document.getElementById('allBadge').textContent = ships.length;
+            document.getElementById('underOperationBadge').textContent = ships.filter(s => s.status === 'Under Operation').length;
+            document.getElementById('atPortBadge').textContent = ships.filter(s => s.status === 'At Port').length;
+            document.getElementById('atSeaBadge').textContent = ships.filter(s => s.status === 'At Sea').length;
+            document.getElementById('sailedBadge').textContent = ships.filter(s => s.status === 'Sailed').length;
+            document.getElementById('quickBadge').textContent = ships.length;
+        }
+
+        function toggleActivityFeed() {
+            const feed = document.getElementById('activityFeed');
+            feed.classList.toggle('active');
+        }
+
+
+        function clearAllData() {
+            if (confirm('האם אתה בטוח שברצונך למחוק את כל הנתונים ולהתחיל מחדש?')) {
+                localStorage.clear();
+                sessionStorage.clear();
+                ships = [];
+                activities = [];
+                archived = [];
+                fileHandle = null;
+                renderShips();
+                updateStats();
+                updateActivities();
+                showToast('כל הנתונים נמחקו', 'success');
+                addActivity('מחיקת נתונים', 'כל הנתונים נמחקו מהמערכת');
+            }
+        }
+
+        function clearLocalStorage() {
+            clearAllData();
+        }
+
+        function toggleActivityFeed() {
+            const feed = document.getElementById('activityFeed');
+            if (feed) {
+                feed.classList.toggle('active');
+            }
+        }
+
+
+        async function fullReset() {
+            if (confirm('האם אתה בטוח שברצונך למחוק את כל הנתונים ולטעון מחדש מהקובץ החיצוני?')) {
+                localStorage.clear();
+                ships = [];
+                await loadData();
+                renderShips();
+                updateStats();
+                updateActivities();
+                showToast('המערכת אופסה ונטענה מחדש', 'success');
+                addActivity('איפוס מלא', 'כל הנתונים נמחקו ונטענו מחדש מהקובץ');
+            }
+        }
+
+        async function loadFromExternalFile() {
+            try {
+                showToast('טוען נתונים מהקובץ...', 'info');
+                
+                const response = await fetch('./imports/Report.xls');
+                if (!response.ok) {
+                    console.log('Could not load external file, status:', response.status);
+                    showToast('לא ניתן לטעון את הקובץ (קובץ לא נמצא)', 'error');
+                    return;
+                }
+                
+                const htmlContent = await response.text();
+                console.log('File content length:', htmlContent.length);
+                
+                if (htmlContent.length < 100) {
+                    showToast('הקובץ ריק או לא תקין', 'error');
+                    return;
+                }
+                
+                const newShips = parseShipDataFromHTML(htmlContent);
+                
+                // Replace existing ships with new ones
+                ships = newShips;
+                console.log('Loaded ships from external file:', ships.length);
+                
+                if (ships.length > 0) {
+                    // Save to localStorage for future use
+                    saveData();
+                    showToast(`נטענו ${ships.length} אניות מהקובץ`, 'success');
+                    addActivity('טעינת נתונים', `${ships.length} אניות נטענו מהקובץ החיצוני`);
+                } else {
+                    showToast('לא נמצאו אניות בקובץ', 'warning');
+                }
+                } catch (error) {
+                console.error('Error loading external file:', error);
+                showToast('שגיאה בטעינת הקובץ: ' + error.message, 'error');
+            }
+        }
+
+        function parseShipDataFromHTML(htmlContent) {
+            const ships = [];
+            
+            try {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(htmlContent, 'text/html');
+                const rows = doc.querySelectorAll('tbody tr');
+                
+                console.log('Found rows:', rows.length);
+                
+                rows.forEach((row, index) => {
+                    try {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length >= 13) {
+                            const nameCell = cells[1].textContent.trim();
+                            const nameMatch = nameCell.match(/^(.+?)\s*-\s*(.+)$/);
+                            const shipName = nameMatch ? nameMatch[1].trim() : nameCell;
+                            const voyage = nameMatch ? nameMatch[2].trim() : '';
+                            
+                            const portAbroad = cells[2].textContent.trim();
+                            const port = cells[3].textContent.trim();
+                            const status = cells[5].textContent.trim();
+                            const eta = cells[6].textContent.trim();
+                            const cargo = cells[7].textContent.trim();
+                            const owner = cells[9].textContent.trim();
+                            const supplier = cells[10].textContent.trim();
+                            const receivers = cells[11].textContent.trim();
+                            const pic = cells[13].textContent.trim();
+                            
+                            console.log(`Ship ${index + 1}: ${shipName} - ${status}`);
+                            
+                            // Convert status to our format
+                            let convertedStatus = 'At Sea';
+                            if (status === 'Sailed') convertedStatus = 'Sailed';
+                            else if (status === 'At Port') convertedStatus = 'At Port';
+                            else if (status === 'Under Operation') convertedStatus = 'Under Operation';
+                            
+                            // Parse ETA date
+                            let etaDate = new Date();
+                            if (eta && eta !== '' && eta !== '23/10') {
+                                try {
+                                    // Handle different date formats
+                                    if (eta.includes('/')) {
+                                        const parts = eta.split(' ');
+                                        const datePart = parts[0];
+                                        const timePart = parts[1] || '00:00';
+                                        
+                                        if (datePart.includes('/')) {
+                                            const [day, month] = datePart.split('/');
+                                            const currentYear = new Date().getFullYear();
+                                            etaDate = new Date(`${currentYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}T${timePart}:00`);
+                                        }
+                                    }
+                                } catch (e) {
+                                    console.log('Error parsing date:', eta, e);
+                                }
+                            }
+                            
+                            const ship = {
+                                id: (index + 1).toString(),
+                                name: shipName,
+                                voyage: voyage,
+                                status: convertedStatus,
+                                port: port,
+                                eta: etaDate.toISOString(),
+                                cargo: cargo,
+                                owner: owner,
+                                supplier: supplier,
+                                receivers: receivers,
+                                notes: '',
+                                trader: pic,
+                                waterSupply: false,
+                                waterAmount: '',
+                                package: false,
+                                packageWeight: '',
+                                trackingNumber: '',
+                                estimatedDischargeStart: '',
+                                estimatedDischargeEnd: '',
+                                checklist: createChecklist(),
+                                createdAt: new Date().toISOString(),
+                                updatedAt: new Date().toISOString()
+                            };
+                            
+                            ships.push(ship);
+                        }
+                    } catch (rowError) {
+                        console.error(`Error processing row ${index + 1}:`, rowError);
+                    }
+                });
+                
+                console.log('Parsed ships:', ships.length);
+            } catch (error) {
+                console.error('Error parsing HTML:', error);
+            }
+            
+            return ships;
+        }
+
+        // ==================== Import & Merge Functions ====================
+        async function importExcel() {
+            document.getElementById('fileInput').click();
+        }
+
+        function handleFileUpload(evt) {
+            const file = evt.target.files[0];
+            if (!file) return;
+            
+            console.log('File selected:', file.name, file.size, 'bytes');
+            
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                console.log('File read successfully, processing...');
+                const data = new Uint8Array(e.target.result);
+                const wb = XLSX.read(data, { type: 'array' });
+                const ws = wb.Sheets[wb.SheetNames[0]];
+                const rows = XLSX.utils.sheet_to_json(ws, { defval: null, raw: true, blankrows:false });
+
+                console.log('Excel data converted to JSON:', rows.length, 'rows');
+                console.log('First few rows:', rows.slice(0, 3));
+                console.log('Column names in first row:', Object.keys(rows[0] || {}));
+
+                const mapped = mapRows(rows);                  // מיפוי כותרות
+                console.log('Mapped rows:', mapped.length);
+                console.log('Sample mapped row:', mapped[0]);
+                
+                const filtered = mapped.filter(isRelevant);    // I בלבד + Steel ללא Scrap
+                console.log('Filtered rows:', filtered.length);
+                console.log('Sample filtered row:', filtered[0]);
+                
+                const normalized = filtered.map(normalizeShip);// נירמול + id + שדות חסרים
+                console.log('Normalized ships:', normalized.length);
+                console.log('Sample normalized ship:', normalized[0]);
+                
+                // קרא לפונקציית המיזוג החדשה
+                await mergeShips(normalized);
+
+                // אין צורך ב-saveData או renderShips, ה-listener יטפל בזה.
+            };
+            reader.readAsArrayBuffer(file);
+            // אפס קלט לקבצים
+            evt.target.value = '';
+        }
+
+        // פונקציית עזר חדשה לקריאת ערך לפי מספר שמות אפשריים
+        function getValue(row, possibleKeys) {
+            for (const key of possibleKeys) {
+                if (row[key] !== undefined && row[key] !== null) {
+                    return row[key];
+                }
+            }
+            return null; // אם אף מפתח לא נמצא
+        }
+
+        function mapRows(rows) {
+            console.log("Starting mapRows for", rows.length, "rows.");
+            return rows.map((r, index) => {
+                const mappedRow = {
+                    // נסה למצוא כל שדה תחת מספר שמות נפוצים
+                    Name: getValue(r, ['Name', 'Vessel', 'שם אנייה', 'שם']),
+                    Port: getValue(r, ['Port', 'נמל פריקה', 'נמל']),
+                    IE: getValue(r, ['I/E', 'I\\E', 'IE', 'י/י']),
+                    Status: getValue(r, ['Status', 'סטטוס']),
+                    ETA: getValue(r, ['ETA', 'צפי הגעה']) ? excelToISO(getValue(r, ['ETA', 'צפי הגעה'])) : null,
+                    Cargo: getValue(r, ['Cargo', 'מטען']),
+                    Owner: getValue(r, ['Owner', 'בעלים']),
+                    Supplier: getValue(r, ['Supplier', 'ספק']),
+                    Receivers: getValue(r, ['Receivers', 'מטענים']),
+                    Alerts: getValue(r, ['Alerts', 'הערות']),
+                    PIC: getValue(r, ['PIC', 'אחראי', 'סוכן'])
+                };
+                // console.log(`Row ${index} mapped:`, mappedRow); // Uncomment for detailed debugging
+                return mappedRow;
+            });
+        }
+
+        function excelToISO(v) {
+            if (!v) return null;
+            let date = null;
+
+            // 1. אם זה מספר (תאריך סריאלי של אקסל)
+            if (typeof v === 'number') {
+                // המר את המספר לתאריך JavaScript
+                // מספר הימים בין 1900-01-01 (כולל) ל-1970-01-01 (לא כולל) הוא 25569 באקסל (כולל יום מעובר ב-1900)
+                const d = new Date(Math.round((v - 25569) * 86400 * 1000));
+                // בדוק אם התאריך תקין ולוגי (משנת 2023 ואילך)
+                if (!isNaN(+d) && d.getFullYear() >= 2023) {
+                     date = d;
+                } else {
+                     console.warn('Excel serial date is invalid or before 2023:', v);
+                }
+            }
+            // 2. אם זו מחרוזת
+            else if (typeof v === 'string') {
+                v = v.trim();
+                if (v === "") return null;
+
+                let parsedDate = null;
+
+                // נסה פורמט ישראלי ארוך: DD/MM/YYYY (עם או בלי שעה)
+                const israeliMatch = v.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:\s+(\d{1,2}):(\d{2}))?/);
+                if (israeliMatch) {
+                    const [, day, month, year, hour = 0, minute = 0] = israeliMatch;
+                    parsedDate = new Date(year, month - 1, day, hour, minute);
+                } else {
+                    // נסה פורמט ישראלי קצר: DD/MM (עם או בלי שעה, מניח שנה נוכחית או הבאה)
+                    const shortMatch = v.match(/^(\d{1,2})\/(\d{1,2})(?:\s+(\d{1,2}):(\d{2}))?/);
+                    if (shortMatch) {
+                        const [, day, month, hour = 0, minute = 0] = shortMatch;
+                        const currentYear = new Date().getFullYear();
+                        const potentialDate = new Date(currentYear, month - 1, day, hour, minute);
+
+                        // בדוק אם התאריך בעבר (למשל, היום ינואר והתאריך דצמבר)
+                        const now = new Date();
+                        now.setHours(0,0,0,0); // אפס שעה להשוואה
+                        if (!isNaN(+potentialDate) && potentialDate < now) {
+                            // אם בעבר, נניח שמדובר בשנה הבאה
+                            parsedDate = new Date(currentYear + 1, month - 1, day, hour, minute);
+                        } else if (!isNaN(+potentialDate)) {
+                            parsedDate = potentialDate; // אם בעתיד או היום, השתמש בשנה הנוכחית
+                        }
+                    } else {
+                        // ניסיון אחרון: תן לדפדפן לנסות (לפורמטי ISO וכו')
+                        parsedDate = new Date(v);
+                    }
+                }
+
+                // בדוק אם התאריך שפירסרנו תקין והגיוני (משנת 2023 ואילך)
+                if (parsedDate && !isNaN(+parsedDate) && parsedDate.getFullYear() >= 2023) {
+                     date = parsedDate;
+                } else {
+                     console.warn('Could not parse valid date string or date is before 2023:', v);
+                }
+            }
+
+            // אם הצלחנו לפרסר תאריך תקין, החזר ISO string, אחרת null
+            return date ? date.toISOString() : null;
+        }
+
+        function isRelevant(row) {
+            const ieValue = (row.IE || '').trim().toUpperCase();
+            if (ieValue !== 'I') {
+                // console.log("Filtered out (not Import):", row.Name); // Uncomment for debugging
+                return false;
+            }
+            const cargo = (row.Cargo || '').toString().toLowerCase();
+            if (!cargo || cargo.includes('scrap')) {
+                // console.log("Filtered out (Scrap or no cargo):", row.Name, cargo); // Uncomment for debugging
+                return false;
+            }
+            const isSteel = STEEL_WHITELIST.some(t => cargo.includes(t));
+            if (!isSteel) {
+                // console.log("Filtered out (Not in STEEL_WHITELIST):", row.Name, cargo); // Uncomment for debugging
+            }
+            return isSteel; // רק אם נמצא ברשימה הלבנה
+        }
+
+        function extractVoyage(name){
+            // "Lodestar Capella - 002/25" -> "002/25"
+            const m = (name||'').match(/-\s*([0-9]{3}\/[0-9]{2})\b/);
+            return m ? m[1] : null;
+        }
+
+        function normalizeShip(row){
+            const voyage = extractVoyage(row.Name);
+            const name = (row.Name||'').replace(/\s*-\s*[0-9]{3}\/[0-9]{2}\b/,'').trim();
+            const obj = {
+                id: VESSEL_ID(name, voyage),
+                name, voyage,
+                status: row.Status || STATUS.AT_SEA,
+                port: row.Port || null,
+                eta: row.ETA || null,
+                cargo: row.Cargo || null,
+                owner: row.Owner || null,
+                supplier: row.Supplier || null,
+                receivers: row.Receivers || null,
+                alerts: row.Alerts || null,
+                pic: row.PIC || null,
+                // שדות פנימיים
+                expected_berth_time: null,
+                expected_finish_time: null,
+                notes: '',
+                waterSupply: false, waterAmount: null,
+                package: false, packageWeight: null, trackingNumber: null,
+                trader_flag: null,
+                tasks: [], // יקבל תבנית למטה
+                flags: { missing_in_today_report: false },
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+                version: 1
+            };
+            ensureChecklistForStatus(obj);
+            return obj;
+        }
+
+        async function mergeShips(incoming) {
+            console.log('Merging ships with Firestore:', incoming.length, 'incoming ships');
+            
+            // `ships` הוא המצב המקומי שמתעדכן מה-listener, הוא מייצג את האמת הנוכחית בענן
+            const byId = new Map(ships.map(s => [s.id, s]));
+            const seen = new Set();
+            const batch = db.batch(); // ניצור Batch לכל העדכונים
+            let addedCount = 0;
+            let updatedCount = 0;
+            let removedCount = 0;
+
+            for (const inc of incoming) {
+                seen.add(inc.id);
+                if (byId.has(inc.id)) {
+                    // --- אנייה קיימת ---
+                    const cur = byId.get(inc.id);
+
+                    // בנה אובייקט עדכון ששומר נתונים ידניים
+                    const updatedData = {
+                        ...inc, // התחל עם הנתונים החדשים מהאקסל
+
+                        // כעת, דרוס את הנתונים החדשים עם הנתונים הידניים הישנים
+                        notes: cur.notes,
+                        waterSupply: cur.waterSupply,
+                        waterAmount: cur.waterAmount,
+                        package: cur.package,
+                        packageWeight: cur.packageWeight,
+                        trackingNumber: cur.trackingNumber,
+                        trader_flag: cur.trader_flag,
+                        etb: cur.etb || inc.etb || null, // ודא שזה null אם שניהם חסרים
+                        expected_berth_time: cur.expected_berth_time || inc.expected_berth_time || null, // ודא שזה null אם שניהם חסרים
+                        tasks: cur.tasks, // שמור על כל היסטוריית המשימות!
+
+                        // עדכן שדות ניהוליים
+                        flags: { missing_in_today_report: false },
+                        updatedAt: new Date().toISOString(),
+                        version: (cur.version || 1) + 1
+                    };
+
+                    // עדכן סטטוס משימות אם הסטטוס של האנייה השתנה
+                    ensureChecklistForStatus(updatedData);
+
+                    const docRef = db.collection("ships").doc(cur.id);
+                    batch.update(docRef, updatedData); // עדכן ב-Batch
+                    updatedCount++;
+
+                } else {
+                    // --- אנייה חדשה ---
+                    const docRef = db.collection("ships").doc(inc.id);
+                    batch.set(docRef, inc); // הוסף ב-Batch
+                    addedCount++;
+                }
+            }
+
+            // --- טיפול באניות שאינן בדוח ---
+            for (const ship of ships) {
+                if (!seen.has(ship.id)) {
+                    if (ship.status === STATUS.SAILED) {
+                        // אנייה שכבר הפליגה, נשאיר אותה עד שתעבור לארכיון
+                    } else {
+                        // אנייה שהייתה צריכה להופיע ונעלמה - מחק אותה
+                        const docRef = db.collection("ships").doc(ship.id);
+                        batch.delete(docRef);
+                        removedCount++;
+                    }
+                }
+            }
+
+            // בצע את כל הפעולות בבת אחת
+            try {
+                await batch.commit();
+                const summary = `מיזוג הושלם: נוספו ${addedCount}, עודכנו ${updatedCount}, הוסרו ${removedCount}`;
+                showToast(summary, 'success');
+                addActivity('ייבוא דוח', summary);
+            } catch (error) {
+                console.error("Error committing batch:", error);
+                showToast('שגיאה חמורה במיזוג הדוח', 'error');
+            }
+        }
+
+        // ==================== Legacy Functions (Deprecated) ====================
+        // These functions are kept for backward compatibility but are no longer used
+        // The new import system uses mapRows, isRelevant, normalizeShip, and mergeShips
+
+        function parseDate(dateString) {
+            if (!dateString || dateString === '') {
+                return new Date().toISOString();
+            }
+            
+            try {
+                // Try different date formats
+                let date;
+                
+                // If it's already a Date object
+                if (dateString instanceof Date) {
+                    date = dateString;
+                }
+                // If it's a number (Excel serial date)
+                else if (typeof dateString === 'number') {
+                    // Excel serial date to JavaScript date
+                    date = new Date((dateString - 25569) * 86400 * 1000);
+                }
+                // If it's a string
+                else if (typeof dateString === 'string') {
+                    // Try parsing as ISO string first
+                    date = new Date(dateString);
+                    
+                    // If that fails, try other formats
+                    if (isNaN(date.getTime())) {
+                        // Try DD/MM format (Israeli format)
+                        if (dateString.includes('/')) {
+                            const parts = dateString.split(' ');
+                            const datePart = parts[0];
+                            const timePart = parts[1] || '00:00';
+                            
+                            if (datePart.includes('/')) {
+                                const [day, month] = datePart.split('/');
+                                const currentYear = new Date().getFullYear();
+                                
+                                // Handle time parsing
+                                let hours = 0, minutes = 0;
+                                if (timePart && timePart.includes(':')) {
+                                    const [h, m] = timePart.split(':');
+                                    hours = parseInt(h) || 0;
+                                    minutes = parseInt(m) || 0;
+                                }
+                                
+                                date = new Date(currentYear, parseInt(month) - 1, parseInt(day), hours, minutes);
+                            }
+                        }
+                        // Try MM/DD/YYYY format
+                        else {
+                            const parts = dateString.split('/');
+                            if (parts.length === 3) {
+                                date = new Date(parts[2], parts[0] - 1, parts[1]);
+                            }
+                        }
+                    }
+                }
+                
+                // Check if date is valid
+                if (date && !isNaN(date.getTime())) {
+                    return date.toISOString();
+                } else {
+                    console.log('Invalid date:', dateString);
+                    return new Date().toISOString();
+                }
+            } catch (error) {
+                console.log('Error parsing date:', dateString, error);
+                return new Date().toISOString();
+            }
+        }
+
+        // ==================== UI Functions ====================
+
+        function editShip(id) {
+            const ship = ships.find(s => s.id === id);
+            if (!ship) return;
+            
+            // Default ETB object if it doesn't exist
+            ship.etb = ship.etb || { type: 'specific', sortDate: ship.expected_berth_time || '' };
+            
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            
+            title.textContent = `עריכת אנייה: ${ship.name}`;
+            body.innerHTML = `
+                <form id="editShipForm" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="form-group"><label>שם:</label><input type="text" name="name" value="${ship.name}" required></div>
+                    <div class="form-group"><label>מסע:</label><input type="text" name="voyage" value="${ship.voyage || ''}"></div>
+                    <div class="form-group"><label>סטטוס:</label><select name="status">${Object.values(STATUS).map(s => `<option value="${s}" ${ship.status === s ? 'selected' : ''}>${getStatusText(s)}</option>`).join('')}</select></div>
+                    <div class="form-group"><label>ETA:</label><input type="datetime-local" name="eta" value="${ship.eta ? new Date(ship.eta).toISOString().slice(0, 16) : ''}"></div>
+                    <div class="form-group"><label>מטען:</label><textarea name="cargo" rows="2">${ship.cargo || ''}</textarea></div>
+                    
+                    <div class="checklist-section" style="padding: var(--spacing-md);">
+                        <h4>ETB (תאריך עגינה צפוי)</h4>
+                        <div id="etb-options" style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
+                            <label><input type="radio" name="etb_type" value="specific" ${ship.etb.type === 'specific' || !ship.etb.type ? 'checked' : ''}> תאריך</label>
+                            <label><input type="radio" name="etb_type" value="range" ${ship.etb.type === 'range' ? 'checked' : ''}> טווח</label>
+                            <label><input type="radio" name="etb_type" value="shift" ${ship.etb.type === 'shift' ? 'checked' : ''}> משמרת</label>
+                    </div>
+                        <div id="etb-inputs">
+                            <div id="etb-specific" class="etb-input-group" style="display: ${ship.etb.type === 'specific' || !ship.etb.type ? 'flex' : 'none'};">
+                                <input type="date" name="etb_specific_date" value="${(ship.etb.sortDate || '').split('T')[0]}">
+                    </div>
+                            <div id="etb-range" class="etb-input-group" style="display: ${ship.etb.type === 'range' ? 'flex' : 'none'}; gap: var(--spacing-sm); align-items: center;">
+                                <input type="date" name="etb_range_start" value="${(ship.etb.startDate || '').split('T')[0]}">
+                                <span>עד</span>
+                                <input type="date" name="etb_range_end" value="${(ship.etb.endDate || '').split('T')[0]}">
+                            </div>
+                            <div id="etb-shift" class="etb-input-group" style="display: ${ship.etb.type === 'shift' ? 'flex' : 'none'}; gap: var(--spacing-sm);">
+                                <input type="date" name="etb_shift_date" value="${(ship.etb.sortDate || '').split('T')[0]}">
+                                <select name="etb_shift_value">
+                                    <option value="A" ${ship.etb.shift === 'A' ? 'selected' : ''}>משמרת א'</option>
+                                    <option value="B" ${ship.etb.shift === 'B' ? 'selected' : ''}>משמרת ב'</option>
+                                    <option value="C" ${ship.etb.shift === 'C' ? 'selected' : ''}>משמרת ג'</option>
+                        </select>
+                    </div>
+                    </div>
+                    </div>
+                    
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                        <button type="submit" class="btn btn-primary">שמור</button>
+                    </div>
+                </form>
+            `;
+            
+            // FIX: This line was missing, it makes the modal visible
+            modal.classList.add('active');
+
+            // Add event listeners for radio buttons
+            document.querySelectorAll('input[name="etb_type"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    document.querySelectorAll('.etb-input-group').forEach(group => group.style.display = 'none');
+                    document.getElementById(`etb-${this.value}`).style.display = 'flex';
+                });
+            });
+
+            document.getElementById('editShipForm').onsubmit = function(e) {
+                e.preventDefault();
+                const formData = new FormData(e.target);
+                const data = Object.fromEntries(formData.entries());
+
+                ship.name = data.name;
+                ship.voyage = data.voyage;
+                ship.status = data.status;
+                ship.eta = data.eta ? new Date(data.eta).toISOString() : null;
+                ship.cargo = data.cargo;
+                
+                // Process and save the new ETB object
+                ship.etb = getEtbObject(data);
+                ship.expected_berth_time = ship.etb.sortDate; // Keep legacy field for basic sorting
+                
+                ship.updatedAt = new Date().toISOString();
+                
+                ensureChecklistForStatus(ship);
+                checkPostSailedTasksComplete(ship); 
+                
+                // Update to Firestore
+                const shipDataToUpdate = { 
+                    name: data.name, 
+                    voyage: data.voyage, 
+                    status: data.status, 
+                    eta: ship.eta, 
+                    cargo: data.cargo, 
+                    etb: ship.etb, 
+                    expected_berth_time: ship.expected_berth_time, 
+                    tasks: ship.tasks,
+                    updatedAt: new Date().toISOString() 
+                };
+                
+                db.collection("ships").doc(ship.id).update(shipDataToUpdate)
+                    .then(() => {
+                        showToast('האנייה עודכנה בהצלחה', 'success');
+                        addActivity('עריכת אנייה', `עודכנה אנייה: ${ship.name}`);
+                        closeModal();
+                    })
+                    .catch(e => showToast('שגיאה בעדכון אנייה', 'error'));
+            };
+        }
+
+        function getEtbObject(data) {
+            const etb = { type: data.etb_type };
+            const formatDatePart = (dateStr) => dateStr ? new Date(dateStr).toLocaleDateString('he-IL', {day:'2-digit', month:'2-digit'}) : '';
+
+            switch (data.etb_type) {
+                case 'range':
+                    etb.startDate = data.etb_range_start ? new Date(data.etb_range_start).toISOString() : null;
+                    etb.endDate = data.etb_range_end ? new Date(data.etb_range_end).toISOString() : null;
+                    etb.sortDate = etb.startDate;
+                    etb.displayValue = `${formatDatePart(etb.startDate)} - ${formatDatePart(etb.endDate)}`;
+                    break;
+                case 'shift':
+                    etb.sortDate = data.etb_shift_date ? new Date(data.etb_shift_date).toISOString() : null;
+                    etb.shift = data.etb_shift_value;
+                    const shiftText = {A: "משמרת א'", B: "משמרת ב'", C: "משמרת ג'"}[etb.shift];
+                    etb.displayValue = `${formatDatePart(etb.sortDate)} - ${shiftText}`;
+                    break;
+                case 'specific':
+                default:
+                    etb.sortDate = data.etb_specific_date ? new Date(data.etb_specific_date).toISOString() : null;
+                    etb.displayValue = formatDatePart(etb.sortDate);
+                    break;
+            }
+            return etb;
+        }
+
+        function openServices(id) {
+            const ship = ships.find(s => s.id === id);
+            if (!ship) return;
+
+            // אתחול מערך השירותים אם לא קיים
+            ship.services = ship.services || [];
+            
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            
+            title.textContent = `ניהול שירותים: ${ship.name}`;
+
+            // פונקציית עזר ליצירת HTML עבור שירות קיים
+            const createServiceItemHtml = (service) => {
+                let detailsHtml = '';
+                switch(service.type) {
+                    case 'water': detailsHtml = `כמות: ${service.details.amount || '?'} טון`; break;
+                    case 'package': detailsHtml = `משקל: ${service.details.weight || '?'} ק"ג, מעקב: ${service.details.tracking || '?'}`; break;
+                    case 'sludge': detailsHtml = `כמות: ${service.details.amount || '?'} מ"ק`; break;
+                    case 'bilge': detailsHtml = `כמות: ${service.details.amount || '?'} מ"ק`; break;
+                    case 'crew_change': detailsHtml = `נכנסים: ${service.details.crewIn || 0}, יוצאים: ${service.details.crewOut || 0}`; break;
+                    case 'other': detailsHtml = `${service.details.description || 'תיאור חסר'}`; break;
+                    default: detailsHtml = 'פרטים לא ידועים';
+                }
+
+                return `
+                    <div class="service-item ${service.status || 'requested'}" id="service-${service.id}">
+                        <div class="service-item-header">
+                            <strong>${getServiceTypeName(service.type)}</strong>
+                            <span class="service-status">${service.status || 'requested'}</span>
+                        </div>
+                        <div class="service-item-body">${detailsHtml}</div>
+                        <div class="service-item-actions">
+                             <button class="btn btn-sm btn-secondary" onclick="editService('${id}', '${service.id}')">ערוך</button>
+                             <button class="btn btn-sm btn-danger" onclick="deleteService('${id}', '${service.id}')">מחק</button>
+                        </div>
+                    </div>
+                `;
+            };
+
+            body.innerHTML = `
+                <div id="services-container" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <h4>שירותים קיימים</h4>
+                    <div id="existing-services-list" style="max-height: 300px; overflow-y: auto; display: flex; flex-direction: column; gap: var(--spacing-sm);">
+                        ${ship.services.length > 0 ? ship.services.map(createServiceItemHtml).join('') : '<p style="color: var(--text-tertiary);">אין שירותים רשומים.</p>'}
+                    </div>
+
+                    <hr style="border-color: var(--glass-border); margin: var(--spacing-md) 0;">
+
+                    <h4>הוספת שירות חדש</h4>
+                    <div class="form-group">
+                        <label>סוג שירות:</label>
+                        <select id="new-service-type" onchange="showServiceDetailsForm()">
+                            <option value="">בחר סוג...</option>
+                            <option value="water">אספקת מים</option>
+                            <option value="package">חבילה</option>
+                            <option value="sludge">פינוי SLUDGE</option>
+                            <option value="bilge">פינוי BILGE</option>
+                            <option value="crew_change">חילוף צוות</option>
+                            <option value="other">אחר</option>
+                        </select>
+                    </div>
+
+                    <div id="new-service-details-form" style="display: none; flex-direction: column; gap: var(--spacing-sm); background: var(--bg-secondary); padding: var(--spacing-md); border-radius: var(--radius-md);">
+                        <!-- שדות דינמיים יופיעו כאן -->
+                    </div>
+
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-lg);">
+                        <button class="btn btn-secondary" onclick="closeModal()">סגור</button>
+                        <button class="btn btn-primary" id="add-service-btn" onclick="addService('${id}')" style="display: none;">הוסף שירות</button>
+                    </div>
+                    </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        // ==================== Service Helper Functions ====================
+        function getServiceTypeName(type) {
+            const names = { water: 'אספקת מים', package: 'חבילה', sludge: 'פינוי SLUDGE', bilge: 'פינוי BILGE', crew_change: 'חילוף צוות', other: 'אחר' };
+            return names[type] || type;
+        }
+
+        function showServiceDetailsForm() {
+            const type = document.getElementById('new-service-type').value;
+            const formDiv = document.getElementById('new-service-details-form');
+            const addBtn = document.getElementById('add-service-btn');
+
+            if (!type) {
+                formDiv.style.display = 'none';
+                addBtn.style.display = 'none';
+                return;
+            }
+
+            let detailsHtml = '';
+            switch(type) {
+                case 'water': 
+                    detailsHtml = `<label>כמות (טון):</label><input type="number" id="service-detail-amount">`; 
+                    break;
+                case 'package': 
+                    detailsHtml = `<label>משקל (ק"ג):</label><input type="number" id="service-detail-weight">
+                                   <label>מספר מעקב:</label><input type="text" id="service-detail-tracking">`; 
+                    break;
+                case 'sludge': 
+                case 'bilge':
+                    detailsHtml = `<label>כמות (מ"ק):</label><input type="number" id="service-detail-amount">`; 
+                    break;
+                case 'crew_change':
+                    detailsHtml = `<label>מספר אנשי צוות נכנסים:</label><input type="number" id="service-detail-crewIn">
+                                   <label>מספר אנשי צוות יוצאים:</label><input type="number" id="service-detail-crewOut">`; 
+                    break;
+                case 'other': 
+                    detailsHtml = `<label>תיאור השירות:</label><input type="text" id="service-detail-description">`; 
+                    break;
+            }
+            detailsHtml += `<label>סטטוס:</label><select id="service-detail-status">
+                                <option value="requested">נדרש</option>
+                                <option value="in-progress">בטיפול</option>
+                                <option value="completed">הושלם</option>
+                                <option value="cancelled">בוטל</option>
+                            </select>`;
+
+            formDiv.innerHTML = detailsHtml;
+            formDiv.style.display = 'flex';
+            addBtn.style.display = 'inline-flex';
+        }
+
+        function addService(shipId) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            const type = document.getElementById('new-service-type').value;
+            if (!type) return;
+
+            const newService = {
+                id: 'service_' + Date.now(), // ID ייחודי
+                type: type,
+                details: {},
+                status: document.getElementById('service-detail-status').value,
+                createdAt: new Date().toISOString()
+            };
+
+            // איסוף הפרטים מהטופס הדינמי
+            switch(type) {
+                case 'water': 
+                case 'sludge': 
+                case 'bilge':
+                    newService.details.amount = document.getElementById('service-detail-amount').value;
+                    break;
+                case 'package': 
+                    newService.details.weight = document.getElementById('service-detail-weight').value;
+                    newService.details.tracking = document.getElementById('service-detail-tracking').value;
+                    break;
+                case 'crew_change':
+                    newService.details.crewIn = document.getElementById('service-detail-crewIn').value;
+                    newService.details.crewOut = document.getElementById('service-detail-crewOut').value;
+                    break;
+                case 'other': 
+                    newService.details.description = document.getElementById('service-detail-description').value;
+                    break;
+            }
+
+            ship.services = ship.services || [];
+            ship.services.push(newService);
+            ship.updatedAt = new Date().toISOString();
+
+            // שמור שינויים ב-Firestore
+            db.collection("ships").doc(ship.id).update({ services: ship.services, updatedAt: ship.updatedAt })
+                .then(() => showToast('שירות נוסף בהצלחה', 'success'))
+                .catch(e => showToast('שגיאה בהוספת שירות', 'error'));
+
+            // רענן את רשימת השירותים במודאל
+            const listDiv = document.getElementById('existing-services-list');
+            listDiv.innerHTML = ship.services.length > 0 ? ship.services.map(s => {
+                let detailsHtml = '';
+                switch(s.type) {
+                    case 'water': detailsHtml = `כמות: ${s.details.amount || '?'} טון`; break;
+                    case 'package': detailsHtml = `משקל: ${s.details.weight || '?'} ק"ג, מעקב: ${s.details.tracking || '?'}`; break;
+                    case 'sludge': detailsHtml = `כמות: ${s.details.amount || '?'} מ"ק`; break;
+                    case 'bilge': detailsHtml = `כמות: ${s.details.amount || '?'} מ"ק`; break;
+                    case 'crew_change': detailsHtml = `נכנסים: ${s.details.crewIn || 0}, יוצאים: ${s.details.crewOut || 0}`; break;
+                    case 'other': detailsHtml = `${s.details.description || 'תיאור חסר'}`; break;
+                    default: detailsHtml = 'פרטים לא ידועים';
+                }
+                return `
+                    <div class="service-item ${s.status || 'requested'}" id="service-${s.id}">
+                        <div class="service-item-header">
+                            <strong>${getServiceTypeName(s.type)}</strong>
+                            <span class="service-status">${s.status || 'requested'}</span>
+                    </div>
+                        <div class="service-item-body">${detailsHtml}</div>
+                        <div class="service-item-actions">
+                             <button class="btn btn-sm btn-secondary" onclick="editService('${shipId}', '${s.id}')">ערוך</button>
+                             <button class="btn btn-sm btn-danger" onclick="deleteService('${shipId}', '${s.id}')">מחק</button>
+                    </div>
+                    </div>
+                `;
+            }).join('') : '<p style="color: var(--text-tertiary);">אין שירותים רשומים.</p>';
+
+            // נקה את טופס ההוספה
+            document.getElementById('new-service-type').value = '';
+            document.getElementById('new-service-details-form').style.display = 'none';
+            document.getElementById('add-service-btn').style.display = 'none';
+
+            // רענן את התצוגה הראשית אם צריך
+            if (currentTab !== 'quick') renderShips();
+        }
+
+        function editService(shipId, serviceId) {
+            alert(`יש לממש עריכה לשירות ${serviceId} באנייה ${shipId}`);
+        }
+
+        function deleteService(shipId, serviceId) {
+             const ship = ships.find(s => s.id === shipId);
+            if (!ship || !ship.services) return;
+
+            if (confirm(`האם למחוק את השירות "${getServiceTypeName(ship.services.find(s=>s.id === serviceId)?.type)}"?`)) {
+                ship.services = ship.services.filter(s => s.id !== serviceId);
+                ship.updatedAt = new Date().toISOString();
+                
+                // שמור שינויים ב-Firestore
+                db.collection("ships").doc(ship.id).update({ services: ship.services, updatedAt: ship.updatedAt })
+                    .then(() => showToast('שירות נמחק', 'success'))
+                    .catch(e => showToast('שג导向 במחיקת שירות', 'error'));
+
+                // רענן רשימה במודאל
+                const itemElement = document.getElementById(`service-${serviceId}`);
+                if (itemElement) itemElement.remove();
+
+                // רענן תצוגה ראשית
+                 if (currentTab !== 'quick') renderShips();
+            }
+        }
+
+        function openTasks(id) {
+            const ship = ships.find(s => s.id === id);
+            if (!ship) return;
+            
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            
+            title.textContent = `משימות: ${ship.name}`;
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="checklist-section">
+                        <h4>רשימת משימות</h4>
+                        <div class="checklist-items">
+                            ${(ship.tasks || []).map((item, index) => {
+                                const taskUrg = taskUrgency(item, ship);
+                                return `
+                                <label class="checklist-item ${taskUrg}">
+                                    <input type="checkbox" ${item.done ? 'checked' : ''} 
+                                           onchange="toggleTaskItem('${id}', ${index})">
+                                    <span class="checklist-text">${item.title}</span>
+                                    <span class="task-due ${taskUrg}">${item.due}</span>
+                                </label>
+                                `;
+                            }).join('')}
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>הערות נוספות:</label>
+                        <textarea id="taskNotes" rows="3" placeholder="הוסף הערות למשימות...">${ship.notes}</textarea>
+                    </div>
+                    
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="closeModal()">סגור</button>
+                        <button class="btn btn-primary" onclick="saveTaskNotes('${id}')">שמור הערות</button>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function saveTaskNotes(shipId) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+            
+            const notes = document.getElementById('taskNotes').value;
+            ship.notes = notes;
+            ship.updatedAt = new Date().toISOString();
+            
+            db.collection("ships").doc(ship.id).update({ 
+                notes: notes, 
+                updatedAt: new Date().toISOString() 
+            }).then(() => {
+            showToast('הערות נשמרו בהצלחה', 'success');
+            addActivity('עדכון הערות', `עודכנו הערות לאנייה: ${ship.name}`);
+                closeModal();
+            }).catch(e => showToast('שגיאה בשמירת הערות', 'error'));
+        }
+
+        function setTraderFlag(shipId, flag, event) {
+            event.stopPropagation(); // מונע פתיחת המודאל בלחיצה על הכפתור
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            ship.trader_flag = flag;
+            ship.updatedAt = new Date().toISOString();
+            
+            db.collection("ships").doc(ship.id).update({ 
+                trader_flag: flag, 
+                updatedAt: new Date().toISOString() 
+            }).then(() => {
+                showToast(`סוכן שונה ל-${flag} עבור ${ship.name}`, 'success');
+            }).catch(e => console.error(e));
+        }
+
+        function toggleTaskItem(shipId, itemIndex) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+            
+            const task = ship.tasks[itemIndex];
+            // שינוי הסטטוס במעגל: pending -> in-progress -> done -> pending
+            const statusCycle = ['pending', 'in-progress', 'done'];
+            const currentIndex = statusCycle.indexOf(task.status);
+            const nextIndex = (currentIndex + 1) % statusCycle.length;
+            task.status = statusCycle[nextIndex];
+            
+            // עדכון פרטי המשימה
+            task.lastUpdatedAt = new Date().toISOString();
+            if (task.status === 'done') {
+                task.doneAt = new Date().toISOString();
+                task.doneBy = currentUser;
+            } else {
+                task.doneAt = null;
+                task.doneBy = null;
+            }
+            
+            // עדכון ל-Firestore
+            db.collection("ships").doc(ship.id).update({ 
+                tasks: ship.tasks, 
+                updatedAt: new Date().toISOString() 
+            }).then(() => {
+                updateStats();
+                addActivity('עדכון משימה', `עודכנה משימה לאנייה: ${ship.name}`);
+                
+                // בדוק אם כל משימות ההפלגה הושלמו
+                checkPostSailedTasksComplete(ship);
+            }).catch(e => console.error(e));
+        }
+
+        function promptToArchiveShip(shipId) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+            
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            
+            title.textContent = 'סיום טיפול והעברה לארכיון';
+            body.innerHTML = `
+                <div style="text-align: center; padding: var(--spacing-lg);">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" style="margin-bottom: var(--spacing-lg);">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                        <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <h3 style="margin-bottom: var(--spacing-md); color: var(--text-primary);">
+                        כל משימות ההפלגה עבור האנייה "${ship.name}" הושלמו.
+                    </h3>
+                    <p style="margin-bottom: var(--spacing-xl); color: var(--text-secondary);">
+                        האם ברצונך להעביר את האנייה לארכיון ולסגור את הטיפול בה?
+                    </p>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: center;">
+                        <button class="btn btn-primary" onclick="archiveShip('${shipId}')">כן, העבר לארכיון</button>
+                        <button class="btn btn-secondary" onclick="closeModal()">לא, השאר פעילה</button>
+                    </div>
+                    </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function archiveShip(shipId) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+            
+            // כתוב לארכיון ומחק מהרשימה הפעילה
+            db.collection("archived").doc(shipId).set({ ...ship, archivedAt: new Date().toISOString() })
+                .then(() => {
+                    db.collection("ships").doc(shipId).delete()
+                        .then(() => {
+                            showToast(`האנייה ${ship.name} הועברה לארכיון בהצלחה`, 'success');
+                            addActivity('העברה לארכיון', `האנייה ${ship.name} הועברה לארכיון לאחר השלמת כל המשימות.`);
+                            closeModal();
+                        })
+                        .catch(e => console.error("Error deleting ship:", e));
+                })
+                .catch(e => {
+                    console.error("Error archiving:", e);
+                    showToast('שגיאה בהעברת אנייה לארכיון', 'error');
+                });
+        }
+
+        function checkPostSailedTasksComplete(ship) {
+            if (ship.status !== STATUS.SAILED) {
+                return;
+            }
+
+            const postSailedTaskKeys = POST_SAILED.map(t => t.key);
+            const allDone = postSailedTaskKeys.every(key => {
+                const task = ship.tasks.find(t => t.key === key);
+                return task && task.status === 'done';
+            });
+
+            if (allDone) {
+                // העבר לארכיון אוטומטית במקום להציג חלון אישור
+                console.log(`Archiving ship ${ship.name} automatically.`);
+                archiveShip(ship.id);
+            }
+        }
+
+        function viewArchive() {
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+            
+            title.textContent = `ארכיון אניות (${archived.length})`;
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    ${archived.length === 0 ? `
+                        <div style="text-align: center; padding: var(--spacing-xl); color: var(--text-tertiary);">
+                            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin-bottom: var(--spacing-md);">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                            <p>אין אניות בארכיון</p>
+                        </div>
+                    ` : `
+                        <div style="max-height: 60vh; overflow-y: auto;">
+                            ${archived.map(ship => `
+                                <div class="ship-card archived" style="margin-bottom: var(--spacing-md);">
+                                    <div class="ship-header">
+                                        <div class="ship-title">
+                                            <div>
+                                                <div class="ship-name">${ship.name}</div>
+                                                <div class="ship-voyage">${ship.voyage || ''}</div>
+                                            </div>
+                                            <div class="ship-status status-sailed">
+                                                ${getStatusText(ship.status)}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="ship-body">
+                                        <div class="ship-info">
+                                            <div class="info-row">
+                                                <span class="info-label">נמל:</span>
+                                                <span class="info-value">${ship.port || '-'}</span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">מטען:</span>
+                                                <span class="info-value">${ship.cargo || '-'}</span>
+                                            </div>
+                                            <div class="info-row">
+                                                <span class="info-label">ארכיון:</span>
+                                                <span class="info-value">${formatDate(ship.archivedAt)}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `}
+                    
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="closeModal()">סגור</button>
+                        ${archived.length > 0 ? `
+                            <button class="btn btn-danger" onclick="clearArchive()">נקה ארכיון</button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.add('active');
+        }
+
+        function clearArchive() {
+            if (confirm('האם אתה בטוח שברצונך למחוק את כל הארכיון?')) {
+                archived = [];
+                persistArchive();
+                closeModal();
+                showToast('הארכיון נוקה', 'success');
+                addActivity('ניקוי ארכיון', 'כל האניות הוסרו מהארכיון');
+            }
+        }
+
+        function closeModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+            
+            toast.innerHTML = `
+                <span style="font-size: 18px; margin-left: var(--spacing-sm);">${icons[type]}</span>
+                <span style="flex: 1;">${message}</span>
+            `;
+            
+            container.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+
+        function addActivity(title, text) {
+            const activity = {
+                title,
+                text,
+                time: new Date().toISOString()
+            };
+            
+            // שמור פעילות ב-Firestore
+            db.collection("activities").add(activity).catch(e => console.error("Error adding activity:", e));
+            updateActivities();
+        }
+
+        function updateActivities() {
+            const content = document.getElementById('activityContent');
+            
+            if (activities.length === 0) {
+                content.innerHTML = `
+                    <div style="text-align: center; padding: var(--spacing-xl); color: var(--text-tertiary);">
+                        אין פעילות להצגה
+                    </div>
+                `;
+                return;
+            }
+            
+            content.innerHTML = activities.map(activity => `
+                <div class="activity-item">
+                    <div class="activity-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 2v4m0 12v4m-8-8h4m12 0h4"/>
+                        </svg>
+                    </div>
+                    <div class="activity-body">
+                        <div class="activity-text">${activity.title}</div>
+                        <div class="activity-time">${formatRelativeTime(activity.time)}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function formatRelativeTime(time) {
+            const now = new Date();
+            const then = new Date(time);
+            const diff = now - then;
+            
+            const minutes = Math.floor(diff / 60000);
+            const hours = Math.floor(diff / 3600000);
+            const days = Math.floor(diff / 86400000);
+            
+            if (minutes < 1) return 'כרגע';
+            if (minutes < 60) return `לפני ${minutes} דקות`;
+            if (hours < 24) return `לפני ${hours} שעות`;
+            return `לפני ${days} ימים`;
+        }
+
+        // ==================== Initialize App ====================
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
