@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ship Operations Premium | מערכת ניהול אניות</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230066FF' stroke-width='2'><path d='M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1'/><path d='M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76'/><path d='M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6'/></svg>" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -805,6 +806,694 @@
         .modal-close:hover {
             background: var(--danger);
             border-color: var(--danger);
+        }
+
+        /* ======================== EMAIL PARSER MODULE ======================== */
+        .email-parser-view {
+            display: none;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+            padding: var(--spacing-xl);
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .email-parser-view.active {
+            display: flex;
+        }
+
+        .parser-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            flex: 1;
+            min-height: 0;
+        }
+
+        .parser-input-section,
+        .parser-output-section {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--glass-border);
+        }
+
+        .parser-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .parser-section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .parser-section-title svg {
+            color: var(--primary);
+        }
+
+        .email-textarea {
+            flex: 1;
+            min-height: 300px;
+            padding: var(--spacing-md);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: none;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .email-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+
+        .email-textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        .parse-btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .parse-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--primary-glow);
+        }
+
+        .parse-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .parsed-result {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .parsed-empty {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            gap: var(--spacing-md);
+        }
+
+        .parsed-empty svg {
+            opacity: 0.3;
+        }
+
+        .confidence-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .confidence-high {
+            background: var(--success-glow);
+            color: var(--success);
+        }
+
+        .confidence-medium {
+            background: var(--warning-glow);
+            color: var(--warning);
+        }
+
+        .confidence-low {
+            background: var(--danger-glow);
+            color: var(--danger);
+        }
+
+        .parsed-field {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+        }
+
+        .parsed-field-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .parsed-field-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .parsed-field-value {
+            font-size: 16px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .parsed-field-apply {
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .parsed-field-apply:hover {
+            background: var(--primary-dark);
+        }
+
+        .parsed-field-apply.applied {
+            background: var(--success);
+        }
+
+        .parsed-services {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .parsed-service-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+        }
+
+        .parsed-service-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .parsed-service-type {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .parsed-service-details {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .uncertainty-note {
+            padding: var(--spacing-md);
+            background: var(--warning-glow);
+            border: 1px solid var(--warning);
+            border-radius: var(--radius-md);
+            color: var(--warning);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+
+        .apply-all-btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+        }
+
+        .apply-all-btn:hover {
+            background: var(--success-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px var(--success-glow);
+        }
+
+        .apply-all-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .ship-selector {
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        .ship-selector label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .ship-selector select {
+            padding: var(--spacing-sm);
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .new-ship-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-xs) var(--spacing-sm);
+            background: var(--primary-glow);
+            color: var(--primary);
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        @media (max-width: 1200px) {
+            .parser-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ======================== CONTACTS & EMAIL MANAGEMENT ======================== */
+        .contacts-view {
+            display: none;
+            flex-direction: column;
+            gap: var(--spacing-lg);
+            padding: var(--spacing-xl);
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .contacts-view.active {
+            display: flex;
+        }
+
+        .contacts-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .contacts-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .contacts-actions {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .contacts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+        }
+
+        @media (max-width: 1200px) {
+            .contacts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .contacts-section {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: var(--spacing-md);
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+        }
+
+        .search-input {
+            width: 100%;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .contacts-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            transition: all 200ms;
+        }
+
+        .contact-item:hover {
+            border-color: var(--primary);
+            background: var(--bg-tertiary);
+        }
+
+        .contact-item.selected {
+            border-color: var(--primary);
+            background: var(--primary-glow);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .contact-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .contact-email {
+            font-size: 12px;
+            color: var(--text-secondary);
+            direction: ltr;
+            text-align: right;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .contact-type {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: var(--radius-full);
+            background: var(--bg-tertiary);
+            color: var(--text-tertiary);
+            margin-right: var(--spacing-sm);
+        }
+
+        .contact-type.agent { background: var(--primary-glow); color: var(--primary); }
+        .contact-type.port { background: var(--success-glow); color: var(--success); }
+        .contact-type.owner { background: var(--warning-glow); color: var(--warning); }
+        .contact-type.charterer { background: #9333ea20; color: #9333ea; }
+        .contact-type.receiver { background: #ec489920; color: #ec4899; }
+
+        .contact-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+            opacity: 0;
+            transition: opacity 200ms;
+        }
+
+        .contact-item:hover .contact-actions {
+            opacity: 1;
+        }
+
+        .contact-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms;
+        }
+
+        .contact-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .contact-btn.delete:hover {
+            background: var(--danger);
+        }
+
+        .group-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .group-item:hover {
+            border-color: var(--primary);
+            background: var(--bg-tertiary);
+        }
+
+        .group-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .group-name {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .group-count {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        .group-actions {
+            display: flex;
+            gap: var(--spacing-xs);
+        }
+
+        /* Email Composer */
+        .email-composer {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-md);
+        }
+
+        .composer-recipients {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+            padding: var(--spacing-sm);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            min-height: 44px;
+            align-items: center;
+        }
+
+        .recipient-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--spacing-xs);
+            padding: 4px 8px;
+            background: var(--primary-glow);
+            color: var(--primary);
+            border-radius: var(--radius-full);
+            font-size: 12px;
+        }
+
+        .recipient-tag .remove {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .recipient-tag .remove:hover {
+            opacity: 1;
+        }
+
+        .recipient-tag.group {
+            background: var(--success-glow);
+            color: var(--success);
+        }
+
+        .add-recipient-btn {
+            padding: 4px 12px;
+            background: transparent;
+            border: 1px dashed var(--glass-border);
+            border-radius: var(--radius-full);
+            color: var(--text-tertiary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+
+        .add-recipient-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .email-preview {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            direction: ltr;
+            text-align: left;
+        }
+
+        .open-outlook-btn {
+            padding: var(--spacing-md) var(--spacing-xl);
+            background: #0078d4;
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            transition: all 200ms;
+        }
+
+        .open-outlook-btn:hover {
+            background: #106ebe;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 120, 212, 0.3);
+        }
+
+        .checkbox-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background 200ms;
+        }
+
+        .checkbox-item:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .checkbox-item label {
+            flex: 1;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: var(--spacing-xl);
+            color: var(--text-tertiary);
+        }
+
+        .empty-state svg {
+            opacity: 0.3;
+            margin-bottom: var(--spacing-md);
         }
 
         /* Form Styles */
@@ -1874,6 +2563,435 @@
             display: flex;
             justify-content: space-between;
         }
+
+        /* ======================== DISCHARGE TRACKING VIEW ======================== */
+        .discharge-view {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+        .discharge-view.active {
+            display: block;
+        }
+        .discharge-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-xl);
+        }
+        .discharge-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .discharge-actions {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+        .discharge-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+        }
+        @media (max-width: 1200px) {
+            .discharge-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .discharge-section {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+        }
+        .discharge-section-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: var(--spacing-md);
+        }
+
+        /* Tally Input Methods */
+        .tally-input-tabs {
+            display: flex;
+            gap: var(--spacing-xs);
+            background: var(--bg-secondary);
+            padding: var(--spacing-xs);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-md);
+        }
+        .tally-input-tab {
+            flex: 1;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-sm);
+            color: var(--text-tertiary);
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-xs);
+        }
+        .tally-input-tab:hover {
+            color: var(--text-secondary);
+            background: var(--bg-hover);
+        }
+        .tally-input-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        .tally-input-content {
+            display: none;
+        }
+        .tally-input-content.active {
+            display: block;
+        }
+
+        /* File Drop Zone */
+        .tally-drop-zone {
+            border: 2px dashed var(--glass-border);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-2xl);
+            text-align: center;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .tally-drop-zone:hover,
+        .tally-drop-zone.dragover {
+            border-color: var(--primary);
+            background: var(--bg-hover);
+        }
+        .tally-drop-zone svg {
+            margin-bottom: var(--spacing-md);
+            color: var(--text-tertiary);
+        }
+        .tally-drop-zone p {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-sm);
+        }
+        .tally-drop-zone span {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* Text Input */
+        .tally-text-input {
+            width: 100%;
+            min-height: 200px;
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            resize: vertical;
+            direction: ltr;
+            text-align: left;
+        }
+        .tally-text-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+        .tally-text-input::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        /* Parse Button */
+        .parse-tally-btn {
+            width: 100%;
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-sm);
+            transition: all 200ms;
+        }
+        .parse-tally-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        /* Parsed Tally Results */
+        .tally-results {
+            margin-top: var(--spacing-lg);
+        }
+        .tally-result-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+        }
+        .tally-result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: var(--spacing-sm);
+        }
+        .tally-result-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .tally-result-date {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .tally-shift-row {
+            display: grid;
+            grid-template-columns: 80px 1fr 100px 100px;
+            gap: var(--spacing-md);
+            padding: var(--spacing-sm);
+            border-bottom: 1px solid var(--glass-border);
+            font-size: 13px;
+        }
+        .tally-shift-row:last-child {
+            border-bottom: none;
+        }
+        .tally-shift-row.header {
+            font-weight: 600;
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+        .tally-shift-name {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        .tally-cargo-details {
+            color: var(--text-secondary);
+        }
+        .tally-quantity {
+            text-align: left;
+            direction: ltr;
+            font-family: 'Courier New', monospace;
+        }
+        .tally-weight {
+            text-align: left;
+            direction: ltr;
+            font-family: 'Courier New', monospace;
+        }
+
+        /* Remarks Section */
+        .tally-remarks {
+            margin-top: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-sm);
+            border-right: 3px solid var(--warning);
+        }
+        .tally-remarks-title {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--warning);
+            margin-bottom: var(--spacing-xs);
+        }
+        .tally-remarks-text {
+            color: var(--text-secondary);
+            font-size: 13px;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Progress Tracking */
+        .discharge-progress {
+            margin-top: var(--spacing-lg);
+        }
+        .progress-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+        .progress-stat {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+        }
+        .progress-stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: 'Orbitron', sans-serif;
+        }
+        .progress-stat-label {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: var(--spacing-xs);
+        }
+        .progress-bar-container {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-full);
+            height: 24px;
+            overflow: hidden;
+            margin-bottom: var(--spacing-md);
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary), var(--success));
+            border-radius: var(--radius-full);
+            transition: width 500ms ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* Daily Log */
+        .daily-log {
+            margin-top: var(--spacing-lg);
+        }
+        .daily-log-item {
+            display: flex;
+            gap: var(--spacing-md);
+            padding: var(--spacing-md);
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            margin-bottom: var(--spacing-sm);
+        }
+        .daily-log-date {
+            min-width: 80px;
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 13px;
+        }
+        .daily-log-details {
+            flex: 1;
+        }
+        .daily-log-cargo {
+            display: flex;
+            gap: var(--spacing-lg);
+            font-size: 13px;
+            margin-bottom: var(--spacing-xs);
+        }
+        .daily-log-cargo span {
+            color: var(--text-secondary);
+        }
+        .daily-log-cargo strong {
+            color: var(--text-primary);
+            margin-right: var(--spacing-xs);
+        }
+        .daily-log-remarks {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            font-style: italic;
+            direction: ltr;
+            text-align: left;
+        }
+
+        /* Ship Selection for Discharge */
+        .discharge-ship-selector {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: center;
+            margin-bottom: var(--spacing-lg);
+        }
+        .discharge-ship-selector select {
+            flex: 1;
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .discharge-ship-selector select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Apply Tally Button */
+        .apply-tally-btn {
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: var(--success);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            transition: all 200ms;
+        }
+        .apply-tally-btn:hover {
+            background: var(--success-dark);
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px var(--success-glow);
+        }
+        .apply-tally-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Image Preview */
+        .tally-image-preview {
+            margin-top: var(--spacing-md);
+            max-height: 300px;
+            overflow: auto;
+            border-radius: var(--radius-md);
+            background: var(--bg-secondary);
+        }
+        .tally-image-preview img {
+            max-width: 100%;
+            display: block;
+        }
+
+        /* Processing Indicator */
+        .tally-processing {
+            display: none;
+            align-items: center;
+            justify-content: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-xl);
+            color: var(--text-secondary);
+        }
+        .tally-processing.active {
+            display: flex;
+        }
+        .tally-processing .spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 
     <!-- Firebase SDK (compat version for classic script) -->
@@ -1890,8 +3008,20 @@
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="sidebar-header">
-                <div class="logo-container">
-                    <img src="logo/logo.png" alt="Ship Operations Premium Logo" class="animated-logo"/>
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                            <path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/>
+                            <path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/>
+                            <path d="M12 10v4"/>
+                            <path d="M12 2v3"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="logo-text">Ship Operations</div>
+                        <div class="logo-subtitle">Premium System</div>
+                    </div>
                 </div>
             </div>
             
@@ -1911,6 +3041,30 @@
                         <path d="M9 9h6M9 15h6"/>
                     </svg>
                     <span>מבט מהיר</span>
+                </div>
+                <div class="nav-item" onclick="switchToParserView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    <span>ניתוח הודעות</span>
+                </div>
+                <div class="nav-item" onclick="switchToContactsView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                        <circle cx="9" cy="7" r="4"/>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                    </svg>
+                    <span>אנשי קשר</span>
+                </div>
+                <div class="nav-item" onclick="switchToDischargeView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                        <line x1="12" y1="22.08" x2="12" y2="12"/>
+                    </svg>
+                    <span>מעקב פריקה</span>
                 </div>
             </nav>
 
@@ -2060,6 +3214,466 @@
                 <!-- Ships Grid -->
                 <div class="ships-grid" id="shipsGrid">
                     <!-- Ships will be rendered here -->
+                </div>
+
+                <!-- Email Parser View -->
+                <div class="email-parser-view" id="emailParserView">
+                    <div class="parser-section-header">
+                        <h2 class="parser-section-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            ניתוח הודעות אוטומטי
+                        </h2>
+                    </div>
+
+                    <div class="parser-container">
+                        <!-- Input Section -->
+                        <div class="parser-input-section">
+                            <div class="parser-section-header">
+                                <h3 class="parser-section-title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    הדבק הודעה / אימייל
+                                </h3>
+                            </div>
+                            <textarea
+                                class="email-textarea"
+                                id="emailInput"
+                                placeholder="הדבק כאן את תוכן האימייל או ההודעה...
+
+לדוגמה:
+From: Lady Zehma <mvladyzehma@gmail.com>
+Subject: ETA to Haifa - 6 Hrs Notice
+
+Dear Agency,
+ETA to Haifa plt stn: 04.01.2026 / 14:00 lt
+Need 50 tons fresh water
+Crew change: 2 joining, 3 leaving
+
+Best Regards,
+Captain"></textarea>
+                            <button class="parse-btn" onclick="parseEmailMessage()">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <path d="m21 21-4.35-4.35"/>
+                                </svg>
+                                נתח הודעה
+                            </button>
+                        </div>
+
+                        <!-- Output Section -->
+                        <div class="parser-output-section">
+                            <div class="parser-section-header">
+                                <h3 class="parser-section-title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14,2 14,8 20,8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                    </svg>
+                                    תוצאות ניתוח
+                                </h3>
+                            </div>
+                            <div class="parsed-result" id="parsedResult">
+                                <div class="parsed-empty">
+                                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                        <polyline points="22,6 12,13 2,6"/>
+                                    </svg>
+                                    <span>הדבק הודעה ולחץ "נתח הודעה" לקבלת תוצאות</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contacts & Email Management View -->
+                <div class="contacts-view" id="contactsView">
+                    <div class="contacts-header">
+                        <h2 class="contacts-title">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                            ניהול אנשי קשר וקבוצות מייל
+                        </h2>
+                        <div class="contacts-actions">
+                            <button class="btn btn-secondary" onclick="openAddContactModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="8.5" cy="7" r="4"/>
+                                    <line x1="20" y1="8" x2="20" y2="14"/>
+                                    <line x1="23" y1="11" x2="17" y2="11"/>
+                                </svg>
+                                איש קשר חדש
+                            </button>
+                            <button class="btn btn-primary" onclick="openAddGroupModal()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                                קבוצה חדשה
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="contacts-grid">
+                        <!-- Contacts Section -->
+                        <div class="contacts-section">
+                            <div class="section-header">
+                                <h3 class="section-title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    אנשי קשר
+                                </h3>
+                                <span class="contacts-count" id="contactsCount">0</span>
+                            </div>
+                            <input type="text" class="search-input" id="contactSearch" placeholder="חיפוש איש קשר..." oninput="filterContacts()">
+                            <div class="contacts-list" id="contactsList">
+                                <div class="empty-state">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                    <p>אין אנשי קשר עדיין</p>
+                                    <button class="btn btn-primary btn-sm" onclick="openAddContactModal()">הוסף איש קשר</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Groups Section -->
+                        <div class="contacts-section">
+                            <div class="section-header">
+                                <h3 class="section-title">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                    קבוצות מייל
+                                </h3>
+                                <span class="contacts-count" id="groupsCount">0</span>
+                            </div>
+                            <div class="contacts-list" id="groupsList">
+                                <div class="empty-state">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                    <p>אין קבוצות עדיין</p>
+                                    <button class="btn btn-primary btn-sm" onclick="openAddGroupModal()">צור קבוצה</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Email Composer Section -->
+                    <div class="email-composer" id="emailComposer">
+                        <div class="section-header">
+                            <h3 class="section-title">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                    <polyline points="22,6 12,13 2,6"/>
+                                </svg>
+                                הכנת דוח למשלוח
+                            </h3>
+                            <select id="shipSelectForEmail" class="form-group select" onchange="updateEmailPreview()" style="width: auto; padding: 6px 12px;">
+                                <option value="">בחר אנייה...</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>נמענים:</label>
+                            <div class="composer-recipients" id="composerRecipients">
+                                <button class="add-recipient-btn" onclick="openRecipientSelector()">+ הוסף נמענים</button>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>נושא:</label>
+                            <input type="text" id="emailSubject" placeholder="נושא ההודעה..." onchange="updateEmailPreview()">
+                        </div>
+
+                        <div class="form-group">
+                            <label>תצוגה מקדימה:</label>
+                            <div class="email-preview" id="emailPreview">
+                                בחר אנייה ונמענים ליצירת הדוח...
+                            </div>
+                        </div>
+
+                        <button class="open-outlook-btn" onclick="openInOutlook()">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                                <polyline points="22,6 12,13 2,6"/>
+                            </svg>
+                            פתח ב-Outlook
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Discharge Tracking View -->
+                <div class="discharge-view" id="dischargeView">
+                    <div class="discharge-header">
+                        <h2 class="discharge-title">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                            מעקב פריקה - Discharge Tracking
+                        </h2>
+                        <div class="discharge-actions">
+                            <button class="btn btn-secondary" onclick="clearTallyData()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                                נקה נתונים
+                            </button>
+                            <button class="btn btn-primary" onclick="exportDischargeReport()">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="7 10 12 15 17 10"/>
+                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                </svg>
+                                ייצוא דוח
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Ship Selection -->
+                    <div class="discharge-ship-selector">
+                        <label style="font-weight: 600; color: var(--text-primary);">בחר אנייה:</label>
+                        <select id="dischargeShipSelect" onchange="loadDischargeData()">
+                            <option value="">-- בחר אנייה --</option>
+                        </select>
+                    </div>
+
+                    <div class="discharge-grid">
+                        <!-- Tally Input Section -->
+                        <div class="discharge-section">
+                            <h3 class="discharge-section-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                    <line x1="16" y1="13" x2="8" y2="13"/>
+                                    <line x1="16" y1="17" x2="8" y2="17"/>
+                                    <polyline points="10 9 9 9 8 9"/>
+                                </svg>
+                                קליטת טאלי יומי
+                            </h3>
+
+                            <!-- Input Method Tabs -->
+                            <div class="tally-input-tabs">
+                                <button class="tally-input-tab active" onclick="switchTallyInputTab('text')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                    </svg>
+                                    טקסט
+                                </button>
+                                <button class="tally-input-tab" onclick="switchTallyInputTab('image')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                    תמונה
+                                </button>
+                                <button class="tally-input-tab" onclick="switchTallyInputTab('pdf')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <path d="M9 15h6"/>
+                                    </svg>
+                                    PDF
+                                </button>
+                            </div>
+
+                            <!-- Text Input -->
+                            <div class="tally-input-content active" id="tallyInputText">
+                                <textarea class="tally-text-input" id="tallyTextArea" placeholder="Paste tally report here...
+
+Example format:
+Date: 15/01/2024
+Shift 1 (07:00-15:00): Gang 1-2
+- Steel coils: 150 units, 2,450 MT
+- Breakbulk: 45 units, 890 MT
+
+Shift 2 (15:00-23:00): Gang 1-3
+- Steel coils: 180 units, 2,890 MT
+
+Remarks: Rain stopped operations 14:30-15:15"></textarea>
+                                <button class="parse-tally-btn" onclick="parseTallyText()">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    נתח טאלי
+                                </button>
+                            </div>
+
+                            <!-- Image Input -->
+                            <div class="tally-input-content" id="tallyInputImage">
+                                <div class="tally-drop-zone" id="imageDropZone" onclick="document.getElementById('tallyImageInput').click()">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                                        <polyline points="21 15 16 10 5 21"/>
+                                    </svg>
+                                    <p>גרור תמונה לכאן או לחץ לבחירה</p>
+                                    <span>PNG, JPG, JPEG (מקסימום 10MB)</span>
+                                </div>
+                                <input type="file" id="tallyImageInput" accept="image/*" style="display: none;" onchange="handleTallyImage(event)">
+                                <div class="tally-image-preview" id="tallyImagePreview" style="display: none;"></div>
+                                <div class="tally-processing" id="imageProcessing">
+                                    <div class="spinner"></div>
+                                    <span>מעבד תמונה...</span>
+                                </div>
+                                <button class="parse-tally-btn" id="parseImageBtn" onclick="parseImageTally()" style="display: none;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    נתח תמונה
+                                </button>
+                            </div>
+
+                            <!-- PDF Input -->
+                            <div class="tally-input-content" id="tallyInputPdf">
+                                <div class="tally-drop-zone" id="pdfDropZone" onclick="document.getElementById('tallyPdfInput').click()">
+                                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <path d="M9 15h6"/>
+                                    </svg>
+                                    <p>גרור קובץ PDF לכאן או לחץ לבחירה</p>
+                                    <span>PDF (מקסימום 10MB)</span>
+                                </div>
+                                <input type="file" id="tallyPdfInput" accept=".pdf" style="display: none;" onchange="handleTallyPdf(event)">
+                                <div class="tally-processing" id="pdfProcessing">
+                                    <div class="spinner"></div>
+                                    <span>מעבד PDF...</span>
+                                </div>
+                                <div id="pdfFileName" style="margin-top: var(--spacing-md); color: var(--text-secondary); display: none;"></div>
+                                <button class="parse-tally-btn" id="parsePdfBtn" onclick="parsePdfTally()" style="display: none;">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    נתח PDF
+                                </button>
+                            </div>
+
+                            <!-- Parsed Results -->
+                            <div class="tally-results" id="tallyResults" style="display: none;">
+                                <h4 style="color: var(--text-primary); margin-bottom: var(--spacing-md);">תוצאות ניתוח:</h4>
+                                <div class="tally-result-card">
+                                    <div class="tally-result-header">
+                                        <span class="tally-result-title" id="parsedTallyDate">--</span>
+                                        <span class="tally-result-date" id="parsedTallyTime">--</span>
+                                    </div>
+                                    <div class="tally-shift-row header">
+                                        <span>משמרת</span>
+                                        <span>מטען</span>
+                                        <span>כמות</span>
+                                        <span>משקל (MT)</span>
+                                    </div>
+                                    <div id="parsedShiftsContainer">
+                                        <!-- Shifts will be rendered here -->
+                                    </div>
+                                    <div class="tally-remarks" id="parsedRemarks" style="display: none;">
+                                        <div class="tally-remarks-title">Remarks / Events</div>
+                                        <div class="tally-remarks-text" id="parsedRemarksText"></div>
+                                    </div>
+                                </div>
+                                <button class="apply-tally-btn" onclick="applyTallyToShip()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"/>
+                                    </svg>
+                                    החל על האנייה
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Progress Tracking Section -->
+                        <div class="discharge-section">
+                            <h3 class="discharge-section-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                </svg>
+                                התקדמות פריקה
+                            </h3>
+
+                            <div class="discharge-progress">
+                                <div class="progress-summary">
+                                    <div class="progress-stat">
+                                        <div class="progress-stat-value" id="totalDischarged">0</div>
+                                        <div class="progress-stat-label">טון שנפרקו</div>
+                                    </div>
+                                    <div class="progress-stat">
+                                        <div class="progress-stat-value" id="totalUnits">0</div>
+                                        <div class="progress-stat-label">יחידות</div>
+                                    </div>
+                                    <div class="progress-stat">
+                                        <div class="progress-stat-value" id="totalDays">0</div>
+                                        <div class="progress-stat-label">ימי פריקה</div>
+                                    </div>
+                                    <div class="progress-stat">
+                                        <div class="progress-stat-value" id="avgPerDay">0</div>
+                                        <div class="progress-stat-label">ממוצע ליום (MT)</div>
+                                    </div>
+                                </div>
+
+                                <div class="progress-bar-container">
+                                    <div class="progress-bar" id="dischargeProgressBar" style="width: 0%;">0%</div>
+                                </div>
+
+                                <div style="display: flex; justify-content: space-between; font-size: 12px; color: var(--text-tertiary); margin-bottom: var(--spacing-lg);">
+                                    <span>נפרק: <span id="dischargedAmount">0</span> MT</span>
+                                    <span>נותר: <span id="remainingAmount">0</span> MT</span>
+                                    <span>סה"כ: <span id="totalCargo">0</span> MT</span>
+                                </div>
+                            </div>
+
+                            <!-- Daily Log -->
+                            <div class="daily-log">
+                                <h4 style="color: var(--text-primary); margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: var(--spacing-sm);">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                        <line x1="16" y1="2" x2="16" y2="6"/>
+                                        <line x1="8" y1="2" x2="8" y2="6"/>
+                                        <line x1="3" y1="10" x2="21" y2="10"/>
+                                    </svg>
+                                    יומן פריקה יומי
+                                </h4>
+                                <div id="dailyLogContainer">
+                                    <div class="empty-state">
+                                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                            <line x1="16" y1="2" x2="16" y2="6"/>
+                                            <line x1="8" y1="2" x2="8" y2="6"/>
+                                            <line x1="3" y1="10" x2="21" y2="10"/>
+                                        </svg>
+                                        <p>אין נתוני פריקה עדיין</p>
+                                        <span>קלוט טאלי יומי להתחלת מעקב</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -2367,6 +3981,7 @@
             updateStats();
             updateActivities();
             setupEventListeners();
+            setupDropZones(); // Setup drag and drop for tally input
         }
 
         function setupEventListeners() {
@@ -3166,6 +4781,12 @@
             document.querySelector('.tabs').style.display = 'flex';
             document.querySelector('.stats-grid').style.display = 'grid';
 
+            // הסתר את תצוגות אחרות והצג את הגריד
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('shipsGrid').style.display = 'grid';
+
             currentTab = 'all'; // אפס לטאב "כל האניות"
             // אפס את כפתורי הטאבים למצב ברירת מחדל
             document.querySelectorAll('.tabs .tab').forEach(t => t.classList.remove('active'));
@@ -3184,14 +4805,2433 @@
             // הסר 'active' מכל כפתורי הניווט הראשי
             document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
             // הוסף 'active' לכפתור "מבט מהיר"
-            document.querySelector('.nav-menu .nav-item:last-of-type').classList.add('active');
+            document.querySelectorAll('.nav-menu .nav-item')[1].classList.add('active');
 
             // הסתר את הטאבים והסטטיסטיקות שאינם רלוונטיים
             document.querySelector('.tabs').style.display = 'none';
             document.querySelector('.stats-grid').style.display = 'none';
 
+            // הסתר את תצוגות אחרות והצג את הגריד
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('shipsGrid').style.display = 'grid';
+
             currentTab = 'quick'; // עדכן את המצב הנוכחי
             renderQuickView(); // רנדר את תצוגת "מבט מהיר"
+        }
+
+        function switchToParserView() {
+            // הסר 'active' מכל כפתורי הניווט הראשי
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            // הוסף 'active' לכפתור "ניתוח הודעות"
+            document.querySelectorAll('.nav-menu .nav-item')[2].classList.add('active');
+
+            // הסתר את הטאבים והסטטיסטיקות
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+
+            // הסתר תצוגות אחרות והצג את תצוגת הפרסר
+            document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('emailParserView').classList.add('active');
+
+            currentTab = 'parser';
+        }
+
+        // ==================== EMAIL PARSER MODULE ====================
+        let lastParsedData = null;
+
+        function parseEmailMessage() {
+            const emailText = document.getElementById('emailInput').value.trim();
+            if (!emailText) {
+                showToast('נא להדביק הודעה לניתוח', 'warning');
+                return;
+            }
+
+            const parsedData = extractShipData(emailText);
+            lastParsedData = parsedData;
+            displayParsedResult(parsedData);
+        }
+
+        function extractShipData(text) {
+            const result = {
+                match_confidence: 0,
+                identified_ship_id: null,
+                matched_ship: null,
+                is_new_ship: false,
+                updates: {
+                    name: null,
+                    status: null,
+                    eta: null,
+                    etb: null,
+                    etd: null,
+                    port: null,
+                    cargo: null,
+                    services_to_add: [],
+                    notes_delta: null
+                },
+                uncertainty_note: null
+            };
+
+            // 1. Extract vessel name
+            const vesselName = extractVesselName(text);
+            if (vesselName) {
+                result.updates.name = vesselName;
+
+                // Try to match with existing ships
+                const matchedShip = findMatchingShip(vesselName);
+                if (matchedShip) {
+                    result.matched_ship = matchedShip;
+                    result.identified_ship_id = matchedShip.id;
+                    result.match_confidence = calculateMatchConfidence(vesselName, matchedShip.name);
+                } else {
+                    result.is_new_ship = true;
+                    result.match_confidence = 0.7; // New ship, name confidence
+                }
+            }
+
+            // 2. Extract dates (ETA, ETB, ETD)
+            const dates = extractDates(text);
+            if (dates.eta) result.updates.eta = dates.eta;
+            if (dates.etb) result.updates.etb = dates.etb;
+            if (dates.etd) result.updates.etd = dates.etd;
+
+            // 3. Extract port
+            const port = extractPort(text);
+            if (port) result.updates.port = port;
+
+            // 4. Determine status based on context
+            result.updates.status = determineStatus(text, dates);
+
+            // 5. Extract services
+            result.updates.services_to_add = extractServices(text);
+
+            // 6. Extract cargo
+            const cargo = extractCargo(text);
+            if (cargo) result.updates.cargo = cargo;
+
+            // 7. Extract notes (master name, contact info, etc.)
+            const notes = extractNotes(text);
+            if (notes) result.updates.notes_delta = notes;
+
+            // 8. Check for uncertainty markers
+            result.uncertainty_note = checkUncertainty(text);
+
+            // Update confidence based on data extracted
+            if (!vesselName) result.match_confidence = 0.3;
+            else if (dates.eta || dates.etb) result.match_confidence = Math.min(result.match_confidence + 0.1, 1);
+
+            return result;
+        }
+
+        function extractVesselName(text) {
+            // Common patterns for vessel names
+            const patterns = [
+                /(?:M\/?V|MV|m\.v\.|mv)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?(?:\s*\/|\s*$|\s*\n|\s*<)/i,
+                /(?:vessel|ship|from)[\s:]+["']?([A-Z][A-Za-z\s\-\.]+?)["']?(?:\s*\/|\s*$|\s*\n)/i,
+                /Subject:.*?(?:M\/?V|MV|m\.v\.|VESSEL)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?/i,
+                /^(?:M\/?V|MV|m\.v\.|VESSEL)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?/im,
+                /VESSEL[\s:]+["']?([A-Z][A-Za-z\s\-\.]+?)["']?(?:\s*\/|\s*$|\s*\n|\s*,)/i,
+                /(?:RE|FW|Fwd)[\s:]+.*?(?:M\/?V|MV|VESSEL)[\s.:]*["']?([A-Z][A-Za-z\s\-\.]+?)["']?/i
+            ];
+
+            for (const pattern of patterns) {
+                const match = text.match(pattern);
+                if (match && match[1]) {
+                    // Clean up the name
+                    let name = match[1].trim()
+                        .replace(/\s+/g, ' ')
+                        .replace(/[<>]/g, '')
+                        .replace(/\s*\/\s*$/, '')
+                        .replace(/\s*Msg.*$/i, '')
+                        .trim();
+
+                    // Validate it looks like a ship name
+                    if (name.length >= 3 && name.length <= 50 && /^[A-Za-z]/.test(name)) {
+                        return name.toUpperCase();
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        function findMatchingShip(vesselName) {
+            if (!vesselName || !ships || ships.length === 0) return null;
+
+            const normalizedSearch = vesselName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            // Try exact match first
+            let match = ships.find(s =>
+                s.name && s.name.toLowerCase().replace(/[^a-z0-9]/g, '') === normalizedSearch
+            );
+            if (match) return match;
+
+            // Try partial match
+            match = ships.find(s => {
+                if (!s.name) return false;
+                const shipName = s.name.toLowerCase().replace(/[^a-z0-9]/g, '');
+                return shipName.includes(normalizedSearch) || normalizedSearch.includes(shipName);
+            });
+            if (match) return match;
+
+            // Try fuzzy match (at least 70% similarity)
+            for (const ship of ships) {
+                if (!ship.name) continue;
+                const similarity = calculateSimilarity(
+                    vesselName.toLowerCase(),
+                    ship.name.toLowerCase()
+                );
+                if (similarity > 0.7) {
+                    return ship;
+                }
+            }
+
+            return null;
+        }
+
+        function calculateSimilarity(str1, str2) {
+            const longer = str1.length > str2.length ? str1 : str2;
+            const shorter = str1.length > str2.length ? str2 : str1;
+
+            if (longer.length === 0) return 1.0;
+
+            const costs = [];
+            for (let i = 0; i <= shorter.length; i++) {
+                let lastValue = i;
+                for (let j = 0; j <= longer.length; j++) {
+                    if (i === 0) {
+                        costs[j] = j;
+                    } else if (j > 0) {
+                        let newValue = costs[j - 1];
+                        if (shorter.charAt(i - 1) !== longer.charAt(j - 1)) {
+                            newValue = Math.min(Math.min(newValue, lastValue), costs[j]) + 1;
+                        }
+                        costs[j - 1] = lastValue;
+                        lastValue = newValue;
+                    }
+                }
+                if (i > 0) costs[longer.length] = lastValue;
+            }
+
+            return (longer.length - costs[longer.length]) / longer.length;
+        }
+
+        function calculateMatchConfidence(extractedName, matchedName) {
+            const similarity = calculateSimilarity(
+                extractedName.toLowerCase(),
+                matchedName.toLowerCase()
+            );
+            return Math.round(similarity * 100) / 100;
+        }
+
+        function extractDates(text) {
+            const result = { eta: null, etb: null, etd: null };
+            const currentYear = new Date().getFullYear();
+
+            // Patterns for different date formats
+            const datePatterns = [
+                // DD.MM.YYYY / HH:MM or DD/MM/YYYY HH:MM
+                /(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})[\s\/]*(?:at\s*)?(\d{1,2})[:\.](\d{2})/gi,
+                // DD.MM / HH:MM (no year)
+                /(\d{1,2})[.\/](\d{1,2})[\s\/]+(\d{1,2})[:\.](\d{2})/g,
+                // YYYY-MM-DD HH:MM (ISO-ish)
+                /(\d{4})-(\d{2})-(\d{2})[\sT](\d{2}):(\d{2})/g
+            ];
+
+            // Find ETA
+            const etaMatch = text.match(/ETA[^:]*:?\s*[^\d]*(\d{1,2}[.\/]\d{1,2}[.\/]?\d{0,4}[\s\/]*(?:at\s*)?(?:\d{1,2}[:\.]?\d{2})?)/i);
+            if (etaMatch) {
+                const parsed = parseDateTime(etaMatch[1], currentYear);
+                if (parsed) result.eta = parsed;
+            }
+
+            // Find ETB
+            const etbMatch = text.match(/ETB[^:]*:?\s*[^\d]*(\d{1,2}[.\/]\d{1,2}[.\/]?\d{0,4}[\s\/]*(?:at\s*)?(?:\d{1,2}[:\.]?\d{2})?)/i);
+            if (etbMatch) {
+                const parsed = parseDateTime(etbMatch[1], currentYear);
+                if (parsed) result.etb = parsed;
+            }
+
+            // Find ETD
+            const etdMatch = text.match(/ETD[^:]*:?\s*[^\d]*(\d{1,2}[.\/]\d{1,2}[.\/]?\d{0,4}[\s\/]*(?:at\s*)?(?:\d{1,2}[:\.]?\d{2})?)/i);
+            if (etdMatch) {
+                const parsed = parseDateTime(etdMatch[1], currentYear);
+                if (parsed) result.etd = parsed;
+            }
+
+            return result;
+        }
+
+        function parseDateTime(dateStr, defaultYear) {
+            if (!dateStr) return null;
+
+            // Clean up the string
+            dateStr = dateStr.trim().replace(/\s+/g, ' ');
+
+            // Try DD.MM.YYYY HH:MM format
+            let match = dateStr.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})[\s\/]*(?:at\s*)?(\d{1,2})[:\.](\d{2})/i);
+            if (match) {
+                let year = parseInt(match[3]);
+                if (year < 100) year += 2000;
+                const date = new Date(year, parseInt(match[2]) - 1, parseInt(match[1]), parseInt(match[4]), parseInt(match[5]));
+                return date.toISOString();
+            }
+
+            // Try DD.MM HH:MM format (no year)
+            match = dateStr.match(/(\d{1,2})[.\/](\d{1,2})[\s\/]+(\d{1,2})[:\.](\d{2})/);
+            if (match) {
+                let year = defaultYear;
+                const month = parseInt(match[2]) - 1;
+                const day = parseInt(match[1]);
+                // If the date is in the past, assume next year
+                const testDate = new Date(year, month, day);
+                if (testDate < new Date()) {
+                    year++;
+                }
+                const date = new Date(year, month, day, parseInt(match[3]), parseInt(match[4]));
+                return date.toISOString();
+            }
+
+            // Try DD.MM.YYYY format (no time)
+            match = dateStr.match(/(\d{1,2})[.\/](\d{1,2})[.\/](\d{2,4})/);
+            if (match) {
+                let year = parseInt(match[3]);
+                if (year < 100) year += 2000;
+                const date = new Date(year, parseInt(match[2]) - 1, parseInt(match[1]), 0, 0);
+                return date.toISOString();
+            }
+
+            return null;
+        }
+
+        function extractPort(text) {
+            const textLower = text.toLowerCase();
+
+            // Port mapping with all variations
+            const portMap = {
+                // חיפה ונמליה
+                'haifa': 'חיפה',
+                'חיפה': 'חיפה',
+                'מספנות': 'מספנות ישראל',
+                'מספנות ישראל': 'מספנות ישראל',
+                'israel shipyards': 'מספנות ישראל',
+                'shipyards': 'מספנות ישראל',
+                'נמל המפרץ': 'נמל המפרץ',
+                'bay port': 'נמל המפרץ',
+                'haifa bay': 'נמל המפרץ',
+                // אשדוד
+                'ashdod': 'אשדוד',
+                'אשדוד': 'אשדוד',
+                'נמל הדרום': 'נמל הדרום',
+                'south port': 'נמל הדרום',
+                // אחרים
+                'eilat': 'אילת',
+                'אילת': 'אילת',
+                'ashkelon': 'אשקלון',
+                'אשקלון': 'אשקלון'
+            };
+
+            // Check for port mentions (longer patterns first for better matching)
+            const sortedPorts = Object.keys(portMap).sort((a, b) => b.length - a.length);
+
+            for (const port of sortedPorts) {
+                if (textLower.includes(port.toLowerCase())) {
+                    return portMap[port];
+                }
+            }
+
+            return null;
+        }
+
+        function determineStatus(text, dates) {
+            const textLower = text.toLowerCase();
+
+            // Check for explicit status mentions
+            if (textLower.includes('sailed') || textLower.includes('departed') || textLower.includes('הפלגה')) {
+                return 'Sailed';
+            }
+            if (textLower.includes('berthing') || textLower.includes('alongside') || textLower.includes('עוגנת')) {
+                return 'At Port';
+            }
+            if (textLower.includes('operation') || textLower.includes('discharging') || textLower.includes('loading') ||
+                textLower.includes('פריקה') || textLower.includes('טעינה')) {
+                return 'Under Operation';
+            }
+
+            // Infer from dates
+            if (dates.eta && !dates.etb) {
+                return 'At Sea';
+            }
+            if (dates.etb && !dates.etd) {
+                return 'At Port';
+            }
+
+            // Check for notice patterns (6 hrs notice usually means approaching)
+            if (text.match(/\d+\s*(?:hrs?|hours?)\s*notice/i)) {
+                return 'At Sea';
+            }
+
+            return 'At Sea'; // Default
+        }
+
+        function extractServices(text) {
+            const services = [];
+            const textLower = text.toLowerCase();
+
+            // Water supply
+            const waterMatch = text.match(/(\d+)\s*(?:tons?|טון|t\.?)\s*(?:of\s*)?(?:fresh\s*)?water/i) ||
+                              text.match(/water[:\s]+(\d+)\s*(?:tons?|טון|t\.?)/i) ||
+                              text.match(/מים[:\s]+(\d+)\s*טון/);
+            if (waterMatch) {
+                services.push({
+                    type: 'water',
+                    status: 'requested',
+                    details: { amount: parseInt(waterMatch[1]) }
+                });
+            } else if (textLower.includes('fresh water') || textLower.includes('water supply') || textLower.includes('מים')) {
+                services.push({
+                    type: 'water',
+                    status: 'requested',
+                    details: { amount: null }
+                });
+            }
+
+            // Crew change
+            const crewMatch = text.match(/crew\s*(?:change)?[:\s]*(\d+)\s*(?:joining|on|נכנסים)[,\s]*(\d+)\s*(?:leaving|off|יוצאים)/i) ||
+                             text.match(/(\d+)\s*(?:joining|on|נכנסים)[,\s]*(\d+)\s*(?:leaving|off|יוצאים)/i) ||
+                             text.match(/חילוף\s*צוות[:\s]*(\d+)\s*נכנסים[,\s]*(\d+)\s*יוצאים/);
+            if (crewMatch) {
+                services.push({
+                    type: 'crew_change',
+                    status: 'requested',
+                    details: {
+                        crewIn: parseInt(crewMatch[1]),
+                        crewOut: parseInt(crewMatch[2])
+                    }
+                });
+            } else if (textLower.includes('crew change') || textLower.includes('חילוף צוות')) {
+                services.push({
+                    type: 'crew_change',
+                    status: 'requested',
+                    details: { crewIn: null, crewOut: null }
+                });
+            }
+
+            // Package/Parcel
+            const packageMatch = text.match(/(?:package|parcel|חבילה)[:\s]*(?:(\d+(?:\.\d+)?)\s*(?:kg|ק"ג|קג))?/i);
+            if (packageMatch || textLower.includes('package') || textLower.includes('parcel') || textLower.includes('חבילה')) {
+                const details = {};
+                if (packageMatch && packageMatch[1]) {
+                    details.weight = parseFloat(packageMatch[1]);
+                }
+                // Try to find tracking number
+                const trackingMatch = text.match(/(?:tracking|מספר מעקב)[:\s]*([A-Z0-9]+)/i);
+                if (trackingMatch) {
+                    details.tracking = trackingMatch[1];
+                }
+                services.push({
+                    type: 'package',
+                    status: 'requested',
+                    details: details
+                });
+            }
+
+            // Sludge
+            const sludgeMatch = text.match(/sludge[:\s]*(\d+)\s*(?:m3|מ"ק|cbm)/i);
+            if (sludgeMatch || textLower.includes('sludge')) {
+                services.push({
+                    type: 'sludge',
+                    status: 'requested',
+                    details: { amount: sludgeMatch ? parseInt(sludgeMatch[1]) : null }
+                });
+            }
+
+            // Bilge
+            const bilgeMatch = text.match(/bilge[:\s]*(\d+)\s*(?:m3|מ"ק|cbm)/i);
+            if (bilgeMatch || textLower.includes('bilge')) {
+                services.push({
+                    type: 'bilge',
+                    status: 'requested',
+                    details: { amount: bilgeMatch ? parseInt(bilgeMatch[1]) : null }
+                });
+            }
+
+            return services;
+        }
+
+        function extractCargo(text) {
+            const cargoPatterns = [
+                /cargo[:\s]+([^,\n]+)/i,
+                /מטען[:\s]+([^,\n]+)/,
+                /loading[:\s]+([^,\n]+)/i,
+                /discharging[:\s]+([^,\n]+)/i
+            ];
+
+            for (const pattern of cargoPatterns) {
+                const match = text.match(pattern);
+                if (match && match[1]) {
+                    return match[1].trim();
+                }
+            }
+
+            // Common cargo types
+            const cargoTypes = ['fertilizer', 'grain', 'coal', 'steel', 'cement', 'דשנים', 'תבואה', 'פחם', 'פלדה', 'מלט'];
+            const textLower = text.toLowerCase();
+            for (const cargo of cargoTypes) {
+                if (textLower.includes(cargo.toLowerCase())) {
+                    return cargo;
+                }
+            }
+
+            return null;
+        }
+
+        function extractNotes(text) {
+            const notes = [];
+
+            // Master/Captain name
+            const masterMatch = text.match(/(?:master|captain|capt\.?|רב חובל)[:\s]+([A-Za-z\s\.]+?)(?:\n|$|<)/i);
+            if (masterMatch) {
+                notes.push(`Master: ${masterMatch[1].trim()}`);
+            }
+
+            // Phone number
+            const phoneMatch = text.match(/(?:mobile|phone|tel|טלפון)[:\s]*([+\d\s\-()]+)/i);
+            if (phoneMatch) {
+                notes.push(`Tel: ${phoneMatch[1].trim()}`);
+            }
+
+            // Notice period
+            const noticeMatch = text.match(/(\d+)\s*(?:hrs?|hours?)\s*notice/i);
+            if (noticeMatch) {
+                notes.push(`${noticeMatch[1]} Hrs Notice`);
+            }
+
+            return notes.length > 0 ? notes.join('. ') : null;
+        }
+
+        function checkUncertainty(text) {
+            const uncertaintyMarkers = [
+                { pattern: /iagw|if all goes well/i, message: 'ETA מותנה ב-"אם הכל ילך כשורה"' },
+                { pattern: /wp|weather permitting/i, message: 'תלוי בתנאי מזג האוויר' },
+                { pattern: /approx|approximately|בערך/i, message: 'זמן משוער' },
+                { pattern: /tbc|to be confirmed/i, message: 'דורש אישור' },
+                { pattern: /subject to/i, message: 'כפוף לשינויים' }
+            ];
+
+            const uncertainties = [];
+            for (const marker of uncertaintyMarkers) {
+                if (marker.pattern.test(text)) {
+                    uncertainties.push(marker.message);
+                }
+            }
+
+            return uncertainties.length > 0 ? uncertainties.join(', ') : null;
+        }
+
+        function displayParsedResult(data) {
+            const container = document.getElementById('parsedResult');
+
+            if (!data.updates.name && !data.updates.eta && data.updates.services_to_add.length === 0) {
+                container.innerHTML = `
+                    <div class="uncertainty-note">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                        <span>לא נמצאו נתונים רלוונטיים בהודעה. נסה להדביק הודעה עם מידע על אנייה.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+
+            // Confidence badge
+            const confidenceClass = data.match_confidence >= 0.8 ? 'high' : data.match_confidence >= 0.5 ? 'medium' : 'low';
+            html += `
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
+                    <span class="confidence-badge confidence-${confidenceClass}">
+                        רמת התאמה: ${Math.round(data.match_confidence * 100)}%
+                    </span>
+                    ${data.is_new_ship ? '<span class="new-ship-indicator">אנייה חדשה</span>' : ''}
+                </div>
+            `;
+
+            // Ship selector
+            html += `
+                <div class="ship-selector">
+                    <label>בחר אנייה לעדכון:</label>
+                    <select id="targetShipSelect" onchange="updateApplyButtons()">
+                        ${data.is_new_ship ? '<option value="new">+ הוסף אנייה חדשה</option>' : ''}
+                        ${data.matched_ship ? `<option value="${data.matched_ship.id}" selected>${data.matched_ship.name}</option>` : ''}
+                        ${ships.filter(s => !data.matched_ship || s.id !== data.matched_ship.id).map(s =>
+                            `<option value="${s.id}">${s.name}</option>`
+                        ).join('')}
+                    </select>
+                </div>
+            `;
+
+            // Vessel name
+            if (data.updates.name) {
+                html += createParsedField('שם אנייה', data.updates.name, 'name');
+            }
+
+            // Status
+            if (data.updates.status) {
+                const statusText = {
+                    'At Sea': 'בדרך',
+                    'At Port': 'על עוגן',
+                    'Under Operation': 'בפריקה',
+                    'Sailed': 'הפליגה'
+                };
+                html += createParsedField('סטטוס', statusText[data.updates.status] || data.updates.status, 'status', data.updates.status);
+            }
+
+            // Port
+            if (data.updates.port) {
+                html += createParsedField('נמל', data.updates.port, 'port');
+            }
+
+            // ETA
+            if (data.updates.eta) {
+                const etaDate = new Date(data.updates.eta);
+                html += createParsedField('ETA', formatDateTimeHebrew(etaDate), 'eta', data.updates.eta);
+            }
+
+            // ETB
+            if (data.updates.etb) {
+                const etbDate = new Date(data.updates.etb);
+                html += createParsedField('ETB', formatDateTimeHebrew(etbDate), 'etb', data.updates.etb);
+            }
+
+            // ETD
+            if (data.updates.etd) {
+                const etdDate = new Date(data.updates.etd);
+                html += createParsedField('ETD', formatDateTimeHebrew(etdDate), 'etd', data.updates.etd);
+            }
+
+            // Cargo
+            if (data.updates.cargo) {
+                html += createParsedField('מטען', data.updates.cargo, 'cargo');
+            }
+
+            // Services
+            if (data.updates.services_to_add.length > 0) {
+                html += `
+                    <div class="parsed-field">
+                        <div class="parsed-field-header">
+                            <span class="parsed-field-label">שירותים נדרשים</span>
+                        </div>
+                        <div class="parsed-services">
+                            ${data.updates.services_to_add.map((service, index) => `
+                                <div class="parsed-service-item">
+                                    <div class="parsed-service-info">
+                                        <span class="parsed-service-type">${getServiceTypeName(service.type)}</span>
+                                        <span class="parsed-service-details">${formatServiceDetails(service)}</span>
+                                    </div>
+                                    <button class="parsed-field-apply" onclick="applyService(${index})">
+                                        הוסף
+                                    </button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Notes
+            if (data.updates.notes_delta) {
+                html += createParsedField('הערות חדשות', data.updates.notes_delta, 'notes');
+            }
+
+            // Uncertainty note
+            if (data.uncertainty_note) {
+                html += `
+                    <div class="uncertainty-note">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                            <line x1="12" y1="9" x2="12" y2="13"/>
+                            <line x1="12" y1="17" x2="12.01" y2="17"/>
+                        </svg>
+                        <span>${data.uncertainty_note}</span>
+                    </div>
+                `;
+            }
+
+            // Apply all button
+            html += `
+                <button class="apply-all-btn" onclick="applyAllUpdates()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    החל את כל העדכונים
+                </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function createParsedField(label, value, fieldKey, rawValue = null) {
+            return `
+                <div class="parsed-field" data-field="${fieldKey}">
+                    <div class="parsed-field-header">
+                        <span class="parsed-field-label">${label}</span>
+                        <button class="parsed-field-apply" onclick="applyField('${fieldKey}', '${rawValue || value}')">
+                            החל
+                        </button>
+                    </div>
+                    <span class="parsed-field-value">${value}</span>
+                </div>
+            `;
+        }
+
+        function formatDateTimeHebrew(date) {
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+
+        function formatServiceDetails(service) {
+            switch (service.type) {
+                case 'water':
+                    return service.details.amount ? `${service.details.amount} טון` : 'כמות לא צוינה';
+                case 'crew_change':
+                    const inOut = [];
+                    if (service.details.crewIn) inOut.push(`${service.details.crewIn} נכנסים`);
+                    if (service.details.crewOut) inOut.push(`${service.details.crewOut} יוצאים`);
+                    return inOut.length > 0 ? inOut.join(', ') : 'פרטים לא צוינו';
+                case 'package':
+                    const parts = [];
+                    if (service.details.weight) parts.push(`${service.details.weight} ק"ג`);
+                    if (service.details.tracking) parts.push(`מעקב: ${service.details.tracking}`);
+                    return parts.length > 0 ? parts.join(', ') : 'פרטים לא צוינו';
+                case 'sludge':
+                case 'bilge':
+                    return service.details.amount ? `${service.details.amount} מ"ק` : 'כמות לא צוינה';
+                default:
+                    return '';
+            }
+        }
+
+        function applyField(fieldKey, value) {
+            const shipId = document.getElementById('targetShipSelect').value;
+
+            if (shipId === 'new') {
+                showToast('יש לבחור אנייה קיימת או להשתמש ב"החל את כל העדכונים" להוספת אנייה חדשה', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) {
+                showToast('אנייה לא נמצאה', 'error');
+                return;
+            }
+
+            // Apply the specific field
+            switch (fieldKey) {
+                case 'name':
+                    ship.name = value;
+                    break;
+                case 'status':
+                    ship.status = value;
+                    ensureChecklistForStatus(ship);
+                    break;
+                case 'eta':
+                    ship.eta = value;
+                    break;
+                case 'etb':
+                    ship.etb = {
+                        type: 'specific',
+                        sortDate: value,
+                        displayValue: formatDateTimeHebrew(new Date(value))
+                    };
+                    break;
+                case 'etd':
+                    ship.etd = value;
+                    break;
+                case 'port':
+                    ship.port = value;
+                    break;
+                case 'cargo':
+                    ship.cargo = value;
+                    break;
+                case 'notes':
+                    ship.notes = value + (ship.notes ? '\n---\n' + ship.notes : '');
+                    break;
+            }
+
+            saveData();
+            renderShips();
+
+            // Mark button as applied
+            const btn = event.target;
+            btn.textContent = 'הוחל ✓';
+            btn.classList.add('applied');
+
+            showToast(`שדה "${fieldKey}" עודכן בהצלחה`, 'success');
+            addActivity('עדכון מניתוח', `עודכן ${fieldKey} לאנייה ${ship.name}`);
+        }
+
+        function applyService(serviceIndex) {
+            const shipId = document.getElementById('targetShipSelect').value;
+
+            if (shipId === 'new') {
+                showToast('יש לבחור אנייה קיימת', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) {
+                showToast('אנייה לא נמצאה', 'error');
+                return;
+            }
+
+            const service = lastParsedData.updates.services_to_add[serviceIndex];
+            if (!service) return;
+
+            // Initialize services array if needed
+            ship.services = ship.services || [];
+
+            // Add the service with a unique ID
+            const newService = {
+                id: 'service_' + Date.now(),
+                type: service.type,
+                status: 'requested',
+                details: service.details,
+                createdAt: new Date().toISOString()
+            };
+
+            ship.services.push(newService);
+            saveData();
+
+            // Mark button as applied
+            const btn = event.target;
+            btn.textContent = 'נוסף ✓';
+            btn.classList.add('applied');
+
+            showToast(`שירות ${getServiceTypeName(service.type)} נוסף בהצלחה`, 'success');
+            addActivity('שירות חדש', `נוסף ${getServiceTypeName(service.type)} לאנייה ${ship.name}`);
+        }
+
+        function applyAllUpdates() {
+            const shipId = document.getElementById('targetShipSelect').value;
+            let ship;
+
+            if (shipId === 'new') {
+                // Create new ship
+                ship = createShipObject({
+                    name: lastParsedData.updates.name || 'אנייה חדשה',
+                    status: lastParsedData.updates.status || 'At Sea'
+                });
+                ships.push(ship);
+            } else {
+                ship = ships.find(s => s.id === shipId);
+                if (!ship) {
+                    showToast('אנייה לא נמצאה', 'error');
+                    return;
+                }
+            }
+
+            // Apply all updates
+            const updates = lastParsedData.updates;
+
+            if (updates.name) ship.name = updates.name;
+            if (updates.status) {
+                ship.status = updates.status;
+                ensureChecklistForStatus(ship);
+            }
+            if (updates.eta) ship.eta = updates.eta;
+            if (updates.etb) {
+                ship.etb = {
+                    type: 'specific',
+                    sortDate: updates.etb,
+                    displayValue: formatDateTimeHebrew(new Date(updates.etb))
+                };
+            }
+            if (updates.etd) ship.etd = updates.etd;
+            if (updates.port) ship.port = updates.port;
+            if (updates.cargo) ship.cargo = updates.cargo;
+            if (updates.notes_delta) {
+                ship.notes = updates.notes_delta + (ship.notes ? '\n---\n' + ship.notes : '');
+            }
+
+            // Add services
+            if (updates.services_to_add.length > 0) {
+                ship.services = ship.services || [];
+                for (const service of updates.services_to_add) {
+                    ship.services.push({
+                        id: 'service_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                        type: service.type,
+                        status: 'requested',
+                        details: service.details,
+                        createdAt: new Date().toISOString()
+                    });
+                }
+            }
+
+            saveData();
+            renderShips();
+
+            showToast(shipId === 'new' ? 'אנייה חדשה נוספה בהצלחה!' : 'כל העדכונים הוחלו בהצלחה!', 'success');
+            addActivity(shipId === 'new' ? 'אנייה חדשה' : 'עדכון מניתוח', `${ship.name} עודכנה מניתוח הודעה`);
+
+            // Clear the form and show success
+            document.getElementById('emailInput').value = '';
+            document.getElementById('parsedResult').innerHTML = `
+                <div style="text-align: center; padding: var(--spacing-xl); color: var(--success);">
+                    <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-bottom: var(--spacing-md);">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                        <polyline points="22 4 12 14.01 9 11.01"/>
+                    </svg>
+                    <h3>העדכונים הוחלו בהצלחה!</h3>
+                    <p style="color: var(--text-secondary); margin-top: var(--spacing-sm);">
+                        ${ship.name} עודכנה במערכת
+                    </p>
+                    <button class="btn btn-secondary" onclick="switchToDashboardView()" style="margin-top: var(--spacing-lg);">
+                        חזור ללוח הבקרה
+                    </button>
+                </div>
+            `;
+        }
+
+        function updateApplyButtons() {
+            // This function can be used to update button states when ship selection changes
+        }
+
+        // ==================== CONTACTS & EMAIL MANAGEMENT ====================
+        let contacts = [];
+        let emailGroups = [];
+        let selectedRecipients = [];
+
+        // Contact types
+        const contactTypes = {
+            agent: { label: 'סוכן', class: 'agent' },
+            port: { label: 'נמל', class: 'port' },
+            owner: { label: 'בעלים', class: 'owner' },
+            charterer: { label: 'שוכר', class: 'charterer' },
+            receiver: { label: 'מקבל', class: 'receiver' },
+            other: { label: 'אחר', class: '' }
+        };
+
+        function switchToContactsView() {
+            // Remove 'active' from all nav items
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            // Add 'active' to contacts nav item
+            document.querySelectorAll('.nav-menu .nav-item')[3].classList.add('active');
+
+            // Hide tabs and stats
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+
+            // Hide other views, show contacts view
+            document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('contactsView').classList.add('active');
+
+            currentTab = 'contacts';
+            loadContacts();
+            loadEmailGroups();
+            populateShipSelector();
+        }
+
+        // ==================== Discharge Tracking View ====================
+        let currentTallyData = null;
+        let currentImageData = null;
+        let currentPdfData = null;
+
+        function switchToDischargeView() {
+            // Remove 'active' from all nav items
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            // Add 'active' to discharge nav item (index 4)
+            document.querySelectorAll('.nav-menu .nav-item')[4].classList.add('active');
+
+            // Hide tabs and stats
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+
+            // Hide other views, show discharge view
+            document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.add('active');
+
+            currentTab = 'discharge';
+            populateDischargeShipSelector();
+        }
+
+        function populateDischargeShipSelector() {
+            const select = document.getElementById('dischargeShipSelect');
+            select.innerHTML = '<option value="">-- בחר אנייה --</option>';
+
+            // Filter ships that are at port or under operation
+            const relevantShips = ships.filter(s =>
+                s.status === 'At Port' || s.status === 'Under Operation'
+            );
+
+            relevantShips.forEach(ship => {
+                const option = document.createElement('option');
+                option.value = ship.id;
+                option.textContent = ship.name;
+                select.appendChild(option);
+            });
+
+            // Also add all other ships
+            const otherShips = ships.filter(s =>
+                s.status !== 'At Port' && s.status !== 'Under Operation'
+            );
+
+            if (otherShips.length > 0 && relevantShips.length > 0) {
+                const separator = document.createElement('option');
+                separator.disabled = true;
+                separator.textContent = '── אניות אחרות ──';
+                select.appendChild(separator);
+            }
+
+            otherShips.forEach(ship => {
+                const option = document.createElement('option');
+                option.value = ship.id;
+                option.textContent = ship.name;
+                select.appendChild(option);
+            });
+        }
+
+        function loadDischargeData() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                resetDischargeView();
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            // Load discharge data from ship or initialize
+            const dischargeData = ship.dischargeData || {
+                totalCargo: ship.cargo?.weight || 0,
+                discharged: 0,
+                units: 0,
+                dailyLog: [],
+                remarks: []
+            };
+
+            updateDischargeProgress(dischargeData, ship);
+            renderDailyLog(dischargeData.dailyLog);
+        }
+
+        function resetDischargeView() {
+            document.getElementById('totalDischarged').textContent = '0';
+            document.getElementById('totalUnits').textContent = '0';
+            document.getElementById('totalDays').textContent = '0';
+            document.getElementById('avgPerDay').textContent = '0';
+            document.getElementById('dischargeProgressBar').style.width = '0%';
+            document.getElementById('dischargeProgressBar').textContent = '0%';
+            document.getElementById('dischargedAmount').textContent = '0';
+            document.getElementById('remainingAmount').textContent = '0';
+            document.getElementById('totalCargo').textContent = '0';
+            document.getElementById('dailyLogContainer').innerHTML = `
+                <div class="empty-state">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                        <line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/>
+                        <line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    <p>אין נתוני פריקה עדיין</p>
+                    <span>קלוט טאלי יומי להתחלת מעקב</span>
+                </div>
+            `;
+        }
+
+        function switchTallyInputTab(tab) {
+            // Update tab buttons
+            document.querySelectorAll('.tally-input-tab').forEach(t => t.classList.remove('active'));
+            event.target.closest('.tally-input-tab').classList.add('active');
+
+            // Update content visibility
+            document.querySelectorAll('.tally-input-content').forEach(c => c.classList.remove('active'));
+            document.getElementById(`tallyInput${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+        }
+
+        // API endpoint for Claude analysis
+        const CLAUDE_API_ENDPOINT = '/api/analyze-tally';
+
+        async function parseTallyText() {
+            const text = document.getElementById('tallyTextArea').value.trim();
+            if (!text) {
+                showToast('אנא הכנס טקסט לניתוח', 'warning');
+                return;
+            }
+
+            // Show loading state
+            const btn = document.querySelector('#tallyInputText .parse-tally-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;"></div> מנתח עם Claude AI...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch(CLAUDE_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'text', content: text })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'API error');
+                }
+
+                if (data.parsed) {
+                    currentTallyData = data.parsed;
+                    displayParsedTally(data.parsed);
+                    showToast('הטאלי נותח בהצלחה עם Claude AI', 'success');
+                } else if (data.raw) {
+                    showToast('התקבל ניתוח אך לא בפורמט מובנה', 'warning');
+                    console.log('Raw Claude response:', data.raw);
+                } else {
+                    throw new Error('No parsed data returned');
+                }
+            } catch (error) {
+                console.error('Claude API error:', error);
+                showToast(`שגיאה בניתוח: ${error.message}`, 'error');
+
+                // Fallback to local parsing
+                const localParsed = extractTallyData(text);
+                if (localParsed) {
+                    currentTallyData = localParsed;
+                    displayParsedTally(localParsed);
+                    showToast('נותח עם ניתוח מקומי (fallback)', 'info');
+                }
+            } finally {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        }
+
+        function extractTallyData(text) {
+            const result = {
+                date: null,
+                shifts: [],
+                totalQuantity: 0,
+                totalWeight: 0,
+                remarks: []
+            };
+
+            // Extract date
+            const datePatterns = [
+                /(?:Date|DATE|תאריך)[:\s]*(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})/i,
+                /(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4})/
+            ];
+
+            for (const pattern of datePatterns) {
+                const dateMatch = text.match(pattern);
+                if (dateMatch) {
+                    result.date = dateMatch[1];
+                    break;
+                }
+            }
+
+            // If no date found, use today
+            if (!result.date) {
+                const today = new Date();
+                result.date = `${today.getDate().toString().padStart(2, '0')}/${(today.getMonth() + 1).toString().padStart(2, '0')}/${today.getFullYear()}`;
+            }
+
+            // Extract shifts
+            const shiftPatterns = [
+                /(?:Shift|SHIFT|משמרת)\s*(\d+)[^:]*[:\s]*(?:Gang|GANG|כנופייה)[s]?\s*([\d\-,\s]+)/gi,
+                /(?:Shift|SHIFT|משמרת)\s*(\d+)\s*\(([^\)]+)\)/gi
+            ];
+
+            const lines = text.split('\n');
+            let currentShift = null;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+
+                // Check for shift header
+                const shiftMatch = line.match(/(?:Shift|SHIFT|משמרת)\s*(\d+)/i);
+                if (shiftMatch) {
+                    if (currentShift) {
+                        result.shifts.push(currentShift);
+                    }
+
+                    // Extract time if present
+                    const timeMatch = line.match(/\(([^\)]+)\)/);
+                    const gangMatch = line.match(/(?:Gang|GANG|כנופייה)[s]?\s*([\d\-,\s]+)/i);
+
+                    currentShift = {
+                        name: `Shift ${shiftMatch[1]}`,
+                        time: timeMatch ? timeMatch[1] : '',
+                        gangs: gangMatch ? gangMatch[1].trim() : '',
+                        cargo: [],
+                        quantity: 0,
+                        weight: 0
+                    };
+                    continue;
+                }
+
+                // Check for cargo lines (start with - or have units/MT)
+                if (currentShift) {
+                    const cargoMatch = line.match(/[-•]?\s*([^:]+)[:\s]+(\d+[\d,\.]*)\s*(?:units?|pcs?|יחידות)?[,\s]+(\d+[\d,\.]*)\s*(?:MT|tons?|טון)?/i);
+                    if (cargoMatch) {
+                        const quantity = parseFloat(cargoMatch[2].replace(/,/g, ''));
+                        const weight = parseFloat(cargoMatch[3].replace(/,/g, ''));
+
+                        currentShift.cargo.push({
+                            type: cargoMatch[1].trim(),
+                            quantity: quantity,
+                            weight: weight
+                        });
+                        currentShift.quantity += quantity;
+                        currentShift.weight += weight;
+                        result.totalQuantity += quantity;
+                        result.totalWeight += weight;
+                    }
+
+                    // Also try simpler pattern
+                    const simpleMatch = line.match(/(\d+[\d,\.]*)\s*(?:units?|pcs?|יחידות)[,\s]+(\d+[\d,\.]*)\s*(?:MT|tons?|טון)/i);
+                    if (simpleMatch && !cargoMatch) {
+                        const quantity = parseFloat(simpleMatch[1].replace(/,/g, ''));
+                        const weight = parseFloat(simpleMatch[2].replace(/,/g, ''));
+
+                        currentShift.cargo.push({
+                            type: 'Cargo',
+                            quantity: quantity,
+                            weight: weight
+                        });
+                        currentShift.quantity += quantity;
+                        currentShift.weight += weight;
+                        result.totalQuantity += quantity;
+                        result.totalWeight += weight;
+                    }
+                }
+
+                // Check for remarks
+                const remarksMatch = line.match(/(?:Remarks?|REMARKS?|הערות)[:\s]*(.*)/i);
+                if (remarksMatch && remarksMatch[1].trim()) {
+                    result.remarks.push(remarksMatch[1].trim());
+                }
+            }
+
+            // Add last shift
+            if (currentShift) {
+                result.shifts.push(currentShift);
+            }
+
+            // If no shifts found, try to extract total values
+            if (result.shifts.length === 0) {
+                const totalMatch = text.match(/(?:Total|TOTAL|סה"כ)[:\s]*(\d+[\d,\.]*)\s*(?:units?)?[,\s]+(\d+[\d,\.]*)\s*(?:MT)?/i);
+                if (totalMatch) {
+                    result.totalQuantity = parseFloat(totalMatch[1].replace(/,/g, ''));
+                    result.totalWeight = parseFloat(totalMatch[2].replace(/,/g, ''));
+                    result.shifts.push({
+                        name: 'Total',
+                        time: '',
+                        gangs: '',
+                        cargo: [{ type: 'Cargo', quantity: result.totalQuantity, weight: result.totalWeight }],
+                        quantity: result.totalQuantity,
+                        weight: result.totalWeight
+                    });
+                }
+            }
+
+            // Extract any additional remarks
+            const allRemarks = text.match(/(?:Rain|Breakdown|Stoppage|Delay|Weather|Accident|stopped|commenced|completed)[^\.]*\./gi);
+            if (allRemarks) {
+                allRemarks.forEach(r => {
+                    if (!result.remarks.includes(r.trim())) {
+                        result.remarks.push(r.trim());
+                    }
+                });
+            }
+
+            return result.shifts.length > 0 || result.totalWeight > 0 ? result : null;
+        }
+
+        function displayParsedTally(data) {
+            document.getElementById('tallyResults').style.display = 'block';
+            document.getElementById('parsedTallyDate').textContent = data.date || 'לא זוהה תאריך';
+            document.getElementById('parsedTallyTime').textContent = new Date().toLocaleTimeString('he-IL');
+
+            const container = document.getElementById('parsedShiftsContainer');
+            container.innerHTML = '';
+
+            data.shifts.forEach(shift => {
+                const cargoDetails = shift.cargo.map(c => c.type).join(', ') || 'Cargo';
+                const row = document.createElement('div');
+                row.className = 'tally-shift-row';
+                row.innerHTML = `
+                    <span class="tally-shift-name">${shift.name}</span>
+                    <span class="tally-cargo-details">${cargoDetails}</span>
+                    <span class="tally-quantity">${shift.quantity.toLocaleString()}</span>
+                    <span class="tally-weight">${shift.weight.toLocaleString()} MT</span>
+                `;
+                container.appendChild(row);
+            });
+
+            // Add total row
+            const totalRow = document.createElement('div');
+            totalRow.className = 'tally-shift-row';
+            totalRow.style.borderTop = '2px solid var(--primary)';
+            totalRow.style.fontWeight = '600';
+            totalRow.innerHTML = `
+                <span>סה"כ</span>
+                <span></span>
+                <span class="tally-quantity">${data.totalQuantity.toLocaleString()}</span>
+                <span class="tally-weight">${data.totalWeight.toLocaleString()} MT</span>
+            `;
+            container.appendChild(totalRow);
+
+            // Show remarks if any
+            if (data.remarks.length > 0) {
+                document.getElementById('parsedRemarks').style.display = 'block';
+                document.getElementById('parsedRemarksText').textContent = data.remarks.join('\n');
+            } else {
+                document.getElementById('parsedRemarks').style.display = 'none';
+            }
+        }
+
+        // Drag and drop for image
+        function setupDropZones() {
+            const imageDropZone = document.getElementById('imageDropZone');
+            const pdfDropZone = document.getElementById('pdfDropZone');
+
+            if (imageDropZone) {
+                imageDropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    imageDropZone.classList.add('dragover');
+                });
+                imageDropZone.addEventListener('dragleave', () => {
+                    imageDropZone.classList.remove('dragover');
+                });
+                imageDropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    imageDropZone.classList.remove('dragover');
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        handleTallyImageFile(file);
+                    }
+                });
+            }
+
+            if (pdfDropZone) {
+                pdfDropZone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    pdfDropZone.classList.add('dragover');
+                });
+                pdfDropZone.addEventListener('dragleave', () => {
+                    pdfDropZone.classList.remove('dragover');
+                });
+                pdfDropZone.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    pdfDropZone.classList.remove('dragover');
+                    const file = e.dataTransfer.files[0];
+                    if (file && file.type === 'application/pdf') {
+                        handleTallyPdfFile(file);
+                    }
+                });
+            }
+        }
+
+        function handleTallyImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleTallyImageFile(file);
+            }
+        }
+
+        function handleTallyImageFile(file) {
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('הקובץ גדול מדי (מקסימום 10MB)', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                currentImageData = e.target.result;
+
+                // Show preview
+                const preview = document.getElementById('tallyImagePreview');
+                preview.style.display = 'block';
+                preview.innerHTML = `<img src="${currentImageData}" alt="Tally Image">`;
+
+                // Show parse button
+                document.getElementById('parseImageBtn').style.display = 'flex';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function parseImageTally() {
+            if (!currentImageData) {
+                showToast('אנא העלה תמונה קודם', 'warning');
+                return;
+            }
+
+            document.getElementById('imageProcessing').classList.add('active');
+            document.querySelector('#imageProcessing span').textContent = 'מנתח תמונה עם Claude Vision...';
+
+            try {
+                // Extract base64 data and mime type from data URL
+                const matches = currentImageData.match(/^data:(.+);base64,(.+)$/);
+                if (!matches) {
+                    throw new Error('Invalid image data');
+                }
+
+                const mimeType = matches[1];
+                const base64Data = matches[2];
+
+                const response = await fetch(CLAUDE_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'image',
+                        imageBase64: base64Data,
+                        mimeType: mimeType
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'API error');
+                }
+
+                if (data.parsed) {
+                    currentTallyData = data.parsed;
+                    displayParsedTally(data.parsed);
+                    document.getElementById('tallyResults').style.display = 'block';
+                    showToast('התמונה נותחה בהצלחה עם Claude Vision', 'success');
+                } else if (data.raw) {
+                    showToast('התקבל ניתוח אך לא בפורמט מובנה', 'warning');
+                    console.log('Raw Claude response:', data.raw);
+                } else {
+                    throw new Error('No parsed data returned');
+                }
+            } catch (error) {
+                console.error('Claude Vision API error:', error);
+                showToast(`שגיאה בניתוח תמונה: ${error.message}`, 'error');
+            } finally {
+                document.getElementById('imageProcessing').classList.remove('active');
+            }
+        }
+
+        function handleTallyPdf(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleTallyPdfFile(file);
+            }
+        }
+
+        function handleTallyPdfFile(file) {
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('הקובץ גדול מדי (מקסימום 10MB)', 'error');
+                return;
+            }
+
+            currentPdfData = file;
+            document.getElementById('pdfFileName').style.display = 'block';
+            document.getElementById('pdfFileName').innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align: middle; margin-left: 8px;">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                </svg>
+                ${file.name}
+            `;
+            document.getElementById('parsePdfBtn').style.display = 'flex';
+        }
+
+        async function parsePdfTally() {
+            if (!currentPdfData) {
+                showToast('אנא העלה קובץ PDF קודם', 'warning');
+                return;
+            }
+
+            document.getElementById('pdfProcessing').classList.add('active');
+            document.querySelector('#pdfProcessing span').textContent = 'ממיר PDF לתמונה...';
+
+            try {
+                // Load PDF.js if not already loaded
+                if (typeof pdfjsLib === 'undefined') {
+                    await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                }
+
+                // Read PDF file as array buffer
+                const arrayBuffer = await currentPdfData.arrayBuffer();
+
+                // Load PDF document
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+
+                // Get first page
+                const page = await pdf.getPage(1);
+
+                // Set scale for good quality
+                const scale = 2;
+                const viewport = page.getViewport({ scale });
+
+                // Create canvas
+                const canvas = document.createElement('canvas');
+                const context = canvas.getContext('2d');
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                // Render page to canvas
+                await page.render({
+                    canvasContext: context,
+                    viewport: viewport
+                }).promise;
+
+                document.querySelector('#pdfProcessing span').textContent = 'מנתח עם Claude Vision...';
+
+                // Convert canvas to base64
+                const imageDataUrl = canvas.toDataURL('image/png');
+                const matches = imageDataUrl.match(/^data:(.+);base64,(.+)$/);
+
+                if (!matches) {
+                    throw new Error('Failed to convert PDF to image');
+                }
+
+                const mimeType = matches[1];
+                const base64Data = matches[2];
+
+                // Send to Claude Vision
+                const response = await fetch(CLAUDE_API_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'image',
+                        imageBase64: base64Data,
+                        mimeType: mimeType
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(data.error || 'API error');
+                }
+
+                if (data.parsed) {
+                    currentTallyData = data.parsed;
+                    displayParsedTally(data.parsed);
+                    document.getElementById('tallyResults').style.display = 'block';
+                    showToast('ה-PDF נותח בהצלחה עם Claude Vision', 'success');
+                } else if (data.raw) {
+                    showToast('התקבל ניתוח אך לא בפורמט מובנה', 'warning');
+                    console.log('Raw Claude response:', data.raw);
+                } else {
+                    throw new Error('No parsed data returned');
+                }
+            } catch (error) {
+                console.error('PDF parsing error:', error);
+                showToast(`שגיאה בניתוח PDF: ${error.message}`, 'error');
+            } finally {
+                document.getElementById('pdfProcessing').classList.remove('active');
+            }
+        }
+
+        // Helper to dynamically load scripts
+        function loadScript(src) {
+            return new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            });
+        }
+
+        function applyTallyToShip() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                showToast('אנא בחר אנייה קודם', 'warning');
+                return;
+            }
+
+            if (!currentTallyData) {
+                showToast('אין נתוני טאלי להחלה', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            // Initialize discharge data if not exists
+            if (!ship.dischargeData) {
+                ship.dischargeData = {
+                    totalCargo: ship.cargo?.weight || 0,
+                    discharged: 0,
+                    units: 0,
+                    dailyLog: [],
+                    remarks: []
+                };
+            }
+
+            // Add today's tally to the log
+            const logEntry = {
+                date: currentTallyData.date,
+                timestamp: new Date().toISOString(),
+                shifts: currentTallyData.shifts,
+                quantity: currentTallyData.totalQuantity,
+                weight: currentTallyData.totalWeight,
+                remarks: currentTallyData.remarks
+            };
+
+            ship.dischargeData.dailyLog.push(logEntry);
+            ship.dischargeData.discharged += currentTallyData.totalWeight;
+            ship.dischargeData.units += currentTallyData.totalQuantity;
+            ship.dischargeData.remarks = [...ship.dischargeData.remarks, ...currentTallyData.remarks];
+
+            // Update in Firestore
+            db.collection('ships').doc(ship.id).update({
+                dischargeData: ship.dischargeData
+            }).then(() => {
+                showToast('נתוני הטאלי נוספו בהצלחה', 'success');
+                addActivity('עדכון פריקה', `נוספו ${currentTallyData.totalWeight.toLocaleString()} MT לאנייה ${ship.name}`);
+
+                // Update display
+                updateDischargeProgress(ship.dischargeData, ship);
+                renderDailyLog(ship.dischargeData.dailyLog);
+
+                // Clear current data
+                currentTallyData = null;
+                document.getElementById('tallyResults').style.display = 'none';
+                document.getElementById('tallyTextArea').value = '';
+            }).catch(error => {
+                console.error('Error updating discharge data:', error);
+                showToast('שגיאה בשמירת הנתונים', 'error');
+            });
+        }
+
+        function updateDischargeProgress(data, ship) {
+            const totalCargo = data.totalCargo || ship.cargo?.weight || 0;
+            const discharged = data.discharged || 0;
+            const remaining = Math.max(0, totalCargo - discharged);
+            const percentage = totalCargo > 0 ? Math.min(100, (discharged / totalCargo) * 100) : 0;
+            const days = data.dailyLog?.length || 0;
+            const avgPerDay = days > 0 ? Math.round(discharged / days) : 0;
+
+            document.getElementById('totalDischarged').textContent = discharged.toLocaleString();
+            document.getElementById('totalUnits').textContent = (data.units || 0).toLocaleString();
+            document.getElementById('totalDays').textContent = days;
+            document.getElementById('avgPerDay').textContent = avgPerDay.toLocaleString();
+
+            document.getElementById('dischargeProgressBar').style.width = `${percentage}%`;
+            document.getElementById('dischargeProgressBar').textContent = `${Math.round(percentage)}%`;
+
+            document.getElementById('dischargedAmount').textContent = discharged.toLocaleString();
+            document.getElementById('remainingAmount').textContent = remaining.toLocaleString();
+            document.getElementById('totalCargo').textContent = totalCargo.toLocaleString();
+        }
+
+        function renderDailyLog(dailyLog) {
+            const container = document.getElementById('dailyLogContainer');
+
+            if (!dailyLog || dailyLog.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8" y1="2" x2="8" y2="6"/>
+                            <line x1="3" y1="10" x2="21" y2="10"/>
+                        </svg>
+                        <p>אין נתוני פריקה עדיין</p>
+                        <span>קלוט טאלי יומי להתחלת מעקב</span>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+
+            // Sort by date descending
+            const sortedLog = [...dailyLog].sort((a, b) =>
+                new Date(b.timestamp) - new Date(a.timestamp)
+            );
+
+            sortedLog.forEach(entry => {
+                const item = document.createElement('div');
+                item.className = 'daily-log-item';
+                item.innerHTML = `
+                    <div class="daily-log-date">${entry.date}</div>
+                    <div class="daily-log-details">
+                        <div class="daily-log-cargo">
+                            <span><strong>כמות:</strong> ${entry.quantity.toLocaleString()} יחידות</span>
+                            <span><strong>משקל:</strong> ${entry.weight.toLocaleString()} MT</span>
+                            <span><strong>משמרות:</strong> ${entry.shifts.length}</span>
+                        </div>
+                        ${entry.remarks.length > 0 ? `<div class="daily-log-remarks">${entry.remarks.join(' | ')}</div>` : ''}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function clearTallyData() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                // Just clear the form
+                currentTallyData = null;
+                currentImageData = null;
+                currentPdfData = null;
+                document.getElementById('tallyResults').style.display = 'none';
+                document.getElementById('tallyTextArea').value = '';
+                document.getElementById('tallyImagePreview').style.display = 'none';
+                document.getElementById('parseImageBtn').style.display = 'none';
+                document.getElementById('pdfFileName').style.display = 'none';
+                document.getElementById('parsePdfBtn').style.display = 'none';
+                showToast('הטופס נוקה', 'info');
+                return;
+            }
+
+            if (!confirm('האם אתה בטוח שברצונך למחוק את כל נתוני הפריקה לאנייה זו?')) {
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            ship.dischargeData = {
+                totalCargo: ship.cargo?.weight || 0,
+                discharged: 0,
+                units: 0,
+                dailyLog: [],
+                remarks: []
+            };
+
+            db.collection('ships').doc(ship.id).update({
+                dischargeData: ship.dischargeData
+            }).then(() => {
+                showToast('נתוני הפריקה נמחקו', 'success');
+                loadDischargeData();
+            }).catch(error => {
+                console.error('Error clearing discharge data:', error);
+                showToast('שגיאה במחיקת הנתונים', 'error');
+            });
+        }
+
+        function exportDischargeReport() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                showToast('אנא בחר אנייה', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship || !ship.dischargeData) {
+                showToast('אין נתוני פריקה לייצוא', 'warning');
+                return;
+            }
+
+            const data = ship.dischargeData;
+            const totalCargo = data.totalCargo || 0;
+            const discharged = data.discharged || 0;
+            const remaining = totalCargo - discharged;
+            const percentage = totalCargo > 0 ? ((discharged / totalCargo) * 100).toFixed(1) : 0;
+
+            let report = `DISCHARGE REPORT\n`;
+            report += `================\n\n`;
+            report += `Vessel: ${ship.name}\n`;
+            report += `Port: ${ship.port || 'N/A'}\n`;
+            report += `Generated: ${new Date().toLocaleString('en-GB')}\n\n`;
+            report += `SUMMARY\n`;
+            report += `-------\n`;
+            report += `Total Cargo: ${totalCargo.toLocaleString()} MT\n`;
+            report += `Discharged: ${discharged.toLocaleString()} MT (${percentage}%)\n`;
+            report += `Remaining: ${remaining.toLocaleString()} MT\n`;
+            report += `Total Units: ${(data.units || 0).toLocaleString()}\n`;
+            report += `Days of Discharge: ${data.dailyLog?.length || 0}\n`;
+            report += `Average per Day: ${data.dailyLog?.length > 0 ? Math.round(discharged / data.dailyLog.length).toLocaleString() : 0} MT\n\n`;
+
+            if (data.dailyLog && data.dailyLog.length > 0) {
+                report += `DAILY LOG\n`;
+                report += `---------\n`;
+                data.dailyLog.forEach(entry => {
+                    report += `\n${entry.date}:\n`;
+                    report += `  Quantity: ${entry.quantity.toLocaleString()} units\n`;
+                    report += `  Weight: ${entry.weight.toLocaleString()} MT\n`;
+                    report += `  Shifts: ${entry.shifts.length}\n`;
+                    if (entry.remarks.length > 0) {
+                        report += `  Remarks: ${entry.remarks.join('; ')}\n`;
+                    }
+                });
+            }
+
+            if (data.remarks && data.remarks.length > 0) {
+                report += `\nALL REMARKS\n`;
+                report += `-----------\n`;
+                data.remarks.forEach(r => {
+                    report += `- ${r}\n`;
+                });
+            }
+
+            // Create and download file
+            const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Discharge_Report_${ship.name.replace(/\s+/g, '_')}_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            showToast('הדוח יוצא בהצלחה', 'success');
+        }
+
+        function loadContacts() {
+            // Load from Firestore
+            db.collection('contacts').orderBy('name').onSnapshot(snapshot => {
+                contacts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderContacts();
+            }, error => {
+                console.error('Error loading contacts:', error);
+                // Fallback to localStorage
+                const saved = localStorage.getItem('shipops_contacts');
+                contacts = saved ? JSON.parse(saved) : [];
+                renderContacts();
+            });
+        }
+
+        function loadEmailGroups() {
+            // Load from Firestore
+            db.collection('emailGroups').orderBy('name').onSnapshot(snapshot => {
+                emailGroups = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderGroups();
+            }, error => {
+                console.error('Error loading groups:', error);
+                // Fallback to localStorage
+                const saved = localStorage.getItem('shipops_emailGroups');
+                emailGroups = saved ? JSON.parse(saved) : [];
+                renderGroups();
+            });
+        }
+
+        function saveContacts() {
+            localStorage.setItem('shipops_contacts', JSON.stringify(contacts));
+        }
+
+        function saveEmailGroups() {
+            localStorage.setItem('shipops_emailGroups', JSON.stringify(emailGroups));
+        }
+
+        function renderContacts() {
+            const list = document.getElementById('contactsList');
+            const count = document.getElementById('contactsCount');
+
+            if (!contacts || contacts.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                        </svg>
+                        <p>אין אנשי קשר עדיין</p>
+                        <button class="btn btn-primary btn-sm" onclick="openAddContactModal()">הוסף איש קשר</button>
+                    </div>
+                `;
+                count.textContent = '0';
+                return;
+            }
+
+            count.textContent = contacts.length;
+            list.innerHTML = contacts.map(contact => `
+                <div class="contact-item" data-id="${contact.id}">
+                    <div class="contact-info">
+                        <span class="contact-name">${contact.name}</span>
+                        <span class="contact-email">${contact.email}</span>
+                    </div>
+                    <span class="contact-type ${contactTypes[contact.type]?.class || ''}">${contactTypes[contact.type]?.label || contact.type}</span>
+                    <div class="contact-actions">
+                        <button class="contact-btn" onclick="editContact('${contact.id}')" title="ערוך">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </button>
+                        <button class="contact-btn delete" onclick="deleteContact('${contact.id}')" title="מחק">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderGroups() {
+            const list = document.getElementById('groupsList');
+            const count = document.getElementById('groupsCount');
+
+            if (!emailGroups || emailGroups.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                        <p>אין קבוצות עדיין</p>
+                        <button class="btn btn-primary btn-sm" onclick="openAddGroupModal()">צור קבוצה</button>
+                    </div>
+                `;
+                count.textContent = '0';
+                return;
+            }
+
+            count.textContent = emailGroups.length;
+            list.innerHTML = emailGroups.map(group => {
+                const memberCount = group.contactIds ? group.contactIds.length : 0;
+                return `
+                    <div class="group-item" onclick="selectGroup('${group.id}')">
+                        <div class="group-info">
+                            <span class="group-name">${group.name}</span>
+                            <span class="group-count">${memberCount} אנשי קשר</span>
+                        </div>
+                        <div class="group-actions">
+                            <button class="contact-btn" onclick="event.stopPropagation(); editGroup('${group.id}')" title="ערוך">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </button>
+                            <button class="contact-btn delete" onclick="event.stopPropagation(); deleteGroup('${group.id}')" title="מחק">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterContacts() {
+            const search = document.getElementById('contactSearch').value.toLowerCase();
+            const items = document.querySelectorAll('#contactsList .contact-item');
+
+            items.forEach(item => {
+                const name = item.querySelector('.contact-name').textContent.toLowerCase();
+                const email = item.querySelector('.contact-email').textContent.toLowerCase();
+                item.style.display = (name.includes(search) || email.includes(search)) ? 'flex' : 'none';
+            });
+        }
+
+        function openAddContactModal() {
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'הוספת איש קשר חדש';
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="form-group">
+                        <label>שם:</label>
+                        <input type="text" id="contactName" placeholder="שם איש הקשר">
+                    </div>
+                    <div class="form-group">
+                        <label>אימייל:</label>
+                        <input type="email" id="contactEmail" placeholder="email@example.com" dir="ltr">
+                    </div>
+                    <div class="form-group">
+                        <label>חברה:</label>
+                        <input type="text" id="contactCompany" placeholder="שם החברה">
+                    </div>
+                    <div class="form-group">
+                        <label>סוג:</label>
+                        <select id="contactType">
+                            <option value="agent">סוכן</option>
+                            <option value="port">נמל</option>
+                            <option value="owner">בעלים</option>
+                            <option value="charterer">שוכר</option>
+                            <option value="receiver">מקבל</option>
+                            <option value="other">אחר</option>
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
+                        <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                        <button class="btn btn-primary" onclick="saveNewContact()">שמור</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        async function saveNewContact() {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const company = document.getElementById('contactCompany').value.trim();
+            const type = document.getElementById('contactType').value;
+
+            if (!name || !email) {
+                showToast('נא למלא שם ואימייל', 'warning');
+                return;
+            }
+
+            const newContact = {
+                name,
+                email,
+                company,
+                type,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await db.collection('contacts').add(newContact);
+                showToast('איש קשר נוסף בהצלחה', 'success');
+            } catch (error) {
+                console.error('Error saving contact:', error);
+                // Fallback to local
+                newContact.id = 'contact_' + Date.now();
+                contacts.push(newContact);
+                saveContacts();
+                renderContacts();
+                showToast('איש קשר נוסף (מקומי)', 'success');
+            }
+
+            closeModal();
+        }
+
+        function editContact(contactId) {
+            const contact = contacts.find(c => c.id === contactId);
+            if (!contact) return;
+
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'עריכת איש קשר';
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="form-group">
+                        <label>שם:</label>
+                        <input type="text" id="contactName" value="${contact.name || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>אימייל:</label>
+                        <input type="email" id="contactEmail" value="${contact.email || ''}" dir="ltr">
+                    </div>
+                    <div class="form-group">
+                        <label>חברה:</label>
+                        <input type="text" id="contactCompany" value="${contact.company || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>סוג:</label>
+                        <select id="contactType">
+                            ${Object.entries(contactTypes).map(([key, val]) =>
+                                `<option value="${key}" ${contact.type === key ? 'selected' : ''}>${val.label}</option>`
+                            ).join('')}
+                        </select>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
+                        <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                        <button class="btn btn-primary" onclick="updateContact('${contactId}')">שמור</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        async function updateContact(contactId) {
+            const name = document.getElementById('contactName').value.trim();
+            const email = document.getElementById('contactEmail').value.trim();
+            const company = document.getElementById('contactCompany').value.trim();
+            const type = document.getElementById('contactType').value;
+
+            if (!name || !email) {
+                showToast('נא למלא שם ואימייל', 'warning');
+                return;
+            }
+
+            try {
+                await db.collection('contacts').doc(contactId).update({ name, email, company, type });
+                showToast('איש קשר עודכן', 'success');
+            } catch (error) {
+                console.error('Error updating contact:', error);
+                const idx = contacts.findIndex(c => c.id === contactId);
+                if (idx !== -1) {
+                    contacts[idx] = { ...contacts[idx], name, email, company, type };
+                    saveContacts();
+                    renderContacts();
+                }
+                showToast('איש קשר עודכן (מקומי)', 'success');
+            }
+
+            closeModal();
+        }
+
+        async function deleteContact(contactId) {
+            if (!confirm('האם למחוק את איש הקשר?')) return;
+
+            try {
+                await db.collection('contacts').doc(contactId).delete();
+                showToast('איש קשר נמחק', 'success');
+            } catch (error) {
+                console.error('Error deleting contact:', error);
+                contacts = contacts.filter(c => c.id !== contactId);
+                saveContacts();
+                renderContacts();
+                showToast('איש קשר נמחק (מקומי)', 'success');
+            }
+        }
+
+        function openAddGroupModal() {
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'יצירת קבוצת מייל חדשה';
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="form-group">
+                        <label>שם הקבוצה:</label>
+                        <input type="text" id="groupName" placeholder="לדוגמה: אשדוד - ARM Shipping">
+                    </div>
+                    <div class="form-group">
+                        <label>בחר אנשי קשר:</label>
+                        <div class="checkbox-list" id="groupContactsList">
+                            ${contacts.map(c => `
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="gc_${c.id}" value="${c.id}">
+                                    <label for="gc_${c.id}">${c.name} (${c.email})</label>
+                                </div>
+                            `).join('')}
+                            ${contacts.length === 0 ? '<p style="color: var(--text-tertiary); text-align: center;">אין אנשי קשר. הוסף אנשי קשר קודם.</p>' : ''}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
+                        <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                        <button class="btn btn-primary" onclick="saveNewGroup()">צור קבוצה</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        async function saveNewGroup() {
+            const name = document.getElementById('groupName').value.trim();
+            const checkboxes = document.querySelectorAll('#groupContactsList input[type="checkbox"]:checked');
+            const contactIds = Array.from(checkboxes).map(cb => cb.value);
+
+            if (!name) {
+                showToast('נא להזין שם לקבוצה', 'warning');
+                return;
+            }
+
+            if (contactIds.length === 0) {
+                showToast('נא לבחור לפחות איש קשר אחד', 'warning');
+                return;
+            }
+
+            const newGroup = {
+                name,
+                contactIds,
+                createdAt: new Date().toISOString()
+            };
+
+            try {
+                await db.collection('emailGroups').add(newGroup);
+                showToast('קבוצה נוצרה בהצלחה', 'success');
+            } catch (error) {
+                console.error('Error saving group:', error);
+                newGroup.id = 'group_' + Date.now();
+                emailGroups.push(newGroup);
+                saveEmailGroups();
+                renderGroups();
+                showToast('קבוצה נוצרה (מקומי)', 'success');
+            }
+
+            closeModal();
+        }
+
+        function editGroup(groupId) {
+            const group = emailGroups.find(g => g.id === groupId);
+            if (!group) return;
+
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'עריכת קבוצה';
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-md);">
+                    <div class="form-group">
+                        <label>שם הקבוצה:</label>
+                        <input type="text" id="groupName" value="${group.name || ''}">
+                    </div>
+                    <div class="form-group">
+                        <label>בחר אנשי קשר:</label>
+                        <div class="checkbox-list" id="groupContactsList">
+                            ${contacts.map(c => `
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="gc_${c.id}" value="${c.id}" ${group.contactIds?.includes(c.id) ? 'checked' : ''}>
+                                    <label for="gc_${c.id}">${c.name} (${c.email})</label>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
+                        <button class="btn btn-secondary" onclick="closeModal()">ביטול</button>
+                        <button class="btn btn-primary" onclick="updateGroup('${groupId}')">שמור</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        async function updateGroup(groupId) {
+            const name = document.getElementById('groupName').value.trim();
+            const checkboxes = document.querySelectorAll('#groupContactsList input[type="checkbox"]:checked');
+            const contactIds = Array.from(checkboxes).map(cb => cb.value);
+
+            if (!name) {
+                showToast('נא להזין שם לקבוצה', 'warning');
+                return;
+            }
+
+            try {
+                await db.collection('emailGroups').doc(groupId).update({ name, contactIds });
+                showToast('קבוצה עודכנה', 'success');
+            } catch (error) {
+                console.error('Error updating group:', error);
+                const idx = emailGroups.findIndex(g => g.id === groupId);
+                if (idx !== -1) {
+                    emailGroups[idx] = { ...emailGroups[idx], name, contactIds };
+                    saveEmailGroups();
+                    renderGroups();
+                }
+                showToast('קבוצה עודכנה (מקומי)', 'success');
+            }
+
+            closeModal();
+        }
+
+        async function deleteGroup(groupId) {
+            if (!confirm('האם למחוק את הקבוצה?')) return;
+
+            try {
+                await db.collection('emailGroups').doc(groupId).delete();
+                showToast('קבוצה נמחקה', 'success');
+            } catch (error) {
+                console.error('Error deleting group:', error);
+                emailGroups = emailGroups.filter(g => g.id !== groupId);
+                saveEmailGroups();
+                renderGroups();
+                showToast('קבוצה נמחקה (מקומי)', 'success');
+            }
+        }
+
+        function selectGroup(groupId) {
+            const group = emailGroups.find(g => g.id === groupId);
+            if (!group) return;
+
+            // Add all group contacts to selected recipients
+            group.contactIds.forEach(contactId => {
+                const contact = contacts.find(c => c.id === contactId);
+                if (contact && !selectedRecipients.find(r => r.id === contact.id)) {
+                    selectedRecipients.push({ ...contact, fromGroup: group.name });
+                }
+            });
+
+            renderRecipients();
+            updateEmailPreview();
+            showToast(`נוספו ${group.contactIds.length} נמענים מקבוצה "${group.name}"`, 'success');
+        }
+
+        function openRecipientSelector() {
+            const modal = document.getElementById('modalOverlay');
+            const title = document.getElementById('modalTitle');
+            const body = document.getElementById('modalBody');
+
+            title.textContent = 'בחירת נמענים';
+            body.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: var(--spacing-lg);">
+                    <div>
+                        <h4 style="margin-bottom: var(--spacing-sm);">קבוצות מייל</h4>
+                        <div class="checkbox-list">
+                            ${emailGroups.map(g => `
+                                <div class="checkbox-item" onclick="addGroupToRecipients('${g.id}')">
+                                    <span style="flex: 1;">📁 ${g.name} (${g.contactIds?.length || 0})</span>
+                                    <button class="btn btn-sm btn-primary">הוסף</button>
+                                </div>
+                            `).join('')}
+                            ${emailGroups.length === 0 ? '<p style="color: var(--text-tertiary);">אין קבוצות</p>' : ''}
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: var(--spacing-sm);">אנשי קשר</h4>
+                        <div class="checkbox-list" style="max-height: 250px;">
+                            ${contacts.map(c => `
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="rec_${c.id}" value="${c.id}" ${selectedRecipients.find(r => r.id === c.id) ? 'checked' : ''}>
+                                    <label for="rec_${c.id}">${c.name} (${c.email})</label>
+                                </div>
+                            `).join('')}
+                            ${contacts.length === 0 ? '<p style="color: var(--text-tertiary);">אין אנשי קשר</p>' : ''}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end;">
+                        <button class="btn btn-secondary" onclick="closeModal()">סגור</button>
+                        <button class="btn btn-primary" onclick="applySelectedRecipients()">החל</button>
+                    </div>
+                </div>
+            `;
+            modal.classList.add('active');
+        }
+
+        function addGroupToRecipients(groupId) {
+            selectGroup(groupId);
+            closeModal();
+            openRecipientSelector(); // Reopen to show updated state
+        }
+
+        function applySelectedRecipients() {
+            const checkboxes = document.querySelectorAll('.checkbox-list input[type="checkbox"]:checked');
+            selectedRecipients = [];
+
+            checkboxes.forEach(cb => {
+                const contact = contacts.find(c => c.id === cb.value);
+                if (contact) {
+                    selectedRecipients.push(contact);
+                }
+            });
+
+            renderRecipients();
+            updateEmailPreview();
+            closeModal();
+        }
+
+        function renderRecipients() {
+            const container = document.getElementById('composerRecipients');
+
+            if (selectedRecipients.length === 0) {
+                container.innerHTML = '<button class="add-recipient-btn" onclick="openRecipientSelector()">+ הוסף נמענים</button>';
+                return;
+            }
+
+            container.innerHTML = selectedRecipients.map(r => `
+                <span class="recipient-tag ${r.fromGroup ? 'group' : ''}">
+                    ${r.name}
+                    <span class="remove" onclick="removeRecipient('${r.id}')">&times;</span>
+                </span>
+            `).join('') + '<button class="add-recipient-btn" onclick="openRecipientSelector()">+</button>';
+        }
+
+        function removeRecipient(contactId) {
+            selectedRecipients = selectedRecipients.filter(r => r.id !== contactId);
+            renderRecipients();
+            updateEmailPreview();
+        }
+
+        function populateShipSelector() {
+            const select = document.getElementById('shipSelectForEmail');
+            if (!select) return;
+
+            select.innerHTML = '<option value="">בחר אנייה...</option>' +
+                ships.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+        }
+
+        function updateEmailPreview() {
+            const shipId = document.getElementById('shipSelectForEmail')?.value;
+            const ship = ships.find(s => s.id === shipId);
+            const preview = document.getElementById('emailPreview');
+            const subjectInput = document.getElementById('emailSubject');
+
+            if (!ship) {
+                preview.textContent = 'בחר אנייה ונמענים ליצירת הדוח...';
+                return;
+            }
+
+            // Generate subject
+            const today = new Date().toLocaleDateString('en-GB');
+            const subject = `${ship.name} ${ship.voyage || ''} - Daily Report ${today}`;
+            if (subjectInput) subjectInput.value = subject;
+
+            // Generate email body
+            const body = generateEmailBody(ship);
+            preview.textContent = body;
+        }
+
+        function generateEmailBody(ship) {
+            const today = new Date().toLocaleDateString('en-GB');
+            const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+            let body = `Daily Report\n${today} ${time}\n\n`;
+            body += `Vessel: ${ship.name}\n`;
+            if (ship.voyage) body += `Voyage: ${ship.voyage}\n`;
+            body += `Port: ${ship.port || 'N/A'}\n\n`;
+
+            if (ship.cargo) {
+                body += `Cargo (declared):\n${ship.cargo}\n\n`;
+            }
+
+            // Add timeline if exists
+            if (ship.eta) {
+                const etaDate = new Date(ship.eta);
+                body += `ETA: ${etaDate.toLocaleDateString('en-GB')} ${etaDate.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}\n`;
+            }
+            if (ship.etb?.displayValue) {
+                body += `ETB: ${ship.etb.displayValue}\n`;
+            }
+
+            body += `Status: ${ship.status}\n\n`;
+
+            // Add services if any
+            if (ship.services && ship.services.length > 0) {
+                body += `Services:\n`;
+                ship.services.forEach(s => {
+                    body += `- ${getServiceTypeName(s.type)}: ${formatServiceDetails(s)} (${s.status})\n`;
+                });
+                body += '\n';
+            }
+
+            if (ship.notes) {
+                body += `Notes:\n${ship.notes}\n\n`;
+            }
+
+            body += `Best Regards`;
+
+            return body;
+        }
+
+        function openInOutlook() {
+            if (selectedRecipients.length === 0) {
+                showToast('נא לבחור נמענים', 'warning');
+                return;
+            }
+
+            const shipId = document.getElementById('shipSelectForEmail')?.value;
+            if (!shipId) {
+                showToast('נא לבחור אנייה', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            const emails = selectedRecipients.map(r => r.email).join(',');
+            const subject = document.getElementById('emailSubject')?.value || '';
+            const body = generateEmailBody(ship);
+
+            // Create mailto link
+            const mailtoLink = `mailto:${emails}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            // Open in Outlook/default mail client
+            window.location.href = mailtoLink;
+
+            showToast('נפתח ב-Outlook...', 'success');
+            addActivity('דוח מייל', `הוכן דוח לאנייה ${ship.name}`);
         }
 
         function updateStats() {
