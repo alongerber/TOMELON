@@ -4856,7 +4856,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             let originalBtnText = '';
             if (btn) {
                 originalBtnText = btn.innerHTML;
-                btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;margin-left:8px;"></div> מנתח עם Claude AI...';
+                btn.innerHTML = '<div class="spinner" style="width:16px;height:16px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;display:inline-block;margin-left:8px;"></div> מעבד נתונים...';
                 btn.disabled = true;
             }
 
@@ -4864,7 +4864,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('parsedResult').innerHTML = `
                 <div style="text-align:center;padding:40px;color:var(--text-secondary);">
                     <div class="spinner" style="width:32px;height:32px;border:3px solid var(--glass-border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div>
-                    <p>Claude AI מנתח את ההודעה...</p>
+                    <p>מנתח הודעה...</p>
                 </div>
             `;
 
@@ -4917,7 +4917,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                         </svg>
                         <p style="font-weight:600;margin-bottom:4px;">שגיאה בניתוח</p>
                         <p style="font-size:13px;color:var(--text-secondary);">${error.message}</p>
-                        <p style="font-size:12px;color:var(--text-tertiary);margin-top:8px;">וודא שהגדרת CLAUDE_API_KEY ב-Vercel</p>
+                        <p style="font-size:12px;color:var(--text-tertiary);margin-top:8px;">נא לפנות לתמיכה טכנית</p>
                     </div>
                 `;
             } finally {
@@ -5999,7 +5999,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // Show loading state
             const btn = document.querySelector('#tallyInputText .parse-tally-btn');
             const originalText = btn.innerHTML;
-            btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;"></div> מנתח עם Claude AI...';
+            btn.innerHTML = '<div class="spinner" style="width:18px;height:18px;border:2px solid rgba(255,255,255,0.3);border-top-color:white;border-radius:50%;animation:spin 1s linear infinite;"></div> מעבד נתונים...';
             btn.disabled = true;
 
             try {
@@ -6018,7 +6018,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 if (data.parsed) {
                     currentTallyData = data.parsed;
                     displayParsedTally(data.parsed);
-                    showToast('הטאלי נותח בהצלחה עם Claude AI', 'success');
+                    showToast('הטאלי נותח בהצלחה', 'success');
                 } else if (data.raw) {
                     showToast('התקבל ניתוח אך לא בפורמט מובנה', 'warning');
                     console.log('Raw Claude response:', data.raw);
@@ -6303,7 +6303,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             }
 
             document.getElementById('imageProcessing').classList.add('active');
-            document.querySelector('#imageProcessing span').textContent = 'מנתח תמונה עם Claude Vision...';
+            document.querySelector('#imageProcessing span').textContent = 'מעבד תמונה...';
 
             try {
                 // Extract base64 data and mime type from data URL
@@ -6335,7 +6335,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     currentTallyData = data.parsed;
                     displayParsedTally(data.parsed);
                     document.getElementById('tallyResults').style.display = 'block';
-                    showToast('התמונה נותחה בהצלחה עם Claude Vision', 'success');
+                    showToast('התמונה נותחה בהצלחה', 'success');
                 } else if (data.raw) {
                     showToast('התקבל ניתוח אך לא בפורמט מובנה', 'warning');
                     console.log('Raw Claude response:', data.raw);
@@ -6416,7 +6416,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     viewport: viewport
                 }).promise;
 
-                document.querySelector('#pdfProcessing span').textContent = 'מנתח עם Claude Vision...';
+                document.querySelector('#pdfProcessing span').textContent = 'מעבד מסמך...';
 
                 // Convert canvas to base64
                 const imageDataUrl = canvas.toDataURL('image/png');
@@ -6450,7 +6450,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     currentTallyData = data.parsed;
                     displayParsedTally(data.parsed);
                     document.getElementById('tallyResults').style.display = 'block';
-                    showToast('ה-PDF נותח בהצלחה עם Claude Vision', 'success');
+                    showToast('ה-PDF נותח בהצלחה', 'success');
                 } else if (data.raw) {
                     showToast('התקבל ניתוח אך לא בפורמט מובנה', 'warning');
                     console.log('Raw Claude response:', data.raw);

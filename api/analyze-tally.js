@@ -1,7 +1,7 @@
-// Vercel Serverless Function for Claude API
-// Analyzes tally reports (text or images) using Claude
+// Vercel Serverless Function for AI Analysis
+// Analyzes tally reports (text or images)
 
-export default async function handler(req, res) {
+module.exports = async function handler(req, res) {
     // CORS headers
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
