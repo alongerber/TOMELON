@@ -5566,6 +5566,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                 <table class="reference-table" id="refCargoTable">
                                     <thead>
                                         <tr>
+                                            <th>מס"ד</th>
                                             <th>סוג מטען</th>
                                             <th>קטגוריה</th>
                                             <th>יחידת מידה</th>
@@ -7006,6 +7007,14 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     filterGallery();
                 }
             }, 100);
+        }
+
+        function calculateDaysUntilETA(eta) {
+            if (!eta) return null;
+            const now = new Date();
+            const etaDate = new Date(eta);
+            if (isNaN(etaDate.getTime())) return null;
+            return Math.ceil((etaDate - now) / (1000 * 60 * 60 * 24));
         }
 
         function formatEtaDays(days) {
@@ -9750,10 +9759,75 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     referenceData.receivers = receiversSnapshot.data().items || [];
                 }
 
+                // Seed cargo types if empty
+                if (referenceData.cargo.length === 0) {
+                    await seedCargoTypes();
+                }
+
                 renderAllReferenceTables();
             } catch (error) {
                 console.error('Error loading reference data:', error);
                 showToast('שגיאה בטעינת נתוני יסוד', 'error');
+            }
+        }
+
+        async function seedCargoTypes() {
+            const steelCargoTypes = [
+                'Alloyed Galvanized Wire',
+                'Alloyed Wire',
+                'Aluminum Billets',
+                'Aluminum Ingots',
+                'Aluminum Wire Rods',
+                'Galvanized Wire',
+                'Merchant Bars',
+                'Rebars in spools',
+                'Sheet Piles',
+                'Steel',
+                'Steel Angles',
+                'Steel Bars',
+                'Steel Beams',
+                'Steel Billets',
+                'Steel Billets In Bundles',
+                'Steel channels',
+                'Steel Coils',
+                'Steel Debars',
+                'Steel Debars in Coils',
+                'Steel Piles',
+                'Steel Pipes',
+                'Steel Plates',
+                'Steel Products',
+                'Steel Profiles',
+                'Steel Rails',
+                'Steel Rebars',
+                'Steel Rebars in Coils',
+                'Steel Sections',
+                'Steel Sheets',
+                'Steel Stripes',
+                'Steel Welded Mesh',
+                'Steel Wire Rods',
+                'Steel Wire Rods in Coils',
+                'Stone Wool',
+                'Tear Drops',
+                'Wire strand in coils'
+            ];
+
+            referenceData.cargo = steelCargoTypes.map((name, idx) => ({
+                id: Date.now().toString() + idx,
+                sequentialId: idx + 1,
+                name: name,
+                category: 'Steel',
+                unit: 'MT',
+                notes: ''
+            }));
+
+            try {
+                await db.collection('referenceData').doc('cargo').set({
+                    items: referenceData.cargo,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log('Cargo types seeded successfully');
+            } catch (error) {
+                console.error('Error seeding cargo types:', error);
             }
         }
 
@@ -9815,7 +9889,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             if (referenceData.cargo.length === 0) {
                 tbody.innerHTML = `
                     <tr class="empty-row">
-                        <td colspan="5">אין סוגי מטען במאגר. הוסף סוג מטען חדש.</td>
+                        <td colspan="6">אין סוגי מטען במאגר. הוסף סוג מטען חדש.</td>
                     </tr>
                 `;
                 return;
@@ -9823,6 +9897,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
             tbody.innerHTML = referenceData.cargo.map((cargo, idx) => `
                 <tr>
+                    <td>${cargo.sequentialId || idx + 1}</td>
                     <td><strong>${cargo.name || '-'}</strong></td>
                     <td>${cargo.category || '-'}</td>
                     <td>${cargo.unit || '-'}</td>
@@ -10162,8 +10237,11 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     israeliPortNumber: document.getElementById('refItemIsraeliPortNumber').value.trim()
                 };
             } else if (type === 'cargo') {
+                // Calculate next sequential ID for cargo
+                const maxCargoSeqId = referenceData.cargo.reduce((max, c) => Math.max(max, c.sequentialId || 0), 0);
                 item = {
                     id: Date.now().toString(),
+                    sequentialId: maxCargoSeqId + 1,
                     name: document.getElementById('refItemName').value.trim(),
                     category: document.getElementById('refItemCategory').value,
                     unit: document.getElementById('refItemUnit').value,
