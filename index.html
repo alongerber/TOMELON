@@ -4928,9 +4928,37 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             }
         }
 
+        // Message type labels in Hebrew
+        const MESSAGE_TYPE_LABELS = {
+            'NOMINATION': '📋 מינוי חדש',
+            'ETA_UPDATE': '📍 עדכון ETA',
+            'ARRIVAL_NOTICE': '⚓ הודעת הגעה',
+            'BERTHING_NOTICE': '🚢 הודעת עגינה',
+            'SAILING_NOTICE': '🚀 הודעת הפלגה',
+            'SERVICE_REQUEST': '🔧 בקשת שירות',
+            'DOCUMENTS': '📄 מסמכים',
+            'DAILY_REPORT': '📊 דוח יומי',
+            'CARGO_INFO': '📦 פרטי מטען',
+            'OTHER': '📝 אחר'
+        };
+
+        // Status labels in Hebrew
+        const STATUS_LABELS = {
+            'NOMINATED': 'מינוי',
+            'LOADING': 'בטעינה',
+            'EN_ROUTE': 'בדרך',
+            'AT_ANCHOR': 'על עוגן',
+            'BERTHED': 'ברציף',
+            'WORKING': 'עובדת',
+            'SAILED': 'הפליגה'
+        };
+
         function convertClaudeResponseToShipData(claudeData) {
             const result = {
-                match_confidence: 0,
+                messageType: claudeData.messageType || 'OTHER',
+                messageTypeLabel: MESSAGE_TYPE_LABELS[claudeData.messageType] || MESSAGE_TYPE_LABELS['OTHER'],
+                messageTypeConfidence: claudeData.messageTypeConfidence || 0,
+                match_confidence: claudeData.extractionConfidence || 0,
                 identified_ship_id: null,
                 matched_ship: null,
                 is_new_ship: false,
@@ -4940,13 +4968,25 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     eta: null,
                     etb: null,
                     etd: null,
+                    ets: null,
                     port: null,
+                    originPort: null,
                     cargo: null,
                     services_to_add: [],
-                    notes_delta: null
+                    notes_delta: null,
+                    owner: null,
+                    charterer: null,
+                    voyageNumber: null
+                },
+                dates: {
+                    eta: null,
+                    etb: null,
+                    etd: null,
+                    ets: null
                 },
                 uncertainty_note: null,
                 contacts: [],
+                parties: {},
                 rawClaudeData: claudeData
             };
 
@@ -4959,49 +4999,86 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 if (matchedShip) {
                     result.matched_ship = matchedShip;
                     result.identified_ship_id = matchedShip.id;
-                    result.match_confidence = 0.9;
+                    result.match_confidence = Math.max(result.match_confidence, 0.9);
                 } else {
                     result.is_new_ship = true;
-                    result.match_confidence = 0.8;
                 }
             }
 
-            // Map dates
-            if (claudeData.eta) result.updates.eta = claudeData.eta;
-            if (claudeData.etb) result.updates.etb = claudeData.etb;
-            if (claudeData.etd) result.updates.etd = claudeData.etd;
+            // Map voyage number
+            if (claudeData.voyageNumber) {
+                result.updates.voyageNumber = claudeData.voyageNumber;
+            }
 
-            // Map port
-            if (claudeData.port) result.updates.port = claudeData.port;
+            // Map dates with new structure
+            if (claudeData.dates) {
+                ['eta', 'etb', 'etd', 'ets'].forEach(dateType => {
+                    if (claudeData.dates[dateType] && claudeData.dates[dateType].iso) {
+                        result.dates[dateType] = {
+                            iso: claudeData.dates[dateType].iso,
+                            original: claudeData.dates[dateType].original,
+                            confidence: claudeData.dates[dateType].confidence || 0
+                        };
+                        result.updates[dateType] = claudeData.dates[dateType].iso;
+                    }
+                });
+            }
+
+            // Map ports
+            if (claudeData.ports) {
+                if (claudeData.ports.destination) {
+                    result.updates.port = claudeData.ports.destination;
+                }
+                if (claudeData.ports.origin) {
+                    result.updates.originPort = claudeData.ports.origin;
+                }
+            }
 
             // Map status
-            if (claudeData.status) result.updates.status = claudeData.status;
+            if (claudeData.status && claudeData.status.current) {
+                result.updates.status = STATUS_LABELS[claudeData.status.current] || claudeData.status.statusText;
+            }
 
             // Map cargo
-            if (claudeData.cargo && (claudeData.cargo.type || claudeData.cargo.weight)) {
-                result.updates.cargo = claudeData.cargo;
+            if (claudeData.cargo && claudeData.cargo.types && claudeData.cargo.types.length > 0) {
+                result.updates.cargo = {
+                    types: claudeData.cargo.types,
+                    totalWeight: claudeData.cargo.totalWeight,
+                    totalQuantity: claudeData.cargo.totalQuantity,
+                    blNumbers: claudeData.cargo.blNumbers || [],
+                    hasTelex: claudeData.cargo.hasTelex || false
+                };
             }
 
             // Map services
-            if (claudeData.services) {
-                const serviceMap = {
-                    water: 'מים מתוקים',
-                    bunker: 'דלק',
-                    crewChange: 'החלפת צוות',
-                    provisions: 'ציוד ומזון',
-                    sludge: 'פינוי שמנים',
-                    repairs: 'תיקונים'
+            if (claudeData.services && claudeData.services.requested) {
+                const serviceTypeMap = {
+                    'WATER': 'מים מתוקים',
+                    'BUNKER': 'דלק',
+                    'CREW_CHANGE': 'החלפת צוות',
+                    'PROVISIONS': 'ציוד ומזון',
+                    'SLUDGE': 'פינוי שמנים',
+                    'REPAIRS': 'תיקונים',
+                    'PARCELS': 'חבילות'
                 };
 
-                for (const [key, hebrewName] of Object.entries(serviceMap)) {
-                    if (claudeData.services[key]) {
-                        result.updates.services_to_add.push(hebrewName);
-                    }
-                }
+                claudeData.services.requested.forEach(service => {
+                    const hebrewName = serviceTypeMap[service.type] || service.type;
+                    const serviceEntry = {
+                        name: hebrewName,
+                        details: service.details,
+                        quantity: service.quantity,
+                        date: service.date
+                    };
+                    result.updates.services_to_add.push(serviceEntry);
+                });
+            }
 
-                if (claudeData.services.other && Array.isArray(claudeData.services.other)) {
-                    result.updates.services_to_add.push(...claudeData.services.other);
-                }
+            // Map parties
+            if (claudeData.parties) {
+                result.parties = claudeData.parties;
+                if (claudeData.parties.owner) result.updates.owner = claudeData.parties.owner;
+                if (claudeData.parties.charterer) result.updates.charterer = claudeData.parties.charterer;
             }
 
             // Map notes
@@ -5012,17 +5089,6 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // Map contacts
             if (claudeData.contacts && claudeData.contacts.length > 0) {
                 result.contacts = claudeData.contacts;
-            }
-
-            // Map confidence
-            if (claudeData.confidence) {
-                const confidenceMap = { high: 0.95, medium: 0.75, low: 0.5 };
-                result.match_confidence = confidenceMap[claudeData.confidence] || 0.7;
-            }
-
-            // Determine status based on extracted data if not explicitly set
-            if (!result.updates.status && result.updates.eta) {
-                result.updates.status = 'At Sea';
             }
 
             return result;
@@ -5476,12 +5542,22 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
             let html = '';
 
-            // Confidence badge
+            // Message Type Header
+            if (data.messageTypeLabel) {
+                html += `
+                    <div class="message-type-header" style="background: linear-gradient(135deg, var(--primary-glow), transparent); border: 1px solid var(--primary); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+                        <span style="font-size: 16px; font-weight: 600; color: var(--primary);">${data.messageTypeLabel}</span>
+                        <span style="font-size: 12px; color: var(--text-secondary);">ודאות: ${Math.round((data.messageTypeConfidence || 0) * 100)}%</span>
+                    </div>
+                `;
+            }
+
+            // Confidence badge and new ship indicator
             const confidenceClass = data.match_confidence >= 0.8 ? 'high' : data.match_confidence >= 0.5 ? 'medium' : 'low';
             html += `
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--spacing-md);">
                     <span class="confidence-badge confidence-${confidenceClass}">
-                        רמת התאמה: ${Math.round(data.match_confidence * 100)}%
+                        רמת חילוץ: ${Math.round(data.match_confidence * 100)}%
                     </span>
                     ${data.is_new_ship ? '<span class="new-ship-indicator">אנייה חדשה</span>' : ''}
                 </div>
@@ -5529,27 +5605,57 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 html += createParsedField('סטטוס', hebrewStatus, 'status', hebrewStatus);
             }
 
-            // Port
+            // Origin Port
+            if (data.updates.originPort) {
+                html += createParsedField('נמל טעינה', data.updates.originPort, 'originPort');
+            }
+
+            // Destination Port
             if (data.updates.port) {
-                html += createParsedField('נמל', data.updates.port, 'port');
+                html += createParsedField('נמל יעד', data.updates.port, 'port');
             }
 
-            // ETA
+            // ETA with original text
             if (data.updates.eta) {
-                const displayEta = formatDateSafe(data.updates.eta);
-                html += createParsedField('ETA', displayEta, 'eta', data.updates.eta);
+                const displayEta = formatDateFromISO(data.updates.eta);
+                const originalText = data.dates?.eta?.original ? ` (${data.dates.eta.original})` : '';
+                html += createParsedFieldWithOriginal('ETA', displayEta, originalText, 'eta', data.updates.eta);
             }
 
-            // ETB
+            // ETB with original text
             if (data.updates.etb) {
-                const displayEtb = formatDateSafe(data.updates.etb);
-                html += createParsedField('ETB', displayEtb, 'etb', data.updates.etb);
+                const displayEtb = formatDateFromISO(data.updates.etb);
+                const originalText = data.dates?.etb?.original ? ` (${data.dates.etb.original})` : '';
+                html += createParsedFieldWithOriginal('ETB', displayEtb, originalText, 'etb', data.updates.etb);
             }
 
-            // ETD
+            // ETD with original text
             if (data.updates.etd) {
-                const displayEtd = formatDateSafe(data.updates.etd);
-                html += createParsedField('ETD', displayEtd, 'etd', data.updates.etd);
+                const displayEtd = formatDateFromISO(data.updates.etd);
+                const originalText = data.dates?.etd?.original ? ` (${data.dates.etd.original})` : '';
+                html += createParsedFieldWithOriginal('ETD', displayEtd, originalText, 'etd', data.updates.etd);
+            }
+
+            // ETS with original text
+            if (data.updates.ets) {
+                const displayEts = formatDateFromISO(data.updates.ets);
+                const originalText = data.dates?.ets?.original ? ` (${data.dates.ets.original})` : '';
+                html += createParsedFieldWithOriginal('ETS', displayEts, originalText, 'ets', data.updates.ets);
+            }
+
+            // Owner
+            if (data.updates.owner) {
+                html += createParsedField('בעלים', data.updates.owner, 'owner');
+            }
+
+            // Charterer
+            if (data.updates.charterer) {
+                html += createParsedField('חוכר', data.updates.charterer, 'charterer');
+            }
+
+            // Voyage Number
+            if (data.updates.voyageNumber) {
+                html += createParsedField('מספר מסע', data.updates.voyageNumber, 'voyageNumber');
             }
 
             // Cargo
@@ -5564,18 +5670,23 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                         <div class="parsed-field-header">
                             <span class="parsed-field-label">שירותים נדרשים</span>
                         </div>
-                        <div class="parsed-services">
-                            ${data.updates.services_to_add.map((service, index) => `
-                                <div class="parsed-service-item">
-                                    <div class="parsed-service-info">
-                                        <span class="parsed-service-type">${getServiceTypeName(service.type)}</span>
-                                        <span class="parsed-service-details">${formatServiceDetails(service)}</span>
+                        <div class="parsed-services" style="display: flex; flex-direction: column; gap: 8px;">
+                            ${data.updates.services_to_add.map((service, index) => {
+                                const serviceName = typeof service === 'string' ? service : service.name;
+                                const serviceDetails = typeof service === 'object' ?
+                                    [service.details, service.quantity, service.date].filter(Boolean).join(' | ') : '';
+                                return `
+                                    <div class="parsed-service-item" style="display: flex; justify-content: space-between; align-items: center; padding: 8px 12px; background: var(--glass-bg); border-radius: 8px; border: 1px solid var(--glass-border);">
+                                        <div class="parsed-service-info">
+                                            <span class="parsed-service-type" style="font-weight: 600; color: var(--text-primary);">${serviceName}</span>
+                                            ${serviceDetails ? `<span class="parsed-service-details" style="font-size: 12px; color: var(--text-secondary); margin-right: 8px;">${serviceDetails}</span>` : ''}
+                                        </div>
+                                        <button class="parsed-field-apply" onclick="applyService(${index})" style="padding: 4px 12px; font-size: 12px;">
+                                            הוסף
+                                        </button>
                                     </div>
-                                    <button class="parsed-field-apply" onclick="applyService(${index})">
-                                        הוסף
-                                    </button>
-                                </div>
-                            `).join('')}
+                                `;
+                            }).join('')}
                         </div>
                     </div>
                 `;
@@ -5614,15 +5725,36 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         }
 
         function createParsedField(label, value, fieldKey, rawValue = null) {
+            const displayValue = typeof value === 'object' ? JSON.stringify(value) : value;
+            const escapedRawValue = (rawValue || displayValue || '').toString().replace(/'/g, "\\'");
             return `
                 <div class="parsed-field" data-field="${fieldKey}">
                     <div class="parsed-field-header">
                         <span class="parsed-field-label">${label}</span>
-                        <button class="parsed-field-apply" onclick="applyField('${fieldKey}', '${rawValue || value}')">
+                        <button class="parsed-field-apply" onclick="applyField('${fieldKey}', '${escapedRawValue}')">
                             החל
                         </button>
                     </div>
-                    <span class="parsed-field-value">${value}</span>
+                    <span class="parsed-field-value">${displayValue}</span>
+                </div>
+            `;
+        }
+
+        // Create parsed field with original text shown in smaller font
+        function createParsedFieldWithOriginal(label, value, originalText, fieldKey, rawValue = null) {
+            const escapedRawValue = (rawValue || value || '').toString().replace(/'/g, "\\'");
+            return `
+                <div class="parsed-field" data-field="${fieldKey}">
+                    <div class="parsed-field-header">
+                        <span class="parsed-field-label">${label}</span>
+                        <button class="parsed-field-apply" onclick="applyField('${fieldKey}', '${escapedRawValue}')">
+                            החל
+                        </button>
+                    </div>
+                    <div class="parsed-field-value">
+                        <span style="font-weight: 600;">${value}</span>
+                        ${originalText ? `<span style="font-size: 11px; color: var(--text-tertiary); margin-right: 8px;">${originalText}</span>` : ''}
+                    </div>
                 </div>
             `;
         }
@@ -5634,6 +5766,21 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             const hours = date.getHours().toString().padStart(2, '0');
             const minutes = date.getMinutes().toString().padStart(2, '0');
             return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+
+        // Format ISO date string to display format
+        function formatDateFromISO(isoStr) {
+            if (!isoStr) return '';
+
+            try {
+                const date = new Date(isoStr);
+                if (!isNaN(date.getTime())) {
+                    return formatDateTimeHebrew(date);
+                }
+            } catch (e) {}
+
+            // Return original if parsing fails
+            return String(isoStr).replace(/T/, ' ').replace(/:00$/, '');
         }
 
         // Safe date formatter - handles various formats without NaN

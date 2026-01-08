@@ -17,72 +17,174 @@ module.exports = async function handler(req, res) {
 
     const apiKey = process.env.ANTHROPIC_API_KEY;
     if (!apiKey) {
-        return res.status(500).json({ error: 'Claude API key not configured. Add ANTHROPIC_API_KEY to Vercel Environment Variables.' });
+        return res.status(500).json({ error: 'API key not configured' });
     }
 
     try {
-        const { parseType, content, imageBase64, mimeType, existingShips } = req.body;
+        const { parseType, content, imageBase64, mimeType, existingShips, currentYear } = req.body;
 
         let systemPrompt = '';
         let userPrompt = '';
 
+        // Get current year for date parsing
+        const year = currentYear || new Date().getFullYear();
+
         // Different prompts based on parse type
         if (parseType === 'email' || parseType === 'message') {
-            systemPrompt = `You are an expert shipping operations assistant. Analyze emails, WhatsApp messages, and communications about vessel operations.
+            systemPrompt = `You are an expert shipping operations assistant for an Israeli port agency. Analyze emails and WhatsApp messages about vessel operations.
 
-Extract ANY relevant shipping information you find. Be flexible with formats - the data can come in many variations and languages (English, Hebrew, Chinese, etc.).
+IMPORTANT: Current year is ${year}. Use this for dates without year specified.
+
+## STEP 1: Identify Message Type
+Determine the message type based on content:
+- NOMINATION: New vessel nomination, first contact about a ship coming
+- ETA_UPDATE: Update to arrival time for a known vessel
+- ARRIVAL_NOTICE: Vessel announcing imminent arrival (24hr/12hr/6hr notice)
+- BERTHING_NOTICE: Vessel berthed or about to berth
+- SAILING_NOTICE: Vessel sailed or about to sail
+- SERVICE_REQUEST: Request for services (water, crew change, provisions, repairs)
+- DOCUMENTS: Sending documents (BL, manifest, cargo list)
+- DAILY_REPORT: Daily status report from captain
+- CARGO_INFO: Cargo details, stowage plan, quantities
+- OTHER: Doesn't fit above categories
+
+## STEP 2: Extract All Relevant Fields
 
 Return valid JSON only (no markdown, no explanation):
 
 {
-    "vesselName": "string or null - the ship/vessel name (look for MV, M/V, M.V, VSL, VESSEL, ship names)",
-    "eta": "string or null - Expected Time of Arrival (any date/time format found)",
-    "etb": "string or null - Expected Time of Berthing",
-    "etd": "string or null - Expected Time of Departure",
-    "ets": "string or null - Expected Time of Sailing",
-    "port": "string or null - port name (Ashdod, Haifa, Shipyards, etc. - handle typos like 'Ahsdod')",
-    "status": "string or null - vessel status if mentioned",
+    "messageType": "NOMINATION|ETA_UPDATE|ARRIVAL_NOTICE|BERTHING_NOTICE|SAILING_NOTICE|SERVICE_REQUEST|DOCUMENTS|DAILY_REPORT|CARGO_INFO|OTHER",
+    "messageTypeConfidence": 0.95,
+
+    "vesselName": "string - clean vessel name without MV/M.V prefix",
+    "vesselNameVariations": ["array of name variations found"],
+    "imoNumber": "string or null - IMO number if found",
+    "voyageNumber": "string or null",
+
+    "dates": {
+        "eta": {
+            "original": "string - exactly as written in message",
+            "iso": "YYYY-MM-DDTHH:mm:00 - parsed to ISO format",
+            "confidence": 0.95
+        },
+        "etb": {
+            "original": "string or null",
+            "iso": "string or null",
+            "confidence": 0.0
+        },
+        "etd": {
+            "original": "string or null",
+            "iso": "string or null",
+            "confidence": 0.0
+        },
+        "ets": {
+            "original": "string or null",
+            "iso": "string or null",
+            "confidence": 0.0
+        }
+    },
+
+    "ports": {
+        "destination": "string - destination port (Ashdod/Haifa/Israel Shipyards/North Port/South Port)",
+        "origin": "string or null - loading port",
+        "lastPort": "string or null - last port of call",
+        "nextPort": "string or null - next port after destination"
+    },
+
+    "status": {
+        "current": "NOMINATED|LOADING|EN_ROUTE|AT_ANCHOR|BERTHED|WORKING|SAILED",
+        "statusText": "string - original status text from message"
+    },
+
     "cargo": {
-        "type": "string or null - cargo type",
-        "quantity": "number or null",
-        "weight": "number or null - in MT"
+        "types": [
+            {
+                "name": "string - cargo type",
+                "weight": 0,
+                "weightUnit": "MT",
+                "quantity": 0,
+                "quantityUnit": "pcs/units/coils/etc"
+            }
+        ],
+        "totalWeight": 0,
+        "totalQuantity": 0,
+        "blNumbers": ["array of BL numbers"],
+        "hasTelex": false,
+        "remarks": "string or null"
     },
+
     "services": {
-        "water": "boolean - fresh water supply needed",
-        "bunker": "boolean - fuel/bunker needed",
-        "crewChange": "boolean - crew change mentioned",
-        "provisions": "boolean - provisions/stores needed",
-        "sludge": "boolean - sludge disposal",
-        "repairs": "boolean - any repairs mentioned",
-        "other": ["array of other services mentioned"]
+        "requested": [
+            {
+                "type": "WATER|PROVISIONS|CREW_CHANGE|REPAIRS|PARCELS|BUNKER|SLUDGE|OTHER",
+                "details": "string - specific details",
+                "quantity": "string or null - e.g., '50 tons'",
+                "date": "string or null - requested date"
+            }
+        ]
     },
-    "agent": "string or null - agent name if mentioned",
-    "notes": ["array of important notes, instructions, or remarks"],
+
+    "parties": {
+        "owner": "string or null",
+        "charterer": "string or null",
+        "shipper": "string or null",
+        "receiver": "string or null",
+        "loadingAgent": "string or null",
+        "nomination": "string or null - nominating party"
+    },
+
     "contacts": [
         {
             "name": "string",
-            "role": "string (captain, agent, operator, etc.)",
+            "role": "CAPTAIN|OWNER|CHARTERER|AGENT|OPERATOR|SUPPLIER",
             "email": "string or null",
-            "phone": "string or null"
+            "phone": "string or null",
+            "company": "string or null"
         }
     ],
-    "confidence": "high/medium/low - how confident you are in the extraction"
+
+    "vessel": {
+        "flag": "string or null",
+        "draft": "number or null - in meters",
+        "loa": "number or null - length overall",
+        "beam": "number or null"
+    },
+
+    "notes": ["array of important notes or remarks from the message"],
+
+    "extractionConfidence": 0.9
 }
 
-Rules:
-- Extract EVERYTHING relevant, even partial information
-- Handle typos and variations (Ahsdod = Ashdod, etc.)
-- Dates can be in any format - preserve as found
-- Look for vessel names after: MV, M/V, M.V., M.V, VSL, VESSEL, master of, captain of
-- Israeli ports: Ashdod, Haifa, Haifa Bay Port, Shipyards Port, מספנות, נמל המפרץ
-- Services: water, fresh water, bunker, fuel, crew change, provisions, stores, sludge, repairs
-- Return ONLY valid JSON`;
+## Date Parsing Rules:
+- "9th Jan" / "Jan 9" / "09/01" / "09.01" → ${year}-01-09
+- "9th Jan 2026" / "09/01/2026" → 2026-01-09
+- Time: "0700lt" / "07:00 LT" / "0700hrs" → T07:00:00
+- If no time specified, use T00:00:00
+- If date is ambiguous (e.g., 01/02), prefer DD/MM format
+- Always output ISO format: YYYY-MM-DDTHH:mm:00
+
+## Port Name Normalization:
+- Ashdod, Ahsdod, אשדוד → "Ashdod"
+- Haifa, חיפה → "Haifa"
+- Shipyards, מספנות → "Israel Shipyards"
+- North Port, נמל הצפון → "North Port"
+- South Port, נמל הדרום → "South Port"
+
+## Status Mapping:
+- Loading, בטעינה → LOADING
+- Sailing, transit, en route, בדרך → EN_ROUTE
+- Anchor, waiting, על עוגן → AT_ANCHOR
+- Berthed, alongside, ברציף → BERTHED
+- Working, discharging, עובדת → WORKING
+- Sailed, departed, הפליגה → SAILED
+
+Return ONLY valid JSON, no explanation.`;
 
             userPrompt = content;
 
             // Add context about existing ships if provided
             if (existingShips && existingShips.length > 0) {
-                systemPrompt += `\n\nExisting ships in the system (try to match vessel names): ${existingShips.join(', ')}`;
+                systemPrompt += `\n\n## Existing Ships in System (match if possible):\n${existingShips.join(', ')}`;
             }
 
         } else if (parseType === 'tally') {
@@ -93,7 +195,8 @@ Extract discharge/loading operation data. Handle various formats and languages.
 Return valid JSON only (no markdown, no explanation):
 
 {
-    "date": "DD/MM/YYYY or as found",
+    "date": "YYYY-MM-DD",
+    "vesselName": "string",
     "shifts": [
         {
             "name": "Shift 1/2/3 or time period",
@@ -106,14 +209,17 @@ Return valid JSON only (no markdown, no explanation):
                     "weight": 0
                 }
             ],
-            "quantity": 0,
-            "weight": 0
+            "totalQuantity": 0,
+            "totalWeight": 0
         }
     ],
-    "totalQuantity": 0,
-    "totalWeight": 0,
+    "dailyTotalQuantity": 0,
+    "dailyTotalWeight": 0,
+    "cumulativeQuantity": 0,
+    "cumulativeWeight": 0,
+    "remainingQuantity": 0,
+    "remainingWeight": 0,
     "remarks": ["all remarks, events, stoppages, delays, weather issues"],
-    "vesselName": "vessel name if found",
     "port": "port if found"
 }
 
@@ -181,9 +287,9 @@ Rules:
 
         if (!response.ok) {
             const errorData = await response.text();
-            console.error('Claude API error:', errorData);
+            console.error('API error:', errorData);
             return res.status(response.status).json({
-                error: 'Claude API error',
+                error: 'API error',
                 details: errorData
             });
         }
@@ -193,7 +299,7 @@ Rules:
         // Extract the text content from Claude's response
         const textContent = data.content.find(c => c.type === 'text');
         if (!textContent) {
-            return res.status(500).json({ error: 'No text response from Claude' });
+            return res.status(500).json({ error: 'No text response' });
         }
 
         // Try to parse as JSON
