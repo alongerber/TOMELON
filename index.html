@@ -6722,6 +6722,24 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             return ship;
         }
 
+        // Save ship to Firestore
+        async function saveShipToFirestore(ship) {
+            if (!ship || !ship.id) {
+                console.error('Invalid ship data');
+                return;
+            }
+
+            ship.updatedAt = new Date().toISOString();
+
+            try {
+                await db.collection("ships").doc(ship.id).set(ship, { merge: true });
+                console.log('Ship saved to Firestore:', ship.id);
+            } catch (error) {
+                console.error('Error saving ship to Firestore:', error);
+                throw error;
+            }
+        }
+
         // Find contacts from previous voyage of the same vessel
         function findPreviousVoyageContacts(vesselName) {
             if (!vesselName) return [];
@@ -11935,7 +11953,33 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             );
 
             if (existingVessel) {
-                console.log('Vessel already exists in reference database:', vesselName);
+                // Update existing vessel with new data if we have more info
+                const vesselData = parserData.vessel || {};
+                let updated = false;
+
+                if (vesselData.loa && !existingVessel.loa) { existingVessel.loa = vesselData.loa; updated = true; }
+                if (vesselData.beam && !existingVessel.beam) { existingVessel.beam = vesselData.beam; updated = true; }
+                if (vesselData.dwt && !existingVessel.dwt) { existingVessel.dwt = vesselData.dwt; updated = true; }
+                if (vesselData.draft && !existingVessel.draft) { existingVessel.draft = vesselData.draft; updated = true; }
+                if (vesselData.gross && !existingVessel.grt) { existingVessel.grt = vesselData.gross; updated = true; }
+                if (vesselData.net && !existingVessel.nrt) { existingVessel.nrt = vesselData.net; updated = true; }
+                if (vesselData.holds && !existingVessel.holds) { existingVessel.holds = vesselData.holds; updated = true; }
+                if (vesselData.grainCapacity && !existingVessel.grain) { existingVessel.grain = vesselData.grainCapacity; updated = true; }
+                if (vesselData.yearBuilt && !existingVessel.yearBuilt) { existingVessel.yearBuilt = vesselData.yearBuilt; updated = true; }
+                if (vesselData.placeBuilt && !existingVessel.placeBuilt) { existingVessel.placeBuilt = vesselData.placeBuilt; updated = true; }
+                if (vesselData.class && !existingVessel.class) { existingVessel.class = vesselData.class; updated = true; }
+                if (vesselData.cranes && !existingVessel.cranes) { existingVessel.cranes = vesselData.cranes; updated = true; }
+                if (vesselData.imoNumber && !existingVessel.imo) { existingVessel.imo = vesselData.imoNumber; updated = true; }
+
+                if (updated) {
+                    await db.collection('referenceData').doc('vessels').set({
+                        items: referenceData.vessels,
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    console.log('Vessel updated with new specs:', vesselName);
+                    showToast(`פרטי ${vesselName} עודכנו במאגר`, 'success');
+                    renderVesselsTable();
+                }
                 return;
             }
 
@@ -11951,15 +11995,20 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 name: vesselName,
                 flag: vesselData.flag || parserData.flag || '',
                 yearBuilt: vesselData.yearBuilt || '',
+                placeBuilt: vesselData.placeBuilt || '',
+                class: vesselData.class || '',
                 holds: vesselData.holds || '',
-                imo: vesselData.imo || parserData.imo || '',
+                hatches: vesselData.hatches || '',
+                imo: vesselData.imoNumber || parserData.imoNumber || '',
                 loa: vesselData.loa || '',
                 beam: vesselData.beam || '',
+                draft: vesselData.draft || '',
                 dwt: vesselData.dwt || '',
-                grain: vesselData.grain || '',
+                grain: vesselData.grainCapacity || '',
                 bale: vesselData.bale || '',
-                nrt: vesselData.nrt || '',
-                grt: vesselData.grt || '',
+                nrt: vesselData.net || '',
+                grt: vesselData.gross || '',
+                cranes: vesselData.cranes || '',
                 dagonCompatible: vesselData.dagonCompatible || '',
                 israeliPortNumber: vesselData.israeliPortNumber || ''
             };
@@ -16264,6 +16313,43 @@ ${signature}`;
                         <span class="parser-field-value">${data.status.current}</span>
                     </div>
                 `;
+            }
+
+            // Display vessel specifications (especially for NOMINATION emails)
+            if (data.vessel) {
+                const v = data.vessel;
+                const vesselSpecs = [];
+
+                if (v.loa) vesselSpecs.push(`LOA: ${v.loa}m`);
+                if (v.beam) vesselSpecs.push(`Beam: ${v.beam}m`);
+                if (v.dwt) vesselSpecs.push(`DWT: ${v.dwt.toLocaleString()} MT`);
+                if (v.draft) vesselSpecs.push(`שוקע: ${v.draft}m`);
+                if (v.gross) vesselSpecs.push(`GRT: ${v.gross.toLocaleString()}`);
+                if (v.net) vesselSpecs.push(`NRT: ${v.net.toLocaleString()}`);
+                if (v.yearBuilt) vesselSpecs.push(`שנת בניה: ${v.yearBuilt}`);
+                if (v.placeBuilt) vesselSpecs.push(`מקום בניה: ${v.placeBuilt}`);
+                if (v.class) vesselSpecs.push(`סיווג: ${v.class}`);
+                if (v.holds) vesselSpecs.push(`מעמסות: ${v.holds}`);
+                if (v.grainCapacity) vesselSpecs.push(`Grain: ${v.grainCapacity.toLocaleString()} CBM`);
+                if (v.cranes) vesselSpecs.push(`מנופים: ${v.cranes}`);
+
+                if (vesselSpecs.length > 0) {
+                    fieldsHtml += `
+                        <div class="parser-field-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+                            <span class="parser-field-label" style="color: var(--primary); font-weight: 600;">מפרט אנייה</span>
+                            <span class="parser-field-value" style="font-size: 11px; line-height: 1.6; word-break: break-word;">${vesselSpecs.join(' | ')}</span>
+                        </div>
+                    `;
+
+                    // Show indication that vessel will be added/updated in reference database
+                    fieldsHtml += `
+                        <div class="parser-field-row" style="background: var(--primary-glow); border-radius: 6px; padding: 8px; margin-top: 8px;">
+                            <span style="font-size: 11px; color: var(--primary);">
+                                ✨ פרטי האנייה יישמרו אוטומטית במאגר הרפרנס
+                            </span>
+                        </div>
+                    `;
+                }
             }
 
             fieldsContainer.innerHTML = fieldsHtml || '<p style="color: var(--text-tertiary); text-align: center;">לא זוהו שדות נוספים</p>';
