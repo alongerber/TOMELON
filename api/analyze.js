@@ -384,13 +384,19 @@ Extract ALL cargo items, AGGREGATE BY CARGO TYPE, and return valid JSON:
 - Final weights must be in MT (Metric Tons)
 
 ## Cargo Type Matching:
-- "HOT ROLLED STEEL DEFORMED BAR" or "REBARS" = "Steel Rebars"
-- "HOT ROLLED STEEL DEFORMED BAR IN COIL" = "Steel Rebars in Coils"
-- "PRIME HOT ROLLED STEEL H-BEAMS" = "Steel H-Beams"
-- "HOT DIPPED GALVANIZED STEEL COILS" = "Galvanized Steel Coils"
-- "COLD ROLLED STEEL COIL" = "Cold Rolled Steel Coils"
-- "HR PROFILE" = "Steel Profiles"
-- "STEEL SHEETS IN COILS" = "Steel Sheet Coils"
+- "HOT ROLLED STEEL DEFORMED BAR" or "REBARS" or "DEFORMED BAR" = "Steel Rebars"
+- "HOT ROLLED STEEL DEFORMED BAR IN COIL" or "REBARS IN COIL" = "Steel Rebars in Coils"
+- "PRIME HOT ROLLED STEEL H-BEAMS" or "H-BEAMS" or "H BEAMS" = "Steel H-Beams"
+- "HOT DIPPED GALVANIZED STEEL COILS" = "Steel Coils"
+- "COLD ROLLED STEEL COIL" = "Steel Coils"
+- "GALVANIZED STEEL COILS" or "GALVANIZED COILS" = "Steel Coils"
+- "STEEL COILS" or "HR COILS" or "CR COILS" = "Steel Coils"
+- "STEEL SHEETS IN COILS" = "Steel Coils"
+- "HR PROFILE" or "STEEL PROFILES" = "Steel Profiles"
+- "WIRE RODS" = "Steel Wire Rods"
+- "STEEL PLATES" or "STEEL PLATE" = "Steel Plates"
+- "STEEL PIPES" or "STEEL PIPE" = "Steel Pipes"
+- "STEEL BILLETS" or "BILLETS" = "Steel Billets"
 - Keep original name if no good match
 
 ## Common Table Formats to Recognize:
