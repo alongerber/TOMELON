@@ -7018,7 +7018,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     </td>
                     <td>
                         <div class="table-eta">
-                            <span class="table-eta-date">${ship.eta ? new Date(ship.eta).toLocaleDateString('he-IL', {day: '2-digit', month: '2-digit'}) : '-'}</span>
+                            <span class="table-eta-date">${ship.eta ? formatEtaDate(ship.eta) : '-'}</span>
                             ${etaDays !== null ? `<span class="table-eta-days ${etaDays <= 1 ? 'urgent' : etaDays <= 3 ? 'warning' : ''}">${formatEtaDays(etaDays)}</span>` : ''}
                         </div>
                     </td>
@@ -7806,6 +7806,21 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             if (days <= 0) return 'היום!';
             if (days <= 1) return 'מחר';
             return `${Math.round(days)} ימים`;
+        }
+
+        function formatEtaDate(eta) {
+            if (!eta) return '-';
+            const etaDate = new Date(eta);
+            if (isNaN(etaDate.getTime())) return '-';
+
+            const currentYear = new Date().getFullYear();
+            const etaYear = etaDate.getFullYear();
+
+            // If different year, show year too
+            if (etaYear !== currentYear) {
+                return etaDate.toLocaleDateString('he-IL', {day: '2-digit', month: '2-digit', year: '2-digit'});
+            }
+            return etaDate.toLocaleDateString('he-IL', {day: '2-digit', month: '2-digit'});
         }
 
         function getShipUrgency(ship) {
@@ -15123,6 +15138,18 @@ ${signature}`;
                 if (queryLower.includes('מטען') || queryLower.includes('cargo')) {
                     answers.push({ label: 'מטען', value: shipMatch.cargo || 'לא הוגדר' });
                 }
+                if (queryLower.includes('פירוט') || queryLower.includes('סחורה') || queryLower.includes('breakdown')) {
+                    // Show cargo breakdown if available
+                    if (shipMatch.cargoBreakdown && shipMatch.cargoBreakdown.length > 0) {
+                        const breakdownText = shipMatch.cargoBreakdown
+                            .filter(c => c.type)
+                            .map(c => `${c.type}: ${c.quantity ? c.quantity + ' יח\' / ' : ''}${c.weight ? c.weight.toLocaleString() + ' MT' : ''}`)
+                            .join('<br>');
+                        answers.push({ label: 'פירוט מטען', value: breakdownText || shipMatch.cargo || 'לא הוגדר', isHtml: true });
+                    } else {
+                        answers.push({ label: 'פירוט מטען', value: shipMatch.cargo || 'לא הוגדר' });
+                    }
+                }
                 if (queryLower.includes('נמל') || queryLower.includes('port') || queryLower.includes('יעד')) {
                     answers.push({ label: 'נמל יעד', value: shipMatch.port || 'לא הוגדר' });
                 }
@@ -15146,10 +15173,17 @@ ${signature}`;
                 if (answers.length > 0) {
                     results.push(`<div style="margin-bottom: 8px;"><strong>📋 ${shipMatch.name}</strong></div>`);
                     answers.forEach(a => {
-                        results.push(`<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--glass-border);">
-                            <span style="color: var(--text-secondary);">${a.label}:</span>
-                            <span style="font-weight: 500;">${a.value}</span>
-                        </div>`);
+                        if (a.isHtml) {
+                            results.push(`<div style="padding: 4px 0; border-bottom: 1px solid var(--glass-border);">
+                                <div style="color: var(--text-secondary); margin-bottom: 4px;">${a.label}:</div>
+                                <div style="font-weight: 500; font-size: 11px; line-height: 1.6;">${a.value}</div>
+                            </div>`);
+                        } else {
+                            results.push(`<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--glass-border);">
+                                <span style="color: var(--text-secondary);">${a.label}:</span>
+                                <span style="font-weight: 500;">${a.value}</span>
+                            </div>`);
+                        }
                     });
                 }
 
