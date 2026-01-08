@@ -142,50 +142,22 @@
         .logo {
             display: flex;
             align-items: center;
-            gap: var(--spacing-md);
-        }
-
-        .logo-icon {
-            width: 48px;
-            height: 48px;
-            background: var(--primary-gradient, linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%));
-            border-radius: var(--radius-md);
-            display: flex;
-            align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 12px var(--primary-glow);
-            position: relative;
-            overflow: hidden;
+            padding: var(--spacing-sm);
         }
 
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-            animation: shine 3s infinite;
+        .logo-image {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 20px rgba(79, 70, 229, 0.3));
+            transition: all 0.3s ease;
         }
 
-        @keyframes shine {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        .logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--text-primary);
-            letter-spacing: -0.5px;
-        }
-
-        .logo-subtitle {
-            font-size: 11px;
-            color: var(--text-tertiary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
+        .logo-image:hover {
+            filter: drop-shadow(0 6px 25px rgba(79, 70, 229, 0.5));
+            transform: scale(1.02);
         }
 
         /* Navigation */
@@ -2953,6 +2925,372 @@
             background: var(--bg-secondary);
         }
 
+        /* ==================== FLOATING AI PARSER BUTTON ==================== */
+        .floating-ai-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #6366f1);
+            border: none;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4), 0 0 0 0 rgba(99, 102, 241, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 300ms ease;
+            animation: pulse-glow 2s infinite;
+        }
+        .floating-ai-btn svg {
+            color: white;
+            transition: transform 200ms;
+        }
+        .floating-ai-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.5);
+        }
+        .floating-ai-btn:hover svg {
+            transform: scale(1.1);
+        }
+        .floating-ai-label {
+            position: absolute;
+            right: 72px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 200ms;
+            pointer-events: none;
+        }
+        .floating-ai-btn:hover .floating-ai-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4), 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4), 0 0 0 8px rgba(99, 102, 241, 0.1); }
+        }
+
+        /* ==================== SMART PARSER MODAL ==================== */
+        .smart-parser-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .smart-parser-overlay.active {
+            display: flex;
+        }
+        .smart-parser-container {
+            background: var(--bg-card);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+        }
+        .smart-parser-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--glass-border);
+            background: linear-gradient(135deg, var(--primary-glow), transparent);
+        }
+        .smart-parser-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        .smart-parser-header h2 svg {
+            color: var(--primary);
+        }
+        .smart-parser-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .smart-parser-close:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Input Section */
+        .smart-parser-input-section {
+            padding: 24px;
+        }
+        .smart-parser-dropzone {
+            border: 2px dashed var(--glass-border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 16px;
+            transition: all 200ms;
+            cursor: pointer;
+        }
+        .smart-parser-dropzone:hover, .smart-parser-dropzone.dragover {
+            border-color: var(--primary);
+            background: var(--primary-glow);
+        }
+        .smart-parser-dropzone svg {
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+        }
+        .smart-parser-dropzone p {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
+        }
+        .smart-parser-dropzone span {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .smart-parser-textarea {
+            width: 100%;
+            min-height: 120px;
+            max-height: 300px;
+            padding: 16px;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: border-color 200ms;
+        }
+        .smart-parser-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .smart-parser-analyze-btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), #6366f1);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 200ms;
+        }
+        .smart-parser-analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Loading Section */
+        .smart-parser-loading {
+            padding: 48px 24px;
+            text-align: center;
+        }
+        .smart-parser-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: spin 1s linear infinite;
+        }
+        .smart-parser-loading p {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
+        }
+        .smart-parser-loading span {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        /* Results Section */
+        .smart-parser-results {
+            padding: 24px;
+        }
+        .smart-parser-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary-glow), transparent);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            margin-bottom: 20px;
+        }
+        .smart-parser-type-badge .type-icon {
+            font-size: 20px;
+        }
+        .smart-parser-type-badge .type-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .smart-parser-type-badge .type-confidence {
+            font-size: 12px;
+            padding: 2px 8px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+        }
+
+        .smart-parser-action {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .smart-parser-action h3 {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin: 0 0 8px 0;
+            font-weight: 500;
+        }
+        .smart-parser-action p {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .smart-parser-ship-match {
+            margin-bottom: 16px;
+        }
+        .smart-parser-ship-match label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+        .ship-match-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .ship-match-option {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 2px solid var(--glass-border);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .ship-match-option:hover {
+            border-color: var(--primary);
+        }
+        .ship-match-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-glow);
+        }
+        .ship-match-option.new-ship {
+            border-style: dashed;
+            color: var(--success);
+        }
+
+        .smart-parser-fields {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .parser-field-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 12px;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+        }
+        .parser-field-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        .parser-field-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .parser-field-value.highlight {
+            color: var(--primary);
+        }
+
+        .smart-parser-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .smart-parser-actions .btn-secondary {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 200ms;
+        }
+        .smart-parser-actions .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+        .smart-parser-actions .btn-primary {
+            flex: 2;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 200ms;
+        }
+        .smart-parser-actions .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
+        }
+
         /* Apply Tally Button */
         .apply-tally-btn {
             padding: var(--spacing-sm) var(--spacing-lg);
@@ -3016,6 +3354,270 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        /* ======================== REFERENCE DATA VIEW ======================== */
+        .reference-view {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+        .reference-view.active {
+            display: block;
+        }
+        .reference-header {
+            margin-bottom: var(--spacing-xl);
+        }
+        .reference-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0 0 var(--spacing-sm) 0;
+        }
+        .reference-title svg {
+            color: var(--primary);
+        }
+        .reference-subtitle {
+            color: var(--text-tertiary);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* Reference Tabs */
+        .reference-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: var(--spacing-lg);
+            background: var(--bg-secondary);
+            padding: 6px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+        }
+        .reference-tab {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 16px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .reference-tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .reference-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+        .reference-tab svg {
+            opacity: 0.7;
+        }
+        .reference-tab.active svg {
+            opacity: 1;
+        }
+
+        /* Reference Content */
+        .reference-content {
+            background: var(--bg-card);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            min-height: 400px;
+        }
+        .reference-panel {
+            display: none;
+            padding: var(--spacing-lg);
+        }
+        .reference-panel.active {
+            display: block;
+        }
+
+        /* Reference Toolbar */
+        .reference-toolbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: var(--spacing-lg);
+            flex-wrap: wrap;
+        }
+        .reference-search {
+            flex: 1;
+            min-width: 200px;
+            position: relative;
+        }
+        .reference-search svg {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-tertiary);
+        }
+        .reference-search input {
+            width: 100%;
+            padding: 12px 44px 12px 16px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .reference-search input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .reference-add-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 200ms;
+        }
+        .reference-add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--success-glow);
+        }
+        .reference-ai-btn {
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary), #6366f1);
+            border: none;
+            border-radius: var(--radius-md);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 200ms;
+        }
+        .reference-ai-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px var(--primary-glow);
+        }
+
+        /* Reference Table */
+        .reference-table-wrapper {
+            overflow-x: auto;
+        }
+        .reference-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .reference-table th {
+            text-align: right;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 2px solid var(--glass-border);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .reference-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--glass-border);
+            font-size: 14px;
+            color: var(--text-primary);
+        }
+        .reference-table tr:hover td {
+            background: var(--bg-hover);
+        }
+        .reference-table .actions {
+            display: flex;
+            gap: 8px;
+        }
+        .reference-table .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms;
+        }
+        .reference-table .action-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .reference-table .action-btn.delete:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+        .reference-table .empty-row td {
+            text-align: center;
+            padding: 48px;
+            color: var(--text-tertiary);
+        }
+
+        /* ======================== PORT STATUS GRID ======================== */
+        .port-status-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .port-status-row {
+            display: grid;
+            grid-template-columns: 1fr 140px 100px;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+        }
+        .port-status-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .port-status-date, .port-status-time {
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .port-status-date:focus, .port-status-time:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .port-status-date::-webkit-calendar-picker-indicator,
+        .port-status-time::-webkit-calendar-picker-indicator {
+            filter: invert(0.8);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .port-status-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 
     <!-- Firebase SDK (compat version for classic script) -->
@@ -3033,19 +3635,7 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <div class="logo-icon">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                            <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
-                            <path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/>
-                            <path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/>
-                            <path d="M12 10v4"/>
-                            <path d="M12 2v3"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="logo-text">Ship Operations</div>
-                        <div class="logo-subtitle">Premium System</div>
-                    </div>
+                    <img src="logo.png" alt="TOMELON" class="logo-image">
                 </div>
             </div>
             
@@ -3089,6 +3679,17 @@
                         <line x1="12" y1="22.08" x2="12" y2="12"/>
                     </svg>
                     <span>מעקב פריקה</span>
+                </div>
+                <div class="nav-item" onclick="switchToReferenceView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                        <line x1="12" y1="6" x2="16" y2="6"/>
+                        <line x1="12" y1="10" x2="16" y2="10"/>
+                        <line x1="8" y1="6" x2="8" y2="6"/>
+                        <line x1="8" y1="10" x2="8" y2="10"/>
+                    </svg>
+                    <span>נתוני יסוד</span>
                 </div>
             </nav>
 
@@ -3481,7 +4082,7 @@ Captain"></textarea>
                     <div class="discharge-ship-selector" style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 200px;">
                             <label style="font-weight: 600; color: var(--text-primary);">בחר אנייה:</label>
-                            <select id="dischargeShipSelect" onchange="loadDischargeData(); loadVoyageContacts();">
+                            <select id="dischargeShipSelect" onchange="loadDischargeData(); loadVoyageContacts(); loadPortStatus();">
                                 <option value="">-- בחר אנייה --</option>
                             </select>
                         </div>
@@ -3781,6 +4382,273 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                 </div>
                             </div>
                         </div>
+
+                        <!-- Port Status Section -->
+                        <div class="discharge-section" style="grid-column: 1 / -1;">
+                            <h3 class="discharge-section-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                Port Status (Statement of Facts)
+                                <button onclick="generateSOF()" style="margin-right: auto; padding: 6px 12px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                    </svg>
+                                    יצא דוח עובדות
+                                </button>
+                            </h3>
+
+                            <div id="portStatusForm" class="port-status-grid">
+                                <div class="port-status-row">
+                                    <span class="port-status-label">1. Arrived on Roads / ETA:</span>
+                                    <input type="date" id="ps_arrivedOnRoads_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_arrivedOnRoads_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">2. Notice of Readiness Tendered:</span>
+                                    <input type="date" id="ps_norTendered_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_norTendered_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">3. Pilot on Board:</span>
+                                    <input type="date" id="ps_pilotOnBoard_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_pilotOnBoard_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">4. Vessel Berthed:</span>
+                                    <input type="date" id="ps_vesselBerthed_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_vesselBerthed_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">5. D/L Commenced:</span>
+                                    <input type="date" id="ps_dlCommenced_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_dlCommenced_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">6. D/L Completed:</span>
+                                    <input type="date" id="ps_dlCompleted_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_dlCompleted_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">7. Pilot Ordered:</span>
+                                    <input type="date" id="ps_pilotOrdered_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_pilotOrdered_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">8. Sailed:</span>
+                                    <input type="date" id="ps_sailed_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_sailed_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reference Data View -->
+                <div class="reference-view" id="referenceView">
+                    <div class="reference-header">
+                        <h2 class="reference-title">
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                                <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                            </svg>
+                            נתוני יסוד
+                        </h2>
+                        <p class="reference-subtitle">ניהול רשימות יסוד למערכת</p>
+                    </div>
+
+                    <!-- Reference Tabs -->
+                    <div class="reference-tabs">
+                        <button class="reference-tab active" onclick="switchReferenceTab('vessels')" data-tab="vessels">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                                <path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/>
+                            </svg>
+                            אניות
+                        </button>
+                        <button class="reference-tab" onclick="switchReferenceTab('cargo')" data-tab="cargo">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                            מטענים
+                        </button>
+                        <button class="reference-tab" onclick="switchReferenceTab('owners')" data-tab="owners">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M3 21h18M3 7v1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7m0 1a3 3 0 0 0 6 0V7H3l2-4h14l2 4"/>
+                            </svg>
+                            בעלים / שוכרים
+                        </button>
+                        <button class="reference-tab" onclick="switchReferenceTab('receivers')" data-tab="receivers">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            </svg>
+                            מקבלי מטען
+                        </button>
+                    </div>
+
+                    <!-- Reference Content -->
+                    <div class="reference-content">
+                        <!-- Vessels Tab -->
+                        <div class="reference-panel active" id="refVesselsPanel">
+                            <div class="reference-toolbar">
+                                <div class="reference-search">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    <input type="text" placeholder="חיפוש אניות..." id="refVesselSearch" oninput="filterReferenceTable('vessels')">
+                                </div>
+                                <button class="reference-add-btn" onclick="showAddReferenceModal('vessels')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"/>
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                    </svg>
+                                    הוסף אנייה
+                                </button>
+                                <button class="reference-ai-btn" onclick="showAiImportModal('vessels')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10"/>
+                                        <path d="M12 16v-4M12 8h.01"/>
+                                    </svg>
+                                    ייבוא חכם
+                                </button>
+                            </div>
+                            <div class="reference-table-wrapper">
+                                <table class="reference-table" id="refVesselsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>שם אנייה</th>
+                                            <th>דגל</th>
+                                            <th>IMO</th>
+                                            <th>סוג</th>
+                                            <th>בעלים</th>
+                                            <th>פעולות</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="refVesselsBody">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Cargo Tab -->
+                        <div class="reference-panel" id="refCargoPanel">
+                            <div class="reference-toolbar">
+                                <div class="reference-search">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    <input type="text" placeholder="חיפוש מטענים..." id="refCargoSearch" oninput="filterReferenceTable('cargo')">
+                                </div>
+                                <button class="reference-add-btn" onclick="showAddReferenceModal('cargo')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"/>
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                    </svg>
+                                    הוסף סוג מטען
+                                </button>
+                            </div>
+                            <div class="reference-table-wrapper">
+                                <table class="reference-table" id="refCargoTable">
+                                    <thead>
+                                        <tr>
+                                            <th>סוג מטען</th>
+                                            <th>קטגוריה</th>
+                                            <th>יחידת מידה</th>
+                                            <th>הערות</th>
+                                            <th>פעולות</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="refCargoBody">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Owners Tab -->
+                        <div class="reference-panel" id="refOwnersPanel">
+                            <div class="reference-toolbar">
+                                <div class="reference-search">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    <input type="text" placeholder="חיפוש בעלים..." id="refOwnersSearch" oninput="filterReferenceTable('owners')">
+                                </div>
+                                <button class="reference-add-btn" onclick="showAddReferenceModal('owners')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"/>
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                    </svg>
+                                    הוסף בעלים
+                                </button>
+                            </div>
+                            <div class="reference-table-wrapper">
+                                <table class="reference-table" id="refOwnersTable">
+                                    <thead>
+                                        <tr>
+                                            <th>שם</th>
+                                            <th>סוג</th>
+                                            <th>מדינה</th>
+                                            <th>אימייל</th>
+                                            <th>טלפון</th>
+                                            <th>פעולות</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="refOwnersBody">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Receivers Tab -->
+                        <div class="reference-panel" id="refReceiversPanel">
+                            <div class="reference-toolbar">
+                                <div class="reference-search">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="11" cy="11" r="8"/>
+                                        <path d="m21 21-4.35-4.35"/>
+                                    </svg>
+                                    <input type="text" placeholder="חיפוש מקבלי מטען..." id="refReceiversSearch" oninput="filterReferenceTable('receivers')">
+                                </div>
+                                <button class="reference-add-btn" onclick="showAddReferenceModal('receivers')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"/>
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                    </svg>
+                                    הוסף מקבל מטען
+                                </button>
+                            </div>
+                            <div class="reference-table-wrapper">
+                                <table class="reference-table" id="refReceiversTable">
+                                    <thead>
+                                        <tr>
+                                            <th>שם</th>
+                                            <th>חברה</th>
+                                            <th>אימייל</th>
+                                            <th>טלפון</th>
+                                            <th>כתובת</th>
+                                            <th>פעולות</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="refReceiversBody">
+                                        <!-- Populated dynamically -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -3897,6 +4765,111 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
+    <!-- Floating AI Parser Button -->
+    <button class="floating-ai-btn" id="floatingAiBtn" onclick="openSmartParser()">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            <path d="M12 7v2M12 13h.01"/>
+        </svg>
+        <span class="floating-ai-label">נתח הודעה</span>
+    </button>
+
+    <!-- Smart AI Parser Modal -->
+    <div class="smart-parser-overlay" id="smartParserModal" onclick="closeSmartParser(event)">
+        <div class="smart-parser-container" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="smart-parser-header">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    ניתוח חכם
+                </h2>
+                <button class="smart-parser-close" onclick="closeSmartParser()">✕</button>
+            </div>
+
+            <!-- Input Section -->
+            <div class="smart-parser-input-section" id="parserInputSection">
+                <div class="smart-parser-dropzone" id="smartParserDropzone"
+                     ondragover="event.preventDefault(); this.classList.add('dragover')"
+                     ondragleave="this.classList.remove('dragover')"
+                     ondrop="handleSmartParserDrop(event)">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <p>הדבק טקסט, גרור קובץ, או הקלד</p>
+                    <span>מיילים, הודעות וואטסאפ, דוחות טאלי</span>
+                </div>
+                <textarea id="smartParserInput" class="smart-parser-textarea"
+                    placeholder="הדבק כאן מייל, הודעת וואטסאפ, או כל טקסט רלוונטי..."
+                    oninput="autoResizeTextarea(this)"></textarea>
+                <button class="smart-parser-analyze-btn" onclick="analyzeSmartInput()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    נתח ואפיין
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div class="smart-parser-loading" id="parserLoadingSection" style="display: none;">
+                <div class="smart-parser-spinner"></div>
+                <p>מנתח את ההודעה...</p>
+                <span>זיהוי סוג, חילוץ פרטים, התאמה לאניות</span>
+            </div>
+
+            <!-- Results Section -->
+            <div class="smart-parser-results" id="parserResultsSection" style="display: none;">
+                <!-- Message Type Badge -->
+                <div class="smart-parser-type-badge" id="parserTypeBadge">
+                    <span class="type-icon">📋</span>
+                    <span class="type-label">סוג ההודעה</span>
+                    <span class="type-confidence">95%</span>
+                </div>
+
+                <!-- Detected Action -->
+                <div class="smart-parser-action" id="parserDetectedAction">
+                    <h3>פעולה מזוהה:</h3>
+                    <p id="parserActionDescription">עדכון ETA לאנייה ELA S</p>
+                </div>
+
+                <!-- Ship Match -->
+                <div class="smart-parser-ship-match" id="parserShipMatch">
+                    <label>אנייה:</label>
+                    <div class="ship-match-options" id="shipMatchOptions">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Extracted Fields Preview -->
+                <div class="smart-parser-fields" id="parserExtractedFields">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="smart-parser-actions">
+                    <button class="btn-secondary" onclick="resetSmartParser()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                        </svg>
+                        נתח מחדש
+                    </button>
+                    <button class="btn-primary" onclick="applySmartParserAction()" id="applyParserBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        אשר והחל
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- File Input -->
     <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleFileUpload(event)">
 
@@ -3991,6 +4964,25 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
                 // Voyage-specific contacts for email notifications
                 voyageContacts: baseData.voyageContacts || [],
+
+                // Manifest - declared cargo for this voyage
+                manifest: baseData.manifest || {
+                    totalWeight: 0,
+                    totalQuantity: 0,
+                    items: [] // Array of { type, weight, quantity, unit, blNumber }
+                },
+
+                // Port Status - formal timestamps for Statement of Facts
+                portStatus: baseData.portStatus || {
+                    arrivedOnRoads: { date: null, time: null },      // 1. Arrived on roads / ETA
+                    norTendered: { date: null, time: null },         // 2. Notice of Readiness Tendered
+                    pilotOnBoard: { date: null, time: null },        // 3. Pilot on board
+                    vesselBerthed: { date: null, time: null },       // 4. Vessel Berthed
+                    dlCommenced: { date: null, time: null },         // 5. D/L commenced
+                    dlCompleted: { date: null, time: null },         // 6. D/L completed
+                    pilotOrdered: { date: null, time: null },        // 7. Pilot Ordered
+                    sailed: { date: null, time: null }               // 8. Sailed
+                },
 
                 // Timestamps
                 createdAt: baseData.createdAt || new Date().toISOString(),
@@ -5034,6 +6026,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('emailParserView').classList.remove('active');
             document.getElementById('contactsView').classList.remove('active');
             document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('referenceView').classList.remove('active');
             document.getElementById('shipsGrid').style.display = 'grid';
 
             currentTab = 'all'; // אפס לטאב "כל האניות"
@@ -5064,6 +6057,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('emailParserView').classList.remove('active');
             document.getElementById('contactsView').classList.remove('active');
             document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('referenceView').classList.remove('active');
             document.getElementById('shipsGrid').style.display = 'grid';
 
             currentTab = 'quick'; // עדכן את המצב הנוכחי
@@ -5084,6 +6078,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('shipsGrid').style.display = 'none';
             document.getElementById('contactsView').classList.remove('active');
             document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('referenceView').classList.remove('active');
             document.getElementById('emailParserView').classList.add('active');
 
             currentTab = 'parser';
@@ -6560,6 +7555,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('shipsGrid').style.display = 'none';
             document.getElementById('emailParserView').classList.remove('active');
             document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('referenceView').classList.remove('active');
             document.getElementById('contactsView').classList.add('active');
 
             currentTab = 'contacts';
@@ -6587,10 +7583,635 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('shipsGrid').style.display = 'none';
             document.getElementById('emailParserView').classList.remove('active');
             document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('referenceView').classList.remove('active');
             document.getElementById('dischargeView').classList.add('active');
 
             currentTab = 'discharge';
             populateDischargeShipSelector();
+        }
+
+        // ==================== Reference Data View ====================
+        let referenceData = {
+            vessels: [],
+            cargo: [],
+            owners: [],
+            receivers: []
+        };
+
+        function switchToReferenceView() {
+            // Remove 'active' from all nav items
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            // Add 'active' to reference nav item (index 5)
+            document.querySelectorAll('.nav-menu .nav-item')[5].classList.add('active');
+
+            // Hide tabs and stats
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+
+            // Hide other views, show reference view
+            document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('referenceView').classList.add('active');
+
+            currentTab = 'reference';
+            loadReferenceData();
+        }
+
+        function switchReferenceTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.reference-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.tab === tabName);
+            });
+
+            // Update panels
+            document.querySelectorAll('.reference-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+
+            const panelMap = {
+                'vessels': 'refVesselsPanel',
+                'cargo': 'refCargoPanel',
+                'owners': 'refOwnersPanel',
+                'receivers': 'refReceiversPanel'
+            };
+
+            document.getElementById(panelMap[tabName]).classList.add('active');
+        }
+
+        async function loadReferenceData() {
+            try {
+                // Load vessels reference
+                const vesselsSnapshot = await db.collection('referenceData').doc('vessels').get();
+                if (vesselsSnapshot.exists) {
+                    referenceData.vessels = vesselsSnapshot.data().items || [];
+                }
+
+                // Load cargo reference
+                const cargoSnapshot = await db.collection('referenceData').doc('cargo').get();
+                if (cargoSnapshot.exists) {
+                    referenceData.cargo = cargoSnapshot.data().items || [];
+                }
+
+                // Load owners reference
+                const ownersSnapshot = await db.collection('referenceData').doc('owners').get();
+                if (ownersSnapshot.exists) {
+                    referenceData.owners = ownersSnapshot.data().items || [];
+                }
+
+                // Load receivers reference
+                const receiversSnapshot = await db.collection('referenceData').doc('receivers').get();
+                if (receiversSnapshot.exists) {
+                    referenceData.receivers = receiversSnapshot.data().items || [];
+                }
+
+                renderAllReferenceTables();
+            } catch (error) {
+                console.error('Error loading reference data:', error);
+                showToast('שגיאה בטעינת נתוני יסוד', 'error');
+            }
+        }
+
+        function renderAllReferenceTables() {
+            renderVesselsTable();
+            renderCargoTable();
+            renderOwnersTable();
+            renderReceiversTable();
+        }
+
+        function renderVesselsTable() {
+            const tbody = document.getElementById('refVesselsBody');
+            if (referenceData.vessels.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="empty-row">
+                        <td colspan="6">אין אניות במאגר. הוסף אנייה חדשה או השתמש בייבוא חכם.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = referenceData.vessels.map((vessel, idx) => `
+                <tr>
+                    <td><strong>${vessel.name || '-'}</strong></td>
+                    <td>${vessel.flag || '-'}</td>
+                    <td>${vessel.imo || '-'}</td>
+                    <td>${vessel.type || '-'}</td>
+                    <td>${vessel.owner || '-'}</td>
+                    <td class="actions">
+                        <button class="action-btn" onclick="editReferenceItem('vessels', ${idx})" title="עריכה">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn delete" onclick="deleteReferenceItem('vessels', ${idx})" title="מחיקה">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderCargoTable() {
+            const tbody = document.getElementById('refCargoBody');
+            if (referenceData.cargo.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="empty-row">
+                        <td colspan="5">אין סוגי מטען במאגר. הוסף סוג מטען חדש.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = referenceData.cargo.map((cargo, idx) => `
+                <tr>
+                    <td><strong>${cargo.name || '-'}</strong></td>
+                    <td>${cargo.category || '-'}</td>
+                    <td>${cargo.unit || '-'}</td>
+                    <td>${cargo.notes || '-'}</td>
+                    <td class="actions">
+                        <button class="action-btn" onclick="editReferenceItem('cargo', ${idx})" title="עריכה">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn delete" onclick="deleteReferenceItem('cargo', ${idx})" title="מחיקה">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderOwnersTable() {
+            const tbody = document.getElementById('refOwnersBody');
+            if (referenceData.owners.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="empty-row">
+                        <td colspan="6">אין בעלים/שוכרים במאגר. הוסף חדש.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = referenceData.owners.map((owner, idx) => `
+                <tr>
+                    <td><strong>${owner.name || '-'}</strong></td>
+                    <td>${owner.type || '-'}</td>
+                    <td>${owner.country || '-'}</td>
+                    <td>${owner.email || '-'}</td>
+                    <td>${owner.phone || '-'}</td>
+                    <td class="actions">
+                        <button class="action-btn" onclick="editReferenceItem('owners', ${idx})" title="עריכה">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn delete" onclick="deleteReferenceItem('owners', ${idx})" title="מחיקה">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderReceiversTable() {
+            const tbody = document.getElementById('refReceiversBody');
+            if (referenceData.receivers.length === 0) {
+                tbody.innerHTML = `
+                    <tr class="empty-row">
+                        <td colspan="6">אין מקבלי מטען במאגר. הוסף חדש.</td>
+                    </tr>
+                `;
+                return;
+            }
+
+            tbody.innerHTML = referenceData.receivers.map((receiver, idx) => `
+                <tr>
+                    <td><strong>${receiver.name || '-'}</strong></td>
+                    <td>${receiver.company || '-'}</td>
+                    <td>${receiver.email || '-'}</td>
+                    <td>${receiver.phone || '-'}</td>
+                    <td>${receiver.address || '-'}</td>
+                    <td class="actions">
+                        <button class="action-btn" onclick="editReferenceItem('receivers', ${idx})" title="עריכה">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn delete" onclick="deleteReferenceItem('receivers', ${idx})" title="מחיקה">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function filterReferenceTable(type) {
+            const searchInputMap = {
+                'vessels': 'refVesselSearch',
+                'cargo': 'refCargoSearch',
+                'owners': 'refOwnersSearch',
+                'receivers': 'refReceiversSearch'
+            };
+
+            const searchTerm = document.getElementById(searchInputMap[type]).value.toLowerCase();
+            const tbody = document.getElementById(`ref${type.charAt(0).toUpperCase() + type.slice(1)}Body`);
+            const rows = tbody.querySelectorAll('tr:not(.empty-row)');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        }
+
+        function showAddReferenceModal(type) {
+            const titles = {
+                'vessels': 'הוספת אנייה',
+                'cargo': 'הוספת סוג מטען',
+                'owners': 'הוספת בעלים / שוכר',
+                'receivers': 'הוספת מקבל מטען'
+            };
+
+            let formHtml = '';
+
+            if (type === 'vessels') {
+                formHtml = `
+                    <div style="display: grid; gap: 16px;">
+                        <div class="form-group">
+                            <label>שם האנייה</label>
+                            <input type="text" id="refItemName" placeholder="לדוגמה: ELA S" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>דגל</label>
+                                <input type="text" id="refItemFlag" placeholder="לדוגמה: Panama" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>מספר IMO</label>
+                                <input type="text" id="refItemImo" placeholder="לדוגמה: 9123456" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>סוג</label>
+                                <select id="refItemType" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                                    <option value="">בחר סוג</option>
+                                    <option value="Bulk Carrier">Bulk Carrier</option>
+                                    <option value="Container Ship">Container Ship</option>
+                                    <option value="General Cargo">General Cargo</option>
+                                    <option value="Tanker">Tanker</option>
+                                    <option value="RoRo">RoRo</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>בעלים</label>
+                                <input type="text" id="refItemOwner" placeholder="שם הבעלים" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'cargo') {
+                formHtml = `
+                    <div style="display: grid; gap: 16px;">
+                        <div class="form-group">
+                            <label>שם סוג המטען</label>
+                            <input type="text" id="refItemName" placeholder="לדוגמה: Steel Coils" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>קטגוריה</label>
+                                <select id="refItemCategory" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                                    <option value="">בחר קטגוריה</option>
+                                    <option value="Steel">Steel</option>
+                                    <option value="Bulk">Bulk</option>
+                                    <option value="General">General</option>
+                                    <option value="Containers">Containers</option>
+                                    <option value="Liquid">Liquid</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>יחידת מידה</label>
+                                <select id="refItemUnit" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                                    <option value="MT">MT (טון)</option>
+                                    <option value="PCS">PCS (יחידות)</option>
+                                    <option value="Coils">Coils (סלילים)</option>
+                                    <option value="Bundles">Bundles (חבילות)</option>
+                                    <option value="M3">M3 (מ"ק)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>הערות</label>
+                            <input type="text" id="refItemNotes" placeholder="הערות נוספות" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'owners') {
+                formHtml = `
+                    <div style="display: grid; gap: 16px;">
+                        <div class="form-group">
+                            <label>שם</label>
+                            <input type="text" id="refItemName" placeholder="שם הבעלים או השוכר" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>סוג</label>
+                                <select id="refItemOwnerType" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                                    <option value="Owner">Owner (בעלים)</option>
+                                    <option value="Charterer">Charterer (שוכר)</option>
+                                    <option value="Operator">Operator (מפעיל)</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>מדינה</label>
+                                <input type="text" id="refItemCountry" placeholder="לדוגמה: Israel" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>אימייל</label>
+                                <input type="email" id="refItemEmail" placeholder="email@example.com" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>טלפון</label>
+                                <input type="text" id="refItemPhone" placeholder="+972-" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else if (type === 'receivers') {
+                formHtml = `
+                    <div style="display: grid; gap: 16px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>שם איש קשר</label>
+                                <input type="text" id="refItemName" placeholder="שם מלא" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>חברה</label>
+                                <input type="text" id="refItemCompany" placeholder="שם החברה" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>אימייל</label>
+                                <input type="email" id="refItemEmail" placeholder="email@example.com" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>טלפון</label>
+                                <input type="text" id="refItemPhone" placeholder="+972-" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>כתובת</label>
+                            <input type="text" id="refItemAddress" placeholder="כתובת מלאה" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                        </div>
+                    </div>
+                `;
+            }
+
+            document.getElementById('modalTitle').textContent = titles[type];
+            document.getElementById('modalBody').innerHTML = `
+                ${formHtml}
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                    <button onclick="closeModal()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">
+                        ביטול
+                    </button>
+                    <button onclick="saveReferenceItem('${type}')" style="padding: 12px 24px; border-radius: 8px; border: none; background: linear-gradient(135deg, var(--success), var(--success-dark)); color: white; cursor: pointer; font-weight: 600;">
+                        שמור
+                    </button>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        async function saveReferenceItem(type) {
+            let item = {};
+
+            if (type === 'vessels') {
+                item = {
+                    id: Date.now().toString(),
+                    name: document.getElementById('refItemName').value.trim(),
+                    flag: document.getElementById('refItemFlag').value.trim(),
+                    imo: document.getElementById('refItemImo').value.trim(),
+                    type: document.getElementById('refItemType').value,
+                    owner: document.getElementById('refItemOwner').value.trim()
+                };
+            } else if (type === 'cargo') {
+                item = {
+                    id: Date.now().toString(),
+                    name: document.getElementById('refItemName').value.trim(),
+                    category: document.getElementById('refItemCategory').value,
+                    unit: document.getElementById('refItemUnit').value,
+                    notes: document.getElementById('refItemNotes').value.trim()
+                };
+            } else if (type === 'owners') {
+                item = {
+                    id: Date.now().toString(),
+                    name: document.getElementById('refItemName').value.trim(),
+                    type: document.getElementById('refItemOwnerType').value,
+                    country: document.getElementById('refItemCountry').value.trim(),
+                    email: document.getElementById('refItemEmail').value.trim(),
+                    phone: document.getElementById('refItemPhone').value.trim()
+                };
+            } else if (type === 'receivers') {
+                item = {
+                    id: Date.now().toString(),
+                    name: document.getElementById('refItemName').value.trim(),
+                    company: document.getElementById('refItemCompany').value.trim(),
+                    email: document.getElementById('refItemEmail').value.trim(),
+                    phone: document.getElementById('refItemPhone').value.trim(),
+                    address: document.getElementById('refItemAddress').value.trim()
+                };
+            }
+
+            if (!item.name) {
+                showToast('נא להזין שם', 'warning');
+                return;
+            }
+
+            // Add to local array
+            referenceData[type].push(item);
+
+            // Save to Firestore
+            try {
+                await db.collection('referenceData').doc(type).set({
+                    items: referenceData[type],
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                closeModal();
+                renderAllReferenceTables();
+                showToast('נשמר בהצלחה!', 'success');
+            } catch (error) {
+                console.error('Error saving reference item:', error);
+                showToast('שגיאה בשמירה', 'error');
+            }
+        }
+
+        async function deleteReferenceItem(type, index) {
+            if (!confirm('האם למחוק פריט זה?')) return;
+
+            referenceData[type].splice(index, 1);
+
+            try {
+                await db.collection('referenceData').doc(type).set({
+                    items: referenceData[type],
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+
+                renderAllReferenceTables();
+                showToast('נמחק בהצלחה', 'success');
+            } catch (error) {
+                console.error('Error deleting reference item:', error);
+                showToast('שגיאה במחיקה', 'error');
+            }
+        }
+
+        function editReferenceItem(type, index) {
+            const item = referenceData[type][index];
+            showAddReferenceModal(type);
+
+            // Pre-fill the form after a short delay to ensure modal is rendered
+            setTimeout(() => {
+                if (type === 'vessels') {
+                    document.getElementById('refItemName').value = item.name || '';
+                    document.getElementById('refItemFlag').value = item.flag || '';
+                    document.getElementById('refItemImo').value = item.imo || '';
+                    document.getElementById('refItemType').value = item.type || '';
+                    document.getElementById('refItemOwner').value = item.owner || '';
+                } else if (type === 'cargo') {
+                    document.getElementById('refItemName').value = item.name || '';
+                    document.getElementById('refItemCategory').value = item.category || '';
+                    document.getElementById('refItemUnit').value = item.unit || 'MT';
+                    document.getElementById('refItemNotes').value = item.notes || '';
+                } else if (type === 'owners') {
+                    document.getElementById('refItemName').value = item.name || '';
+                    document.getElementById('refItemOwnerType').value = item.type || 'Owner';
+                    document.getElementById('refItemCountry').value = item.country || '';
+                    document.getElementById('refItemEmail').value = item.email || '';
+                    document.getElementById('refItemPhone').value = item.phone || '';
+                } else if (type === 'receivers') {
+                    document.getElementById('refItemName').value = item.name || '';
+                    document.getElementById('refItemCompany').value = item.company || '';
+                    document.getElementById('refItemEmail').value = item.email || '';
+                    document.getElementById('refItemPhone').value = item.phone || '';
+                    document.getElementById('refItemAddress').value = item.address || '';
+                }
+
+                // Remove the old item (will be replaced when saved)
+                referenceData[type].splice(index, 1);
+            }, 100);
+        }
+
+        function showAiImportModal(type) {
+            const typeLabels = {
+                'vessels': 'אניות',
+                'cargo': 'סוגי מטען',
+                'owners': 'בעלים',
+                'receivers': 'מקבלי מטען'
+            };
+
+            document.getElementById('modalTitle').textContent = `ייבוא חכם - ${typeLabels[type]}`;
+            document.getElementById('modalBody').innerHTML = `
+                <div style="margin-bottom: 16px;">
+                    <p style="color: var(--text-secondary); margin-bottom: 12px;">
+                        הדבק רשימה או טקסט חופשי והמערכת תזהה אוטומטית את הפרטים
+                    </p>
+                    <textarea id="aiImportInput" rows="8" placeholder="לדוגמה:
+ELA S - Panama - 9123456 - Bulk Carrier
+LUCKY SAILOR - Marshall Islands - 9876543
+
+או טקסט חופשי עם פרטי אניות..."
+                        style="width: 100%; padding: 16px; border: 1px solid var(--glass-border); border-radius: 12px; background: var(--bg-secondary); color: var(--text-primary); font-size: 14px; resize: vertical;"></textarea>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button onclick="closeModal()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">
+                        ביטול
+                    </button>
+                    <button onclick="processAiImport('${type}')" style="padding: 12px 24px; border-radius: 8px; border: none; background: linear-gradient(135deg, var(--primary), #6366f1); color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                        נתח וייבא
+                    </button>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        async function processAiImport(type) {
+            const input = document.getElementById('aiImportInput').value.trim();
+            if (!input) {
+                showToast('נא להזין טקסט', 'warning');
+                return;
+            }
+
+            showToast('מנתח...', 'info');
+
+            try {
+                // Simple parsing for common patterns
+                const lines = input.split('\n').filter(line => line.trim());
+                let imported = 0;
+
+                for (const line of lines) {
+                    if (type === 'vessels') {
+                        // Try to parse vessel info
+                        const parts = line.split(/[-–,\t]+/).map(p => p.trim()).filter(p => p);
+                        if (parts.length >= 1) {
+                            const item = {
+                                id: Date.now().toString() + imported,
+                                name: parts[0],
+                                flag: parts[1] || '',
+                                imo: parts[2] || '',
+                                type: parts[3] || '',
+                                owner: parts[4] || ''
+                            };
+
+                            // Check if not duplicate
+                            if (!referenceData.vessels.some(v => v.name.toLowerCase() === item.name.toLowerCase())) {
+                                referenceData.vessels.push(item);
+                                imported++;
+                            }
+                        }
+                    }
+                    // Add similar parsing for other types as needed
+                }
+
+                if (imported > 0) {
+                    await db.collection('referenceData').doc(type).set({
+                        items: referenceData[type],
+                        lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+
+                    renderAllReferenceTables();
+                    closeModal();
+                    showToast(`יובאו ${imported} פריטים בהצלחה!`, 'success');
+                } else {
+                    showToast('לא נמצאו פריטים חדשים לייבוא', 'warning');
+                }
+            } catch (error) {
+                console.error('AI import error:', error);
+                showToast('שגיאה בייבוא', 'error');
+            }
         }
 
         function populateDischargeShipSelector() {
@@ -6866,6 +8487,168 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 saveData();
                 loadVoyageContacts();
                 showToast(`${prevContacts.contacts.length} אנשי קשר יובאו בהצלחה`, 'success');
+            }
+        }
+
+        // ==================== Port Status Functions ====================
+        const portStatusFields = [
+            'arrivedOnRoads', 'norTendered', 'pilotOnBoard', 'vesselBerthed',
+            'dlCommenced', 'dlCompleted', 'pilotOrdered', 'sailed'
+        ];
+
+        function loadPortStatus() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                // Clear all fields
+                portStatusFields.forEach(field => {
+                    const dateEl = document.getElementById(`ps_${field}_date`);
+                    const timeEl = document.getElementById(`ps_${field}_time`);
+                    if (dateEl) dateEl.value = '';
+                    if (timeEl) timeEl.value = '';
+                });
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            // Initialize portStatus if not exists
+            ship.portStatus = ship.portStatus || {};
+
+            portStatusFields.forEach(field => {
+                const dateEl = document.getElementById(`ps_${field}_date`);
+                const timeEl = document.getElementById(`ps_${field}_time`);
+                const data = ship.portStatus[field] || {};
+
+                if (dateEl) dateEl.value = data.date || '';
+                if (timeEl) timeEl.value = data.time || '';
+            });
+        }
+
+        async function savePortStatus() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) return;
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            // Initialize portStatus if not exists
+            ship.portStatus = ship.portStatus || {};
+
+            // Collect all field values
+            portStatusFields.forEach(field => {
+                const dateEl = document.getElementById(`ps_${field}_date`);
+                const timeEl = document.getElementById(`ps_${field}_time`);
+
+                ship.portStatus[field] = {
+                    date: dateEl?.value || null,
+                    time: timeEl?.value || null
+                };
+            });
+
+            ship.updatedAt = new Date().toISOString();
+
+            // Save to Firestore
+            try {
+                await db.collection("ships").doc(ship.id).update({
+                    portStatus: ship.portStatus,
+                    updatedAt: ship.updatedAt
+                });
+            } catch (error) {
+                console.error('Error saving port status:', error);
+            }
+        }
+
+        function generateSOF() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                showToast('יש לבחור אנייה קודם', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            const ps = ship.portStatus || {};
+            const formatDateTime = (data) => {
+                if (!data || (!data.date && !data.time)) return '____________';
+                const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB') : '';
+                const timeStr = data.time || '';
+                return `${dateStr} ${timeStr}`.trim() || '____________';
+            };
+
+            const manifest = ship.manifest || {};
+            const cargoItems = manifest.items || [];
+            const cargoList = cargoItems.length > 0
+                ? cargoItems.map(c => `${c.type}: ${c.weight?.toLocaleString() || 0} ${c.unit || 'MT'}`).join('\n        ')
+                : ship.cargo || 'N/A';
+
+            const sofContent = `
+═══════════════════════════════════════════════════════════════════
+                    STATEMENT OF FACTS
+═══════════════════════════════════════════════════════════════════
+
+VESSEL:         ${ship.name || 'N/A'}
+VOYAGE:         ${ship.voyage || 'N/A'}
+PORT:           ${ship.port || 'ASHDOD'}
+BERTH:          ${ship.berth || 'N/A'}
+
+CARGO:
+        ${cargoList}
+
+TOTAL:          ${manifest.totalWeight?.toLocaleString() || '0'} MT / ${manifest.totalQuantity?.toLocaleString() || '0'} PCS
+
+───────────────────────────────────────────────────────────────────
+                    PORT STATUS TIMES
+───────────────────────────────────────────────────────────────────
+
+1. Arrived on Roads / ETA:         ${formatDateTime(ps.arrivedOnRoads)}
+2. Notice of Readiness Tendered:   ${formatDateTime(ps.norTendered)}
+3. Pilot on Board:                 ${formatDateTime(ps.pilotOnBoard)}
+4. Vessel Berthed:                 ${formatDateTime(ps.vesselBerthed)}
+5. D/L Commenced:                  ${formatDateTime(ps.dlCommenced)}
+6. D/L Completed:                  ${formatDateTime(ps.dlCompleted)}
+7. Pilot Ordered:                  ${formatDateTime(ps.pilotOrdered)}
+8. Sailed:                         ${formatDateTime(ps.sailed)}
+
+───────────────────────────────────────────────────────────────────
+
+REMARKS:
+${ship.notes || 'N/A'}
+
+───────────────────────────────────────────────────────────────────
+Generated: ${new Date().toLocaleString('en-GB')}
+═══════════════════════════════════════════════════════════════════
+`.trim();
+
+            // Show in modal
+            document.getElementById('modalTitle').textContent = 'Statement of Facts';
+            document.getElementById('modalBody').innerHTML = `
+                <div style="background: #1a1a2e; padding: 16px; border-radius: 8px; overflow: auto; max-height: 60vh;">
+                    <pre style="font-family: 'Courier New', monospace; font-size: 12px; color: #e0e0e0; white-space: pre-wrap; margin: 0; direction: ltr; text-align: left;">${sofContent}</pre>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 16px;">
+                    <button onclick="closeModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">
+                        סגור
+                    </button>
+                    <button onclick="copySOFToClipboard()" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        העתק
+                    </button>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function copySOFToClipboard() {
+            const sofPre = document.querySelector('#modalBody pre');
+            if (sofPre) {
+                navigator.clipboard.writeText(sofPre.textContent)
+                    .then(() => showToast('הדוח הועתק ללוח', 'success'))
+                    .catch(() => showToast('שגיאה בהעתקה', 'error'));
             }
         }
 
@@ -8935,8 +10718,48 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     <div class="form-group"><label>מסע:</label><input type="text" name="voyage" value="${ship.voyage || ''}"></div>
                     <div class="form-group"><label>סטטוס:</label><select name="status">${Object.values(STATUS).map(s => `<option value="${s}" ${ship.status === s ? 'selected' : ''}>${getStatusText(s)}</option>`).join('')}</select></div>
                     <div class="form-group"><label>ETA:</label><input type="datetime-local" name="eta" value="${ship.eta ? new Date(ship.eta).toISOString().slice(0, 16) : ''}"></div>
-                    <div class="form-group"><label>מטען:</label><textarea name="cargo" rows="2">${ship.cargo || ''}</textarea></div>
-                    
+                    <div class="form-group"><label>מטען (תיאור):</label><textarea name="cargo" rows="2">${ship.cargo || ''}</textarea></div>
+
+                    <!-- Manifest Section -->
+                    <div class="manifest-section" style="padding: var(--spacing-md); background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--glass-border);">
+                        <h4 style="margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: 8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                            מניפסט (הצהרת מטען)
+                        </h4>
+                        <div id="manifestItemsList" style="margin-bottom: var(--spacing-md);">
+                            ${(ship.manifest?.items || []).map((item, idx) => `
+                                <div class="manifest-item" data-idx="${idx}" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 8px; padding: 8px; background: var(--bg-tertiary); border-radius: var(--radius-sm);">
+                                    <input type="text" placeholder="סוג מטען" value="${item.type || ''}" class="manifest-type" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);">
+                                    <input type="number" placeholder="משקל" value="${item.weight || 0}" class="manifest-weight" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);">
+                                    <input type="number" placeholder="כמות" value="${item.quantity || 0}" class="manifest-quantity" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);">
+                                    <select class="manifest-unit" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);">
+                                        <option value="MT" ${item.unit === 'MT' ? 'selected' : ''}>MT</option>
+                                        <option value="PCS" ${item.unit === 'PCS' ? 'selected' : ''}>PCS</option>
+                                        <option value="Coils" ${item.unit === 'Coils' ? 'selected' : ''}>Coils</option>
+                                        <option value="Bundles" ${item.unit === 'Bundles' ? 'selected' : ''}>Bundles</option>
+                                    </select>
+                                    <button type="button" onclick="this.parentElement.remove(); updateManifestTotals();" style="padding: 8px; background: var(--danger); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer;">✕</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button type="button" onclick="addManifestItem()" style="padding: 8px 16px; background: var(--success); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 6px; margin-bottom: var(--spacing-md);">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            הוסף סוג מטען
+                        </button>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: var(--spacing-sm); border-top: 1px solid var(--glass-border);">
+                            <div style="text-align: center;">
+                                <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase;">סה"כ משקל</div>
+                                <div id="manifestTotalWeight" style="font-size: 20px; font-weight: 700; color: var(--primary);">${(ship.manifest?.totalWeight || 0).toLocaleString()} MT</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase;">סה"כ כמות</div>
+                                <div id="manifestTotalQuantity" style="font-size: 20px; font-weight: 700; color: var(--primary);">${(ship.manifest?.totalQuantity || 0).toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="checklist-section" style="padding: var(--spacing-md);">
                         <h4>ETB (תאריך עגינה צפוי)</h4>
                         <div id="etb-options" style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
@@ -8992,27 +10815,31 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 ship.status = data.status;
                 ship.eta = data.eta ? new Date(data.eta).toISOString() : null;
                 ship.cargo = data.cargo;
-                
+
                 // Process and save the new ETB object
                 ship.etb = getEtbObject(data);
                 ship.expected_berth_time = ship.etb.sortDate; // Keep legacy field for basic sorting
-                
+
+                // Process and save manifest
+                ship.manifest = getManifestFromForm();
+
                 ship.updatedAt = new Date().toISOString();
-                
+
                 ensureChecklistForStatus(ship);
-                checkPostSailedTasksComplete(ship); 
-                
+                checkPostSailedTasksComplete(ship);
+
                 // Update to Firestore
-                const shipDataToUpdate = { 
-                    name: data.name, 
-                    voyage: data.voyage, 
-                    status: data.status, 
-                    eta: ship.eta, 
-                    cargo: data.cargo, 
-                    etb: ship.etb, 
-                    expected_berth_time: ship.expected_berth_time, 
+                const shipDataToUpdate = {
+                    name: data.name,
+                    voyage: data.voyage,
+                    status: data.status,
+                    eta: ship.eta,
+                    cargo: data.cargo,
+                    etb: ship.etb,
+                    expected_berth_time: ship.expected_berth_time,
+                    manifest: ship.manifest,
                     tasks: ship.tasks,
-                    updatedAt: new Date().toISOString() 
+                    updatedAt: new Date().toISOString()
                 };
                 
                 db.collection("ships").doc(ship.id).update(shipDataToUpdate)
@@ -9049,6 +10876,66 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     break;
             }
             return etb;
+        }
+
+        // ==================== Manifest Functions ====================
+        function addManifestItem() {
+            const container = document.getElementById('manifestItemsList');
+            const idx = container.children.length;
+            const itemHtml = `
+                <div class="manifest-item" data-idx="${idx}" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 8px; padding: 8px; background: var(--bg-tertiary); border-radius: var(--radius-sm);">
+                    <input type="text" placeholder="סוג מטען" class="manifest-type" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);" oninput="updateManifestTotals()">
+                    <input type="number" placeholder="משקל" value="0" class="manifest-weight" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);" oninput="updateManifestTotals()">
+                    <input type="number" placeholder="כמות" value="0" class="manifest-quantity" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);" oninput="updateManifestTotals()">
+                    <select class="manifest-unit" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);">
+                        <option value="MT">MT</option>
+                        <option value="PCS">PCS</option>
+                        <option value="Coils">Coils</option>
+                        <option value="Bundles">Bundles</option>
+                    </select>
+                    <button type="button" onclick="this.parentElement.remove(); updateManifestTotals();" style="padding: 8px; background: var(--danger); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer;">✕</button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', itemHtml);
+        }
+
+        function updateManifestTotals() {
+            const items = document.querySelectorAll('.manifest-item');
+            let totalWeight = 0;
+            let totalQuantity = 0;
+
+            items.forEach(item => {
+                const weight = parseFloat(item.querySelector('.manifest-weight')?.value) || 0;
+                const quantity = parseFloat(item.querySelector('.manifest-quantity')?.value) || 0;
+                totalWeight += weight;
+                totalQuantity += quantity;
+            });
+
+            const weightEl = document.getElementById('manifestTotalWeight');
+            const quantityEl = document.getElementById('manifestTotalQuantity');
+            if (weightEl) weightEl.textContent = `${totalWeight.toLocaleString()} MT`;
+            if (quantityEl) quantityEl.textContent = totalQuantity.toLocaleString();
+        }
+
+        function getManifestFromForm() {
+            const items = [];
+            let totalWeight = 0;
+            let totalQuantity = 0;
+
+            document.querySelectorAll('.manifest-item').forEach(item => {
+                const type = item.querySelector('.manifest-type')?.value?.trim() || '';
+                const weight = parseFloat(item.querySelector('.manifest-weight')?.value) || 0;
+                const quantity = parseFloat(item.querySelector('.manifest-quantity')?.value) || 0;
+                const unit = item.querySelector('.manifest-unit')?.value || 'MT';
+
+                if (type || weight || quantity) {
+                    items.push({ type, weight, quantity, unit });
+                    totalWeight += weight;
+                    totalQuantity += quantity;
+                }
+            });
+
+            return { totalWeight, totalQuantity, items };
         }
 
         function openServices(id) {
@@ -9908,6 +11795,415 @@ ${signature}`;
             if (minutes < 60) return `לפני ${minutes} דקות`;
             if (hours < 24) return `לפני ${hours} שעות`;
             return `לפני ${days} ימים`;
+        }
+
+        // ==================== Smart Parser Functions ====================
+        let smartParserData = null; // Stores the parsed result for applying
+
+        function openSmartParser() {
+            const modal = document.getElementById('smartParserModal');
+            modal.classList.add('active');
+            document.getElementById('smartParserInput').focus();
+        }
+
+        function closeSmartParser(event) {
+            // If called from overlay click, only close if clicking the overlay itself
+            if (event && event.target !== event.currentTarget) return;
+            const modal = document.getElementById('smartParserModal');
+            modal.classList.remove('active');
+            resetSmartParser();
+        }
+
+        function handleSmartParserDrop(event) {
+            event.preventDefault();
+            event.target.classList.remove('dragover');
+
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('text/') || file.name.endsWith('.txt') || file.name.endsWith('.eml')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        document.getElementById('smartParserInput').value = e.target.result;
+                        autoResizeTextarea(document.getElementById('smartParserInput'));
+                    };
+                    reader.readAsText(file);
+                } else if (file.type.startsWith('image/')) {
+                    // Handle image files - convert to base64 for AI vision
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const base64 = e.target.result.split(',')[1];
+                        document.getElementById('smartParserInput').value = `[IMAGE FILE: ${file.name}]`;
+                        document.getElementById('smartParserInput').dataset.imageBase64 = base64;
+                        document.getElementById('smartParserInput').dataset.mimeType = file.type;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 300) + 'px';
+        }
+
+        async function analyzeSmartInput() {
+            const input = document.getElementById('smartParserInput');
+            const content = input.value.trim();
+
+            if (!content) {
+                showToast('נא להזין טקסט לניתוח', 'warning');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('parserInputSection').style.display = 'none';
+            document.getElementById('parserLoadingSection').style.display = 'block';
+            document.getElementById('parserResultsSection').style.display = 'none';
+
+            try {
+                // Prepare request body
+                const requestBody = {
+                    parseType: 'email',
+                    content: content,
+                    existingShips: ships.map(s => `${s.name} (${s.voyage})`),
+                    currentYear: new Date().getFullYear()
+                };
+
+                // Check if there's an image
+                if (input.dataset.imageBase64) {
+                    requestBody.imageBase64 = input.dataset.imageBase64;
+                    requestBody.mimeType = input.dataset.mimeType;
+                }
+
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const result = await response.json();
+
+                if (result.success && result.parsed) {
+                    smartParserData = result.parsed;
+                    displaySmartParserResults(result.parsed);
+                } else {
+                    showToast('לא הצלחתי לנתח את ההודעה', 'error');
+                    resetSmartParser();
+                }
+            } catch (error) {
+                console.error('Analysis error:', error);
+                showToast('שגיאה בניתוח', 'error');
+                resetSmartParser();
+            }
+        }
+
+        function displaySmartParserResults(data) {
+            // Hide loading, show results
+            document.getElementById('parserLoadingSection').style.display = 'none';
+            document.getElementById('parserResultsSection').style.display = 'block';
+
+            // Message type badge
+            const typeIcons = {
+                'NOMINATION': '🚢',
+                'ETA_UPDATE': '📅',
+                'ARRIVAL_NOTICE': '⚓',
+                'BERTHING_NOTICE': '🏗️',
+                'SAILING_NOTICE': '🌊',
+                'SERVICE_REQUEST': '🔧',
+                'DOCUMENTS': '📄',
+                'DAILY_REPORT': '📊',
+                'CARGO_INFO': '📦',
+                'DISCHARGE_REPORT': '📋',
+                'BULK_UPDATE': '📑',
+                'OTHER': '❓'
+            };
+
+            const typeLabels = {
+                'NOMINATION': 'נומינציה חדשה',
+                'ETA_UPDATE': 'עדכון ETA',
+                'ARRIVAL_NOTICE': 'הודעת הגעה',
+                'BERTHING_NOTICE': 'הודעת עגינה',
+                'SAILING_NOTICE': 'הודעת הפלגה',
+                'SERVICE_REQUEST': 'בקשת שירות',
+                'DOCUMENTS': 'מסמכים',
+                'DAILY_REPORT': 'דוח יומי',
+                'CARGO_INFO': 'מידע מטען',
+                'DISCHARGE_REPORT': 'דוח פריקה',
+                'BULK_UPDATE': 'עדכון מרובה',
+                'OTHER': 'אחר'
+            };
+
+            const messageType = data.messageType || 'OTHER';
+            const typeBadge = document.getElementById('parserTypeBadge');
+            typeBadge.innerHTML = `
+                <span class="type-icon">${typeIcons[messageType] || '📝'}</span>
+                <span class="type-label">${typeLabels[messageType] || messageType}</span>
+                <span class="type-confidence">${Math.round((data.messageTypeConfidence || 0.8) * 100)}%</span>
+            `;
+
+            // Determine suggested action
+            const actionDesc = document.getElementById('parserActionDescription');
+            let actionText = '';
+
+            if (messageType === 'NOMINATION') {
+                actionText = `פתיחת אנייה חדשה: ${data.vesselName || 'לא זוהה'}`;
+            } else if (messageType === 'ETA_UPDATE' && data.dates?.eta?.iso) {
+                actionText = `עדכון ETA ל-${formatDateTimeForDisplay(data.dates.eta.iso)}`;
+            } else if (messageType === 'BERTHING_NOTICE' && data.dates?.etb?.iso) {
+                actionText = `עדכון ETB ל-${formatDateTimeForDisplay(data.dates.etb.iso)}`;
+            } else if (messageType === 'SAILING_NOTICE') {
+                actionText = `עדכון סטטוס: הפליגה`;
+            } else if (messageType === 'DISCHARGE_REPORT') {
+                actionText = `עדכון נתוני פריקה`;
+            } else if (messageType === 'BULK_UPDATE' && data.bulkVessels?.length > 0) {
+                actionText = `עדכון ${data.bulkVessels.length} אניות`;
+            } else {
+                actionText = `עדכון פרטים עבור ${data.vesselName || 'אנייה לא מזוהה'}`;
+            }
+            actionDesc.textContent = actionText;
+
+            // Ship match options
+            const shipMatchOptions = document.getElementById('shipMatchOptions');
+            let matchHtml = '';
+
+            // Try to find matching ships
+            const vesselName = data.vesselName || '';
+            const matchingShips = ships.filter(s =>
+                s.name.toLowerCase().includes(vesselName.toLowerCase()) ||
+                vesselName.toLowerCase().includes(s.name.toLowerCase())
+            );
+
+            if (matchingShips.length > 0) {
+                matchingShips.forEach((ship, idx) => {
+                    matchHtml += `
+                        <div class="ship-match-option ${idx === 0 ? 'selected' : ''}"
+                             data-ship-id="${ship.id}" onclick="selectShipMatch(this)">
+                            ${ship.name} (${ship.voyage})
+                        </div>
+                    `;
+                });
+            }
+
+            // Add "new ship" option for nominations
+            if (messageType === 'NOMINATION' || matchingShips.length === 0) {
+                matchHtml += `
+                    <div class="ship-match-option new-ship ${matchingShips.length === 0 ? 'selected' : ''}"
+                         data-new-ship="true" onclick="selectShipMatch(this)">
+                        + אנייה חדשה: ${vesselName || 'לא מזוהה'}
+                    </div>
+                `;
+            }
+
+            shipMatchOptions.innerHTML = matchHtml;
+
+            // Extracted fields preview
+            const fieldsContainer = document.getElementById('parserExtractedFields');
+            let fieldsHtml = '';
+
+            if (data.vesselName) {
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">שם אנייה</span>
+                        <span class="parser-field-value">${data.vesselName}</span>
+                    </div>
+                `;
+            }
+
+            if (data.dates?.eta?.iso) {
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">ETA</span>
+                        <span class="parser-field-value highlight">${formatDateTimeForDisplay(data.dates.eta.iso)}</span>
+                    </div>
+                `;
+            }
+
+            if (data.dates?.etb?.iso) {
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">ETB</span>
+                        <span class="parser-field-value highlight">${formatDateTimeForDisplay(data.dates.etb.iso)}</span>
+                    </div>
+                `;
+            }
+
+            if (data.ports?.destination) {
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">נמל</span>
+                        <span class="parser-field-value">${data.ports.destination}</span>
+                    </div>
+                `;
+            }
+
+            if (data.cargo?.types?.length > 0) {
+                const cargoText = data.cargo.types.map(c => c.name).join(', ');
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">מטען</span>
+                        <span class="parser-field-value">${cargoText}</span>
+                    </div>
+                `;
+            }
+
+            if (data.status?.current) {
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">סטטוס</span>
+                        <span class="parser-field-value">${data.status.current}</span>
+                    </div>
+                `;
+            }
+
+            fieldsContainer.innerHTML = fieldsHtml || '<p style="color: var(--text-tertiary); text-align: center;">לא זוהו שדות נוספים</p>';
+        }
+
+        function selectShipMatch(element) {
+            // Remove selection from all
+            element.parentElement.querySelectorAll('.ship-match-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            // Select this one
+            element.classList.add('selected');
+        }
+
+        function formatDateTimeForDisplay(isoString) {
+            if (!isoString) return '';
+            try {
+                const date = new Date(isoString);
+                return date.toLocaleString('he-IL', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch {
+                return isoString;
+            }
+        }
+
+        async function applySmartParserAction() {
+            if (!smartParserData) {
+                showToast('אין נתונים להחלה', 'error');
+                return;
+            }
+
+            const selectedShipEl = document.querySelector('.ship-match-option.selected');
+            if (!selectedShipEl) {
+                showToast('נא לבחור אנייה', 'warning');
+                return;
+            }
+
+            const isNewShip = selectedShipEl.dataset.newShip === 'true';
+            const shipId = selectedShipEl.dataset.shipId;
+
+            try {
+                if (isNewShip) {
+                    // Create new ship
+                    const newShip = createShipObject({
+                        name: smartParserData.vesselName || '',
+                        voyage: smartParserData.voyageNumber || '',
+                        port: smartParserData.ports?.destination || '',
+                        eta: smartParserData.dates?.eta?.iso || new Date().toISOString(),
+                        expected_berth_time: smartParserData.dates?.etb?.iso || null,
+                        cargo: smartParserData.cargo?.types?.map(c => c.name).join(', ') || '',
+                        status: mapStatusFromParsed(smartParserData.status?.current) || STATUS.AT_SEA
+                    });
+
+                    ships.push(newShip);
+                    await saveShipToFirestore(newShip);
+                    showToast(`אנייה ${newShip.name} נוספה בהצלחה!`, 'success');
+
+                } else {
+                    // Update existing ship
+                    const ship = ships.find(s => s.id === shipId);
+                    if (!ship) {
+                        showToast('אנייה לא נמצאה', 'error');
+                        return;
+                    }
+
+                    let updates = [];
+
+                    // Apply ETA update
+                    if (smartParserData.dates?.eta?.iso) {
+                        ship.eta = smartParserData.dates.eta.iso;
+                        updates.push('ETA');
+                    }
+
+                    // Apply ETB update
+                    if (smartParserData.dates?.etb?.iso) {
+                        ship.expected_berth_time = smartParserData.dates.etb.iso;
+                        updates.push('ETB');
+                    }
+
+                    // Apply status update
+                    if (smartParserData.status?.current) {
+                        const newStatus = mapStatusFromParsed(smartParserData.status.current);
+                        if (newStatus) {
+                            ship.status = newStatus;
+                            updates.push('סטטוס');
+                        }
+                    }
+
+                    // Apply port update
+                    if (smartParserData.ports?.destination && !ship.port) {
+                        ship.port = smartParserData.ports.destination;
+                        updates.push('נמל');
+                    }
+
+                    await saveShipToFirestore(ship);
+                    showToast(`${ship.name}: עודכן ${updates.join(', ')}`, 'success');
+
+                    // Prompt for email notification
+                    if (updates.includes('ETA') || updates.includes('ETB') || updates.includes('סטטוס')) {
+                        setTimeout(() => {
+                            if (confirm('האם לשלוח עדכון למעורבים?')) {
+                                promptEmailNotification(ship, updates[0].toLowerCase(), {});
+                            }
+                        }, 500);
+                    }
+                }
+
+                renderShips();
+                closeSmartParser();
+
+            } catch (error) {
+                console.error('Apply error:', error);
+                showToast('שגיאה בעדכון', 'error');
+            }
+        }
+
+        function mapStatusFromParsed(parsedStatus) {
+            if (!parsedStatus) return null;
+            const statusMap = {
+                'NOMINATED': STATUS.AT_SEA,
+                'LOADING': STATUS.AT_SEA,
+                'EN_ROUTE': STATUS.AT_SEA,
+                'AT_ANCHOR': STATUS.AT_PORT,
+                'BERTHED': STATUS.AT_PORT,
+                'WORKING': STATUS.UNDER_OPERATION,
+                'SAILED': STATUS.SAILED
+            };
+            return statusMap[parsedStatus] || null;
+        }
+
+        function resetSmartParser() {
+            // Reset to input state
+            document.getElementById('parserInputSection').style.display = 'block';
+            document.getElementById('parserLoadingSection').style.display = 'none';
+            document.getElementById('parserResultsSection').style.display = 'none';
+
+            // Clear input
+            const input = document.getElementById('smartParserInput');
+            input.value = '';
+            input.style.height = 'auto';
+            delete input.dataset.imageBase64;
+            delete input.dataset.mimeType;
+
+            // Clear data
+            smartParserData = null;
         }
 
         // ==================== Initialize App ====================
