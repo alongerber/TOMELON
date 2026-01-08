@@ -3711,6 +3711,81 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         </div>
     </div>
 
+    <!-- Email Notification Modal -->
+    <div class="modal-overlay" id="emailNotifyModal" onclick="closeEmailModal(event)">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-glow), transparent); border-bottom: 1px solid var(--primary);">
+                <h2 class="modal-title" style="display: flex; align-items: center; gap: 10px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    שליחת עדכון במייל
+                </h2>
+                <button class="modal-close" onclick="closeEmailModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <!-- Recipients Selection -->
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: block;">נמענים:</label>
+                    <div id="emailRecipientsList" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;"></div>
+                    <input type="email" id="additionalEmail" placeholder="הוסף כתובת נוספת..."
+                        style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);"
+                        onkeypress="if(event.key==='Enter') addCustomRecipient()">
+                </div>
+
+                <!-- Subject -->
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: block;">נושא:</label>
+                    <input type="text" id="emailSubject"
+                        style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                </div>
+
+                <!-- Email Body -->
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: block;">תוכן:</label>
+                    <textarea id="emailBody" rows="12"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary); font-family: monospace; font-size: 13px; line-height: 1.5; resize: vertical;"></textarea>
+                </div>
+
+                <!-- Save to voyage option -->
+                <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--glass-border);">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" id="saveRecipientsToVoyage" checked style="width: 18px; height: 18px; accent-color: var(--success);">
+                        <div>
+                            <span style="font-weight: 600; color: var(--text-primary);">שמור נמענים להפלגה</span>
+                            <span style="font-size: 12px; color: var(--text-tertiary); display: block;">הנמענים שנבחרו ישמרו כברירת מחדל להפלגה זו</span>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Actions -->
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button onclick="closeEmailModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">
+                        דלג
+                    </button>
+                    <button onclick="copyEmailToClipboard()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--primary); background: transparent; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        העתק
+                    </button>
+                    <button onclick="openInEmailClient()" style="padding: 10px 20px; border-radius: 8px; border: none; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                        פתח באאוטלוק
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
@@ -3778,40 +3853,106 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 receivers: baseData.receivers || '',
                 trader: baseData.trader || '',
                 notes: baseData.notes || '',
-                
+
                 // Water supply fields
                 waterSupply: baseData.waterSupply ?? false,
                 waterAmount: baseData.waterAmount ?? null,
-                
+
                 // Package fields
                 package: baseData.package ?? false,
                 packageWeight: baseData.packageWeight ?? null,
-                
+
                 // Tracking
                 trackingNumber: baseData.trackingNumber ?? null,
-                
+
                 // Expected times
                 expected_berth_time: baseData.expected_berth_time ?? null,
                 expected_finish_time: baseData.expected_finish_time ?? null,
-                
+
                 // Trader flag
                 trader_flag: baseData.trader_flag ?? null,
-                
+
                 // Flags
                 flags: baseData.flags ?? { missing_in_today_report: false },
-                
+
                 // Version
                 version: baseData.version ?? 1,
-                
+
                 // Tasks (replaces checklist)
                 tasks: baseData.tasks || [],
-                
+
+                // Voyage-specific contacts for email notifications
+                voyageContacts: baseData.voyageContacts || [],
+
                 // Timestamps
                 createdAt: baseData.createdAt || new Date().toISOString(),
                 updatedAt: baseData.updatedAt || new Date().toISOString()
             };
-            
+
             return ship;
+        }
+
+        // Find contacts from previous voyage of the same vessel
+        function findPreviousVoyageContacts(vesselName) {
+            if (!vesselName) return [];
+
+            // Normalize vessel name for comparison
+            const normalizedName = vesselName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            // Find all ships with similar name, sorted by voyage number descending
+            const sameVesselShips = ships
+                .filter(s => {
+                    const shipNameNorm = (s.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+                    return shipNameNorm === normalizedName && s.voyageContacts && s.voyageContacts.length > 0;
+                })
+                .sort((a, b) => {
+                    // Try to extract voyage number for sorting
+                    const voyageA = parseInt((a.voyage || '').replace(/\D/g, '')) || 0;
+                    const voyageB = parseInt((b.voyage || '').replace(/\D/g, '')) || 0;
+                    return voyageB - voyageA;
+                });
+
+            // Return contacts from the most recent voyage
+            if (sameVesselShips.length > 0) {
+                return {
+                    fromVoyage: sameVesselShips[0].voyage,
+                    contacts: sameVesselShips[0].voyageContacts
+                };
+            }
+
+            return null;
+        }
+
+        // Add contact to voyage
+        function addContactToVoyage(shipId, contactEmail, contactName = '') {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return false;
+
+            ship.voyageContacts = ship.voyageContacts || [];
+
+            // Check if already exists
+            if (ship.voyageContacts.some(c => c.email === contactEmail)) {
+                return false;
+            }
+
+            ship.voyageContacts.push({
+                email: contactEmail,
+                name: contactName,
+                addedAt: new Date().toISOString()
+            });
+
+            saveData();
+            return true;
+        }
+
+        // Remove contact from voyage
+        function removeContactFromVoyage(shipId, contactEmail) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship || !ship.voyageContacts) return false;
+
+            ship.voyageContacts = ship.voyageContacts.filter(c => c.email !== contactEmail);
+            saveData();
+            return true;
         }
 
         function ensureShipFields(ship) {
@@ -4939,6 +5080,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             'DOCUMENTS': '📄 מסמכים',
             'DAILY_REPORT': '📊 דוח יומי',
             'CARGO_INFO': '📦 פרטי מטען',
+            'DISCHARGE_REPORT': '📊 דוח פריקה',
+            'BULK_UPDATE': '📊 עדכון מרובה',
             'OTHER': '📝 אחר'
         };
 
@@ -4962,6 +5105,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 identified_ship_id: null,
                 matched_ship: null,
                 is_new_ship: false,
+                bulkVessels: [], // For BULK_UPDATE message type
                 updates: {
                     name: null,
                     status: null,
@@ -5089,6 +5233,30 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // Map contacts
             if (claudeData.contacts && claudeData.contacts.length > 0) {
                 result.contacts = claudeData.contacts;
+            }
+
+            // Handle bulk vessels (for BULK_UPDATE message type)
+            if (claudeData.bulkVessels && claudeData.bulkVessels.length > 0) {
+                result.bulkVessels = claudeData.bulkVessels.map(vessel => {
+                    const matchedShip = findMatchingShip(vessel.vesselName);
+                    return {
+                        vesselName: vessel.vesselName?.toUpperCase() || '',
+                        matchedShip: matchedShip,
+                        isMatched: !!matchedShip,
+                        etb: vessel.etb ? {
+                            iso: vessel.etb.iso,
+                            original: vessel.etb.original,
+                            display: formatDateFromISO(vessel.etb.iso)
+                        } : null,
+                        eta: vessel.eta ? {
+                            iso: vessel.eta.iso,
+                            original: vessel.eta.original,
+                            display: formatDateFromISO(vessel.eta.iso)
+                        } : null,
+                        berth: vessel.berth || null,
+                        selected: true // Default selected for bulk update
+                    };
+                });
             }
 
             return result;
@@ -5527,6 +5695,12 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         function displayParsedResult(data) {
             const container = document.getElementById('parsedResult');
 
+            // Handle BULK_UPDATE message type
+            if (data.messageType === 'BULK_UPDATE' && data.bulkVessels && data.bulkVessels.length > 0) {
+                displayBulkUpdateResult(data, container);
+                return;
+            }
+
             if (!data.updates.name && !data.updates.eta && data.updates.services_to_add.length === 0) {
                 container.innerHTML = `
                     <div class="uncertainty-note">
@@ -5724,6 +5898,225 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             container.innerHTML = html;
         }
 
+        // Display bulk update result for multiple vessels (port schedule, berthing list)
+        function displayBulkUpdateResult(data, container) {
+            const bulkVessels = data.bulkVessels || [];
+
+            if (bulkVessels.length === 0) {
+                container.innerHTML = `
+                    <div class="uncertainty-note">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                        <span>לא נמצאו אניות בהודעה.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            // Store bulk data globally for apply function
+            window.pendingBulkUpdate = bulkVessels;
+
+            let html = `
+                <div class="message-type-header" style="background: linear-gradient(135deg, var(--success-glow), transparent); border: 1px solid var(--success); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 16px; font-weight: 600; color: var(--success);">📊 עדכון מרובה - ${bulkVessels.length} אניות</span>
+                    <span style="font-size: 12px; color: var(--text-secondary);">סמן לעדכון והחל</span>
+                </div>
+
+                <div class="bulk-actions" style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <button onclick="toggleAllBulkVessels(true)" class="btn-outline" style="flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-secondary); cursor: pointer;">
+                        בחר הכל
+                    </button>
+                    <button onclick="toggleAllBulkVessels(false)" class="btn-outline" style="flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-secondary); cursor: pointer;">
+                        נקה בחירה
+                    </button>
+                </div>
+
+                <div class="bulk-vessels-list" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+            `;
+
+            bulkVessels.forEach((vessel, index) => {
+                const matchedShip = findMatchingShip(vessel.vesselName);
+                const isMatched = !!matchedShip;
+                const etbDisplay = vessel.etb ? formatDateFromISO(vessel.etb.iso) : '-';
+                const etaDisplay = vessel.eta ? formatDateFromISO(vessel.eta.iso) : '-';
+                const matchIndicator = isMatched
+                    ? `<span style="color: var(--success); font-size: 11px;">✓ ${matchedShip.name}</span>`
+                    : `<span style="color: var(--warning); font-size: 11px;">? חדשה</span>`;
+
+                html += `
+                    <div class="bulk-vessel-item" style="background: var(--bg-card); border-radius: 12px; padding: 14px; border: 1px solid var(--glass-border);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1;">
+                                <label style="display: flex; align-items: center; cursor: pointer; margin-top: 3px;">
+                                    <input type="checkbox" id="bulkVessel_${index}" ${isMatched ? 'checked' : ''}
+                                        style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);">
+                                </label>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                        <span style="font-weight: 700; font-size: 15px; color: var(--text-primary);">${vessel.vesselName || 'לא זוהה'}</span>
+                                        ${matchIndicator}
+                                    </div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-secondary);">
+                                        ${vessel.etb ? `
+                                            <div>
+                                                <span style="color: var(--text-tertiary);">ETB:</span>
+                                                <span style="font-weight: 600; color: var(--text-primary); margin-right: 4px;">${etbDisplay}</span>
+                                                ${vessel.etb.original ? `<span style="font-size: 11px; color: var(--text-tertiary);">(${vessel.etb.original})</span>` : ''}
+                                            </div>
+                                        ` : ''}
+                                        ${vessel.eta ? `
+                                            <div>
+                                                <span style="color: var(--text-tertiary);">ETA:</span>
+                                                <span style="font-weight: 600; color: var(--text-primary); margin-right: 4px;">${etaDisplay}</span>
+                                            </div>
+                                        ` : ''}
+                                        ${vessel.berth ? `
+                                            <div>
+                                                <span style="color: var(--text-tertiary);">רציף:</span>
+                                                <span style="font-weight: 600; color: var(--text-primary); margin-right: 4px;">${vessel.berth}</span>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            ${!isMatched ? `
+                                <select id="bulkShipSelect_${index}" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary); font-size: 12px;">
+                                    <option value="new">+ הוסף חדשה</option>
+                                    ${ships.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+                                </select>
+                            ` : `
+                                <input type="hidden" id="bulkShipSelect_${index}" value="${matchedShip.id}">
+                            `}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+
+                <button class="apply-all-btn" onclick="applyBulkUpdates()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, var(--success), var(--success-dark)); border: none; border-radius: 12px; color: white; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    החל עדכונים נבחרים
+                </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Toggle all bulk vessel checkboxes
+        function toggleAllBulkVessels(selectAll) {
+            const checkboxes = document.querySelectorAll('[id^="bulkVessel_"]');
+            checkboxes.forEach(cb => {
+                cb.checked = selectAll;
+            });
+        }
+
+        // Apply bulk updates for selected vessels
+        function applyBulkUpdates() {
+            const bulkVessels = window.pendingBulkUpdate || [];
+            if (bulkVessels.length === 0) {
+                showToast('אין נתונים להחלה', 'error');
+                return;
+            }
+
+            let updatedCount = 0;
+            let addedCount = 0;
+            let errors = [];
+
+            bulkVessels.forEach((vessel, index) => {
+                const checkbox = document.getElementById(`bulkVessel_${index}`);
+                if (!checkbox || !checkbox.checked) return;
+
+                const shipSelectEl = document.getElementById(`bulkShipSelect_${index}`);
+                const shipId = shipSelectEl ? shipSelectEl.value : null;
+
+                try {
+                    if (shipId === 'new') {
+                        // Create new ship
+                        const newShip = {
+                            id: generateId(),
+                            name: vessel.vesselName?.toUpperCase() || 'UNKNOWN',
+                            status: 'מינוי',
+                            port: 'Ashdod',
+                            eta: vessel.eta?.iso || null,
+                            etb: vessel.etb ? {
+                                type: 'specific',
+                                sortDate: vessel.etb.iso,
+                                displayValue: formatDateFromISO(vessel.etb.iso)
+                            } : null,
+                            services: [],
+                            checklist: {},
+                            notes: [],
+                            history: [{
+                                date: new Date().toISOString(),
+                                action: 'נוספה מעדכון מרובה',
+                                user: currentUser
+                            }]
+                        };
+                        ships.push(newShip);
+                        addedCount++;
+                    } else {
+                        // Update existing ship
+                        const ship = ships.find(s => s.id === shipId);
+                        if (ship) {
+                            if (vessel.etb?.iso) {
+                                ship.etb = {
+                                    type: 'specific',
+                                    sortDate: vessel.etb.iso,
+                                    displayValue: formatDateFromISO(vessel.etb.iso)
+                                };
+                            }
+                            if (vessel.eta?.iso) {
+                                ship.eta = vessel.eta.iso;
+                            }
+                            if (vessel.berth) {
+                                ship.berth = vessel.berth;
+                            }
+                            // Add history entry
+                            if (!ship.history) ship.history = [];
+                            ship.history.push({
+                                date: new Date().toISOString(),
+                                action: `עודכן ETB מעדכון מרובה`,
+                                user: currentUser
+                            });
+                            updatedCount++;
+                        }
+                    }
+                } catch (e) {
+                    errors.push(vessel.vesselName || `אנייה ${index + 1}`);
+                }
+            });
+
+            // Save and refresh
+            saveData();
+            renderShips();
+            updateStats();
+
+            // Close modal and show result
+            const modal = document.getElementById('parserModal');
+            if (modal) modal.style.display = 'none';
+
+            // Build result message
+            let message = '';
+            if (updatedCount > 0) message += `עודכנו ${updatedCount} אניות. `;
+            if (addedCount > 0) message += `נוספו ${addedCount} אניות חדשות. `;
+            if (errors.length > 0) message += `שגיאות: ${errors.join(', ')}`;
+
+            if (updatedCount > 0 || addedCount > 0) {
+                showToast(message || 'העדכונים הוחלו בהצלחה', 'success');
+            } else {
+                showToast('לא נבחרו אניות לעדכון', 'warning');
+            }
+
+            // Clear pending data
+            window.pendingBulkUpdate = null;
+        }
+
         function createParsedField(label, value, fieldKey, rawValue = null) {
             const displayValue = typeof value === 'object' ? JSON.stringify(value) : value;
             const escapedRawValue = (rawValue || displayValue || '').toString().replace(/'/g, "\\'");
@@ -5878,6 +6271,21 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
             showToast(`שדה "${fieldKey}" עודכן בהצלחה`, 'success');
             addActivity('עדכון מניתוח', `עודכן ${fieldKey} לאנייה ${ship.name}`);
+
+            // Prompt email notification for significant updates
+            if (fieldKey === 'eta') {
+                askToSendEmail(ship, 'eta', { eta: value });
+            } else if (fieldKey === 'etb') {
+                askToSendEmail(ship, 'etb', { etb: value });
+            } else if (fieldKey === 'status') {
+                // Map status to email type
+                const statusLower = value.toLowerCase();
+                if (statusLower.includes('הפליגה') || statusLower.includes('sailed')) {
+                    askToSendEmail(ship, 'sailed');
+                } else if (statusLower.includes('ברציף') || statusLower.includes('berthed')) {
+                    askToSendEmail(ship, 'berthed');
+                }
+            }
         }
 
         function applyService(serviceIndex) {
@@ -6000,6 +6408,15 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     </button>
                 </div>
             `;
+
+            // Prompt email notification for significant updates
+            if (updates.eta && updates.etb) {
+                askToSendEmail(ship, 'eta_etb', { eta: updates.eta, etb: updates.etb });
+            } else if (updates.eta) {
+                askToSendEmail(ship, 'eta', { eta: updates.eta });
+            } else if (updates.etb) {
+                askToSendEmail(ship, 'etb', { etb: updates.etb });
+            }
         }
 
         function updateApplyButtons() {
@@ -8724,6 +9141,297 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         function closeModal(event) {
             if (event && event.target !== event.currentTarget) return;
             document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        // ==================== EMAIL NOTIFICATION SYSTEM ====================
+        let pendingEmailData = null;
+        let selectedEmailRecipients = [];
+
+        // User signature - stored in localStorage
+        function getUserSignature() {
+            return localStorage.getItem('shipops_email_signature') || `Best Regards
+
+Operations Department | Coral Maritime Services Ltd. (as agents only)
+  +972-4-8671266	 ops@coralgroup.co.il
+ 	 www.coralgroup.co.il`;
+        }
+
+        function setUserSignature(signature) {
+            localStorage.setItem('shipops_email_signature', signature);
+        }
+
+        // Generate email template based on update type
+        function generateEmailTemplate(ship, updateType, updateDetails = {}) {
+            const vesselName = ship.name || 'Unknown';
+            const voyage = ship.voyage || '';
+            const port = ship.port || 'Israel';
+
+            // Build cargo section
+            let cargoSection = '';
+            if (ship.cargo) {
+                cargoSection = `\nCargo (declared):\n${ship.cargo}\n`;
+            }
+
+            // Build update message based on type
+            let updateMessage = '';
+            const signature = getUserSignature();
+
+            switch (updateType) {
+                case 'eta':
+                    const etaDisplay = updateDetails.eta ? formatDateFromISO(updateDetails.eta) : 'TBA';
+                    updateMessage = `Per master vessel's ETA ${etaDisplay} agw wp.`;
+                    break;
+
+                case 'etb':
+                    const etbDisplay = updateDetails.etb ? formatDateFromISO(updateDetails.etb) : 'TBA';
+                    updateMessage = `As per port info ETB & comm disch on abt ${etbDisplay} agw and sub wp.`;
+                    break;
+
+                case 'eta_etb':
+                    const eta = updateDetails.eta ? formatDateFromISO(updateDetails.eta) : 'TBA';
+                    const etb = updateDetails.etb ? formatDateFromISO(updateDetails.etb) : 'TBA';
+                    updateMessage = `Per master vessel's ETA ${eta} agw wp.\n\nAs per port info ETB & comm disch on abt ${etb} agw and sub wp.`;
+                    break;
+
+                case 'berthed':
+                    updateMessage = `Pls be advised vessel has berthed and commenced discharge operations.`;
+                    break;
+
+                case 'sailed':
+                    updateMessage = `Pls be advised vessel has completed discharge and sailed.`;
+                    break;
+
+                case 'arrival':
+                    const arrivalEta = updateDetails.eta ? formatDateFromISO(updateDetails.eta) : 'shortly';
+                    updateMessage = `Per master vessel's ETA ${arrivalEta}. Arrival notice.`;
+                    break;
+
+                default:
+                    updateMessage = `Status update for vessel ${vesselName}.`;
+            }
+
+            const emailBody = `Vessel: ${vesselName}
+Voyage: ${voyage}
+Port: ${port}
+${cargoSection}
+${updateMessage}
+
+Reverting,
+
+${signature}`;
+
+            return emailBody;
+        }
+
+        // Generate email subject
+        function generateEmailSubject(ship, updateType) {
+            const vesselName = ship.name || 'Unknown';
+            const port = ship.port || '';
+
+            switch (updateType) {
+                case 'eta':
+                    return `${vesselName} - ETA Update - ${port}`;
+                case 'etb':
+                    return `${vesselName} - ETB Update - ${port}`;
+                case 'eta_etb':
+                    return `${vesselName} - ETA/ETB Update - ${port}`;
+                case 'berthed':
+                    return `${vesselName} - Berthed - ${port}`;
+                case 'sailed':
+                    return `${vesselName} - Sailed - ${port}`;
+                case 'arrival':
+                    return `${vesselName} - Arrival Notice - ${port}`;
+                default:
+                    return `${vesselName} - Update - ${port}`;
+            }
+        }
+
+        // Default email that's always CC'd
+        const DEFAULT_CC_EMAIL = 'ops@coralgroup.co.il';
+
+        // Show email notification modal after update
+        function promptEmailNotification(ship, updateType, updateDetails = {}) {
+            pendingEmailData = { ship, updateType, updateDetails };
+            selectedEmailRecipients = [];
+
+            const recipientsList = document.getElementById('emailRecipientsList');
+            recipientsList.innerHTML = '';
+
+            // Section 1: Voyage-specific contacts (selected by default)
+            const voyageContacts = ship.voyageContacts || [];
+            if (voyageContacts.length > 0) {
+                const sectionHeader = document.createElement('div');
+                sectionHeader.style.cssText = 'width: 100%; font-size: 12px; color: var(--text-tertiary); margin-bottom: 6px; font-weight: 600;';
+                sectionHeader.textContent = `אנשי קשר של הפלגה ${ship.voyage || ''}:`;
+                recipientsList.appendChild(sectionHeader);
+
+                voyageContacts.forEach(contact => {
+                    const chip = createRecipientChip(contact.email, contact.name, true, 'voyage');
+                    recipientsList.appendChild(chip);
+                });
+            }
+
+            // Section 2: Default CC (always selected)
+            const defaultSection = document.createElement('div');
+            defaultSection.style.cssText = 'width: 100%; font-size: 12px; color: var(--text-tertiary); margin: 10px 0 6px 0; font-weight: 600;';
+            defaultSection.textContent = 'ברירת מחדל:';
+            recipientsList.appendChild(defaultSection);
+
+            // Add default CC email (always checked)
+            const defaultChip = createRecipientChip(DEFAULT_CC_EMAIL, 'Coral Operations', true, 'default');
+            recipientsList.appendChild(defaultChip);
+
+            // Section 3: Other contacts from database (not selected by default)
+            const otherContacts = contacts.filter(c =>
+                c.email &&
+                c.email !== DEFAULT_CC_EMAIL &&
+                !voyageContacts.some(vc => vc.email === c.email)
+            );
+
+            if (otherContacts.length > 0) {
+                const otherSection = document.createElement('div');
+                otherSection.style.cssText = 'width: 100%; font-size: 12px; color: var(--text-tertiary); margin: 10px 0 6px 0; font-weight: 600;';
+                otherSection.textContent = 'אנשי קשר נוספים:';
+                recipientsList.appendChild(otherSection);
+
+                otherContacts.forEach(contact => {
+                    const chip = createRecipientChip(contact.email, contact.name, false, 'other');
+                    recipientsList.appendChild(chip);
+                });
+            }
+
+            // Set subject
+            document.getElementById('emailSubject').value = generateEmailSubject(ship, updateType);
+
+            // Set body
+            document.getElementById('emailBody').value = generateEmailTemplate(ship, updateType, updateDetails);
+
+            // Show modal
+            document.getElementById('emailNotifyModal').classList.add('active');
+        }
+
+        // Create recipient chip element
+        function createRecipientChip(email, name, isChecked, type) {
+            const chip = document.createElement('label');
+
+            let bgStyle = 'background: var(--bg-secondary); border: 1px solid var(--glass-border);';
+            if (type === 'voyage') {
+                bgStyle = 'background: var(--success-glow); border: 1px solid var(--success);';
+            } else if (type === 'default') {
+                bgStyle = 'background: var(--primary-glow); border: 1px solid var(--primary);';
+            }
+
+            chip.style.cssText = `display: flex; align-items: center; gap: 6px; padding: 6px 12px; ${bgStyle} border-radius: 20px; cursor: pointer; font-size: 13px;`;
+            chip.innerHTML = `
+                <input type="checkbox" class="email-recipient-checkbox" value="${email}" ${isChecked ? 'checked' : ''} style="accent-color: var(--primary);">
+                <span>${name || email.split('@')[0]}</span>
+                <span style="color: var(--text-tertiary); font-size: 11px;">${email}</span>
+            `;
+            return chip;
+        }
+
+        // Add custom recipient
+        function addCustomRecipient() {
+            const input = document.getElementById('additionalEmail');
+            const email = input.value.trim();
+
+            if (email && email.includes('@')) {
+                const recipientsList = document.getElementById('emailRecipientsList');
+                const chip = document.createElement('label');
+                chip.style.cssText = 'display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--primary-glow); border: 1px solid var(--primary); border-radius: 20px; cursor: pointer; font-size: 13px;';
+                chip.innerHTML = `
+                    <input type="checkbox" class="email-recipient-checkbox" value="${email}" checked style="accent-color: var(--primary);">
+                    <span>${email}</span>
+                `;
+                recipientsList.appendChild(chip);
+                input.value = '';
+            }
+        }
+
+        // Get selected recipients
+        function getSelectedRecipients() {
+            const checkboxes = document.querySelectorAll('.email-recipient-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        // Copy email to clipboard
+        function copyEmailToClipboard() {
+            const body = document.getElementById('emailBody').value;
+            const subject = document.getElementById('emailSubject').value;
+            const recipients = getSelectedRecipients().join('; ');
+
+            const fullText = `To: ${recipients}\nSubject: ${subject}\n\n${body}`;
+
+            navigator.clipboard.writeText(fullText).then(() => {
+                showToast('הועתק ללוח', 'success');
+            }).catch(() => {
+                showToast('שגיאה בהעתקה', 'error');
+            });
+        }
+
+        // Open in email client (mailto)
+        function openInEmailClient() {
+            const body = document.getElementById('emailBody').value;
+            const subject = document.getElementById('emailSubject').value;
+            const recipients = getSelectedRecipients();
+
+            // Save recipients to voyage if checkbox is checked
+            const saveToVoyage = document.getElementById('saveRecipientsToVoyage')?.checked;
+            if (saveToVoyage && pendingEmailData?.ship) {
+                saveRecipientsToVoyageContacts(pendingEmailData.ship, recipients);
+            }
+
+            const mailtoLink = `mailto:${encodeURIComponent(recipients.join(','))}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(mailtoLink, '_blank');
+            closeEmailModal();
+        }
+
+        // Save selected recipients to voyage contacts
+        function saveRecipientsToVoyageContacts(ship, recipientEmails) {
+            if (!ship || !recipientEmails || recipientEmails.length === 0) return;
+
+            const shipObj = ships.find(s => s.id === ship.id);
+            if (!shipObj) return;
+
+            shipObj.voyageContacts = shipObj.voyageContacts || [];
+
+            let addedCount = 0;
+            recipientEmails.forEach(email => {
+                // Skip default email - it's always included anyway
+                if (email === DEFAULT_CC_EMAIL) return;
+
+                // Check if already exists
+                if (!shipObj.voyageContacts.some(c => c.email === email)) {
+                    // Try to find name from contacts database
+                    const contact = contacts.find(c => c.email === email);
+                    shipObj.voyageContacts.push({
+                        email: email,
+                        name: contact?.name || email.split('@')[0],
+                        addedAt: new Date().toISOString()
+                    });
+                    addedCount++;
+                }
+            });
+
+            if (addedCount > 0) {
+                saveData();
+                showToast(`${addedCount} נמענים נשמרו להפלגה`, 'success');
+            }
+        }
+
+        // Close email modal
+        function closeEmailModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('emailNotifyModal').classList.remove('active');
+            pendingEmailData = null;
+        }
+
+        // Ask user if they want to send email after update
+        function askToSendEmail(ship, updateType, updateDetails = {}) {
+            // Show confirmation first
+            if (confirm('האם לשלוח עדכון במייל לכל הנוגעים בדבר?')) {
+                promptEmailNotification(ship, updateType, updateDetails);
+            }
         }
 
         function showToast(message, type = 'info') {

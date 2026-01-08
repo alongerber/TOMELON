@@ -46,20 +46,39 @@ Determine the message type based on content:
 - DOCUMENTS: Sending documents (BL, manifest, cargo list)
 - DAILY_REPORT: Daily status report from captain
 - CARGO_INFO: Cargo details, stowage plan, quantities
+- DISCHARGE_REPORT: Tally report, discharge progress, cargo discharged/remaining quantities
+- BULK_UPDATE: Multiple vessels with ETB/ETA dates (port schedule, berthing plan)
 - OTHER: Doesn't fit above categories
 
 ## STEP 2: Extract All Relevant Fields
 
+IMPORTANT: If message contains MULTIPLE vessels (like a port schedule or berthing list), set messageType to "BULK_UPDATE" and populate the "bulkVessels" array.
+
 Return valid JSON only (no markdown, no explanation):
 
 {
-    "messageType": "NOMINATION|ETA_UPDATE|ARRIVAL_NOTICE|BERTHING_NOTICE|SAILING_NOTICE|SERVICE_REQUEST|DOCUMENTS|DAILY_REPORT|CARGO_INFO|OTHER",
+    "messageType": "NOMINATION|ETA_UPDATE|ARRIVAL_NOTICE|BERTHING_NOTICE|SAILING_NOTICE|SERVICE_REQUEST|DOCUMENTS|DAILY_REPORT|CARGO_INFO|DISCHARGE_REPORT|BULK_UPDATE|OTHER",
     "messageTypeConfidence": 0.95,
 
-    "vesselName": "string - clean vessel name without MV/M.V prefix",
+    "vesselName": "string - clean vessel name without MV/M.V prefix (for single vessel messages)",
     "vesselNameVariations": ["array of name variations found"],
     "imoNumber": "string or null - IMO number if found",
     "voyageNumber": "string or null",
+
+    "bulkVessels": [
+        {
+            "vesselName": "string - vessel name",
+            "etb": {
+                "original": "string - as written",
+                "iso": "YYYY-MM-DDTHH:mm:00"
+            },
+            "eta": {
+                "original": "string or null",
+                "iso": "string or null"
+            },
+            "berth": "string or null - berth number if specified"
+        }
+    ],
 
     "dates": {
         "eta": {
@@ -188,48 +207,114 @@ Return ONLY valid JSON, no explanation.`;
             }
 
         } else if (parseType === 'tally') {
-            systemPrompt = `You are an expert at analyzing shipping tally reports and discharge documents.
+            systemPrompt = `You are an expert at analyzing shipping tally reports, discharge reports, and cargo manifests.
 
-Extract discharge/loading operation data. Handle various formats and languages.
+CRITICAL: Extract ALL cargo types with their quantities and weights. Be thorough!
 
 Return valid JSON only (no markdown, no explanation):
 
 {
     "date": "YYYY-MM-DD",
-    "vesselName": "string",
+    "vesselName": "string - vessel name",
+    "voyage": "string or null - voyage number if found",
+    "port": "string - port name",
+    "operation": "DISCHARGE|LOADING|BOTH",
+
+    "cargo": {
+        "declared": [
+            {
+                "type": "string - cargo type (e.g., Steel Coils, Steel Rebars, Pipes)",
+                "weightDeclared": 0,
+                "weightUnit": "MT",
+                "quantityDeclared": 0,
+                "quantityUnit": "pcs|coils|bundles|etc",
+                "blNumber": "string or null"
+            }
+        ],
+        "discharged": [
+            {
+                "type": "string - cargo type",
+                "weightDischarged": 0,
+                "quantityDischarged": 0,
+                "percentComplete": 0
+            }
+        ],
+        "remaining": [
+            {
+                "type": "string - cargo type",
+                "weightRemaining": 0,
+                "quantityRemaining": 0
+            }
+        ],
+        "totalDeclaredWeight": 0,
+        "totalDeclaredQuantity": 0,
+        "totalDischargedWeight": 0,
+        "totalDischargedQuantity": 0,
+        "totalRemainingWeight": 0,
+        "totalRemainingQuantity": 0,
+        "percentageComplete": 0
+    },
+
     "shifts": [
         {
             "name": "Shift 1/2/3 or time period",
             "time": "time range if specified",
-            "gangs": "gang numbers if specified",
-            "cargo": [
+            "gangs": "gang numbers/cranes if specified",
+            "cargoMoved": [
                 {
                     "type": "cargo type",
                     "quantity": 0,
                     "weight": 0
                 }
             ],
-            "totalQuantity": 0,
-            "totalWeight": 0
+            "shiftTotalQuantity": 0,
+            "shiftTotalWeight": 0
         }
     ],
-    "dailyTotalQuantity": 0,
-    "dailyTotalWeight": 0,
-    "cumulativeQuantity": 0,
-    "cumulativeWeight": 0,
-    "remainingQuantity": 0,
-    "remainingWeight": 0,
-    "remarks": ["all remarks, events, stoppages, delays, weather issues"],
-    "port": "port if found"
+
+    "dailyTotals": {
+        "quantity": 0,
+        "weight": 0
+    },
+
+    "cumulativeTotals": {
+        "quantity": 0,
+        "weight": 0
+    },
+
+    "remarks": ["array - all remarks, events, stoppages, delays, weather issues, damage notes"],
+    "stoppages": [
+        {
+            "reason": "string - reason for stoppage",
+            "duration": "string - duration if specified",
+            "time": "string - time period if specified"
+        }
+    ],
+
+    "extractionConfidence": 0.9
 }
 
-Rules:
+## Cargo Type Recognition:
+- Steel Coils / Coils / HR Coils / CR Coils → "Steel Coils"
+- Steel Rebars / Rebars / Deformed Bars → "Steel Rebars"
+- Steel Sheets / Plates / HR Sheets → "Steel Sheets"
+- Steel Pipes / Pipes / Tubes → "Steel Pipes"
+- Billets / Steel Billets → "Steel Billets"
+- If cargo type unknown, use exact text from document
+
+## Weight Units:
+- MT / mt / metric tons / tons → MT
+- Always convert to MT if in other units
+
+## Important Rules:
+- Parse ALL cargo types separately - do not combine different types
+- If document shows breakdown by cargo type, capture each type
 - Weights in MT (metric tons)
 - Extract ALL remarks and events
 - If no shifts structure, create one "Total" entry
 - Return ONLY valid JSON`;
 
-            userPrompt = `Analyze this tally/discharge report:\n\n${content}`;
+            userPrompt = `Analyze this tally/discharge report and extract ALL cargo information by type:\n\n${content}`;
         } else {
             return res.status(400).json({ error: 'Invalid parseType. Use "email", "message", or "tally"' });
         }
