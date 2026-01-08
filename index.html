@@ -7708,7 +7708,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                        d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
             };
 
-            const tasks = getShipTasks(ship);
+            const tasks = ship.tasks || [];
             const completedTasks = tasks.filter(t => t.status === 'done');
             const pendingTasks = tasks.filter(t => t.status !== 'done');
 
@@ -15794,7 +15794,7 @@ ${signature}`;
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
-                        type: 'query',
+                        parseType: 'query',
                         query: query,
                         context: context
                     })
@@ -15804,9 +15804,12 @@ ${signature}`;
 
                 const data = await response.json();
 
+                // API returns raw text for query type, or parsed data for others
+                const answer = data.raw || data.answer || data.response || (data.parsed ? JSON.stringify(data.parsed) : 'לא נמצא מידע');
+
                 resultsDiv.innerHTML = `
                     <div class="ai-search-result">
-                        <div class="ai-search-answer">${formatAiAnswer(data.answer || data.response || 'לא נמצא מידע')}</div>
+                        <div class="ai-search-answer">${formatAiAnswer(answer)}</div>
                     </div>
                 `;
             } catch (error) {

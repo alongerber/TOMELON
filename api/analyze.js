@@ -380,8 +380,28 @@ Extract ALL cargo items with their quantities and weights. Return valid JSON onl
 Return ONLY valid JSON.`;
 
             userPrompt = `Extract cargo breakdown from this text:\n\n${content}`;
+        } else if (parseType === 'query') {
+            // AI-powered search query
+            const { query, context } = req.body;
+
+            systemPrompt = `You are a helpful assistant for a ship operations management system. Answer questions based on the provided context about ships, voyages, cargo, and operations.
+
+CONTEXT DATA:
+${context || 'No context provided'}
+
+INSTRUCTIONS:
+- Answer questions accurately based on the data
+- For dates, format in Hebrew locale (DD/MM/YYYY)
+- For weights, use MT (metric tons)
+- If information is not available, say so clearly
+- Keep answers concise but complete
+- Answer in Hebrew if the question is in Hebrew
+
+Return your answer as plain text, NOT JSON.`;
+
+            userPrompt = query || content;
         } else {
-            return res.status(400).json({ error: 'Invalid parseType. Use "email", "message", "tally", or "cargo"' });
+            return res.status(400).json({ error: 'Invalid parseType. Use "email", "message", "tally", "cargo", or "query"' });
         }
 
         // Build messages array
