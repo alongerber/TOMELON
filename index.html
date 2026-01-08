@@ -7703,7 +7703,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
             tbody.innerHTML = referenceData.vessels.map((vessel, idx) => `
                 <tr>
-                    <td>${idx + 1}</td>
+                    <td>${vessel.sequentialId || idx + 1}</td>
                     <td><strong>${vessel.name || '-'}</strong></td>
                     <td>${vessel.flag || '-'}</td>
                     <td>${vessel.yearBuilt || '-'}</td>
@@ -8067,8 +8067,11 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             let item = {};
 
             if (type === 'vessels') {
+                // Calculate next sequential ID
+                const maxSeqId = referenceData.vessels.reduce((max, v) => Math.max(max, v.sequentialId || 0), 0);
                 item = {
                     id: Date.now().toString(),
+                    sequentialId: maxSeqId + 1,
                     name: document.getElementById('refItemName').value.trim(),
                     flag: document.getElementById('refItemFlag').value.trim(),
                     yearBuilt: document.getElementById('refItemYearBuilt').value.trim(),
@@ -8174,8 +8177,12 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // Extract vessel data from parser response
             const vesselData = parserData.vessel || {};
 
+            // Calculate next sequential ID
+            const maxSeqId = referenceData.vessels.reduce((max, v) => Math.max(max, v.sequentialId || 0), 0);
+
             const newVessel = {
                 id: Date.now().toString(),
+                sequentialId: maxSeqId + 1,
                 name: vesselName,
                 flag: vesselData.flag || parserData.flag || '',
                 yearBuilt: vesselData.yearBuilt || '',
