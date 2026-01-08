@@ -658,6 +658,91 @@
             color: white;
         }
 
+        /* Expanded Images Section */
+        .expanded-images-section {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .expanded-images-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .expanded-images-upload {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .expanded-images-upload:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .expanded-images-grid {
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+        .expanded-image-item {
+            flex-shrink: 0;
+            width: 100px;
+            height: 75px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 200ms;
+        }
+        .expanded-image-item:hover {
+            border-color: var(--primary);
+            transform: scale(1.05);
+        }
+        .expanded-image-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .expanded-images-empty {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            text-align: center;
+            padding: 16px;
+            background: var(--bg-hover);
+            border-radius: var(--radius-sm);
+        }
+        .expanded-images-more {
+            flex-shrink: 0;
+            width: 100px;
+            height: 75px;
+            border-radius: var(--radius-sm);
+            background: var(--bg-hover);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 200ms;
+            border: 1px dashed var(--glass-border);
+        }
+        .expanded-images-more:hover {
+            border-color: var(--primary);
+            background: var(--primary-glow);
+        }
+        .expanded-images-more span {
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+
         /* ======================== SMART AI SEARCH ======================== */
         .smart-ai-search {
             position: fixed;
@@ -6685,6 +6770,25 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                         </div>
                     </div>
                 </div>
+
+                <!-- Ship Images Section -->
+                <div class="expanded-images-section">
+                    <div class="expanded-images-header">
+                        <span class="expanded-section-title" style="margin: 0;">תמונות</span>
+                        <button class="expanded-images-upload" onclick="event.stopPropagation(); openShipImageUpload('${ship.id}', '${ship.name}')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                <polyline points="17 8 12 3 7 8"/>
+                                <line x1="12" y1="3" x2="12" y2="15"/>
+                            </svg>
+                            העלה
+                        </button>
+                    </div>
+                    <div class="expanded-images-grid" id="shipImagesGrid-${ship.id}">
+                        <!-- Images loaded dynamically -->
+                    </div>
+                </div>
+
                 <div class="expanded-actions">
                     <button onclick="event.stopPropagation(); openShipDetails(ships.find(s => s.id === '${ship.id}'))">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -6717,6 +6821,191 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 expandedShipId = shipId;
             }
             renderShips();
+
+            // Load images for expanded ship
+            if (expandedShipId) {
+                const ship = ships.find(s => s.id === expandedShipId);
+                if (ship) {
+                    loadShipImages(expandedShipId, ship.name);
+                }
+            }
+        }
+
+        async function loadShipImages(shipId, vesselName) {
+            const grid = document.getElementById(`shipImagesGrid-${shipId}`);
+            if (!grid) return;
+
+            try {
+                // Query gallery for images of this vessel
+                const snapshot = await db.collection('gallery')
+                    .where('vesselName', '==', vesselName)
+                    .orderBy('uploadedAt', 'desc')
+                    .limit(6)
+                    .get();
+
+                const images = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+                if (images.length === 0) {
+                    grid.innerHTML = `
+                        <div class="expanded-images-empty">
+                            אין תמונות לאנייה זו. לחץ "העלה" להוספת תמונה.
+                        </div>
+                    `;
+                    return;
+                }
+
+                grid.innerHTML = images.slice(0, 5).map(img => `
+                    <div class="expanded-image-item" onclick="event.stopPropagation(); openLightbox('${img.id}')" title="${img.imageType || 'תמונה'}">
+                        <img src="${img.imageUrl}" alt="${img.imageType || 'תמונה'}" loading="lazy">
+                    </div>
+                `).join('');
+
+                // Add "more" button if there are more images
+                if (images.length > 5) {
+                    grid.innerHTML += `
+                        <div class="expanded-images-more" onclick="event.stopPropagation(); viewAllShipImages('${vesselName}')">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                            <span>+${images.length - 5} עוד</span>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading ship images:', error);
+                grid.innerHTML = `
+                    <div class="expanded-images-empty">
+                        לא הצלחנו לטעון תמונות
+                    </div>
+                `;
+            }
+        }
+
+        function openShipImageUpload(shipId, vesselName) {
+            document.getElementById('modalTitle').textContent = `העלאת תמונה - ${vesselName}`;
+            document.getElementById('modalBody').innerHTML = `
+                <div style="display: grid; gap: 16px;">
+                    <div class="form-group">
+                        <label>אנייה</label>
+                        <input type="text" id="shipUploadVesselName" value="${vesselName}" readonly
+                            style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-hover); color: var(--text-primary);">
+                    </div>
+                    <div class="form-group">
+                        <label>סוג תמונה</label>
+                        <select id="shipUploadImageType" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            <option value="מעמסה">מעמסה (Hold)</option>
+                            <option value="מסמך">מסמך</option>
+                            <option value="נזק">נזק/ליקוי</option>
+                            <option value="מטען">מטען</option>
+                            <option value="כללי">כללי</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>תיאור (אופציונלי)</label>
+                        <input type="text" id="shipUploadDescription" placeholder="תיאור התמונה"
+                            style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                    </div>
+                    <div class="form-group">
+                        <label>בחר תמונה</label>
+                        <div style="border: 2px dashed var(--glass-border); border-radius: 12px; padding: 30px; text-align: center; cursor: pointer;"
+                             onclick="document.getElementById('shipUploadFileInput').click()"
+                             id="shipUploadDropZone">
+                            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin-bottom: 8px; opacity: 0.5;">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                            <p style="margin: 0; font-size: 13px; color: var(--text-secondary);">לחץ לבחירת תמונה</p>
+                        </div>
+                        <input type="file" id="shipUploadFileInput" accept="image/*" style="display: none;" onchange="handleShipImageSelect(event)">
+                        <div id="shipUploadPreview" style="margin-top: 12px; display: none;">
+                            <img id="shipUploadPreviewImg" style="max-width: 100%; max-height: 150px; border-radius: 8px;">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                        <button onclick="closeModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">
+                            ביטול
+                        </button>
+                        <button onclick="uploadShipImage('${shipId}', '${vesselName}')" id="shipUploadBtn" style="padding: 10px 20px; border-radius: 8px; border: none; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; cursor: pointer; font-weight: 600;">
+                            העלה
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        let shipSelectedImageBase64 = null;
+
+        function handleShipImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('הקובץ גדול מדי (מקסימום 10MB)', 'error');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                shipSelectedImageBase64 = e.target.result;
+                document.getElementById('shipUploadPreview').style.display = 'block';
+                document.getElementById('shipUploadPreviewImg').src = e.target.result;
+                document.getElementById('shipUploadDropZone').style.borderColor = 'var(--success)';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function uploadShipImage(shipId, vesselName) {
+            if (!shipSelectedImageBase64) {
+                showToast('נא לבחור תמונה', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('shipUploadBtn');
+            btn.disabled = true;
+            btn.textContent = 'מעלה...';
+
+            try {
+                const imageData = {
+                    vesselName: vesselName,
+                    shipId: shipId,
+                    imageType: document.getElementById('shipUploadImageType').value,
+                    description: document.getElementById('shipUploadDescription').value.trim(),
+                    imageUrl: shipSelectedImageBase64,
+                    uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('gallery').add(imageData);
+
+                closeModal();
+                shipSelectedImageBase64 = null;
+
+                // Reload images in expanded row
+                loadShipImages(shipId, vesselName);
+
+                showToast('התמונה הועלתה בהצלחה!', 'success');
+            } catch (error) {
+                console.error('Upload error:', error);
+                showToast('שגיאה בהעלאה', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'העלה';
+            }
+        }
+
+        function viewAllShipImages(vesselName) {
+            // Switch to gallery view with search filter
+            switchToGalleryView();
+            setTimeout(() => {
+                const searchInput = document.getElementById('gallerySearch');
+                if (searchInput) {
+                    searchInput.value = vesselName;
+                    filterGallery();
+                }
+            }, 100);
         }
 
         function formatEtaDays(days) {
