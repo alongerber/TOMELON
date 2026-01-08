@@ -3752,6 +3752,17 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                         style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary); font-family: monospace; font-size: 13px; line-height: 1.5; resize: vertical;"></textarea>
                 </div>
 
+                <!-- Save to voyage option -->
+                <div style="margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 8px; border: 1px solid var(--glass-border);">
+                    <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                        <input type="checkbox" id="saveRecipientsToVoyage" checked style="width: 18px; height: 18px; accent-color: var(--success);">
+                        <div>
+                            <span style="font-weight: 600; color: var(--text-primary);">שמור נמענים להפלגה</span>
+                            <span style="font-size: 12px; color: var(--text-tertiary); display: block;">הנמענים שנבחרו ישמרו כברירת מחדל להפלגה זו</span>
+                        </div>
+                    </label>
+                </div>
+
                 <!-- Actions -->
                 <div style="display: flex; gap: 12px; justify-content: flex-end;">
                     <button onclick="closeEmailModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">
@@ -3842,40 +3853,106 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 receivers: baseData.receivers || '',
                 trader: baseData.trader || '',
                 notes: baseData.notes || '',
-                
+
                 // Water supply fields
                 waterSupply: baseData.waterSupply ?? false,
                 waterAmount: baseData.waterAmount ?? null,
-                
+
                 // Package fields
                 package: baseData.package ?? false,
                 packageWeight: baseData.packageWeight ?? null,
-                
+
                 // Tracking
                 trackingNumber: baseData.trackingNumber ?? null,
-                
+
                 // Expected times
                 expected_berth_time: baseData.expected_berth_time ?? null,
                 expected_finish_time: baseData.expected_finish_time ?? null,
-                
+
                 // Trader flag
                 trader_flag: baseData.trader_flag ?? null,
-                
+
                 // Flags
                 flags: baseData.flags ?? { missing_in_today_report: false },
-                
+
                 // Version
                 version: baseData.version ?? 1,
-                
+
                 // Tasks (replaces checklist)
                 tasks: baseData.tasks || [],
-                
+
+                // Voyage-specific contacts for email notifications
+                voyageContacts: baseData.voyageContacts || [],
+
                 // Timestamps
                 createdAt: baseData.createdAt || new Date().toISOString(),
                 updatedAt: baseData.updatedAt || new Date().toISOString()
             };
-            
+
             return ship;
+        }
+
+        // Find contacts from previous voyage of the same vessel
+        function findPreviousVoyageContacts(vesselName) {
+            if (!vesselName) return [];
+
+            // Normalize vessel name for comparison
+            const normalizedName = vesselName.toLowerCase().replace(/[^a-z0-9]/g, '');
+
+            // Find all ships with similar name, sorted by voyage number descending
+            const sameVesselShips = ships
+                .filter(s => {
+                    const shipNameNorm = (s.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+                    return shipNameNorm === normalizedName && s.voyageContacts && s.voyageContacts.length > 0;
+                })
+                .sort((a, b) => {
+                    // Try to extract voyage number for sorting
+                    const voyageA = parseInt((a.voyage || '').replace(/\D/g, '')) || 0;
+                    const voyageB = parseInt((b.voyage || '').replace(/\D/g, '')) || 0;
+                    return voyageB - voyageA;
+                });
+
+            // Return contacts from the most recent voyage
+            if (sameVesselShips.length > 0) {
+                return {
+                    fromVoyage: sameVesselShips[0].voyage,
+                    contacts: sameVesselShips[0].voyageContacts
+                };
+            }
+
+            return null;
+        }
+
+        // Add contact to voyage
+        function addContactToVoyage(shipId, contactEmail, contactName = '') {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return false;
+
+            ship.voyageContacts = ship.voyageContacts || [];
+
+            // Check if already exists
+            if (ship.voyageContacts.some(c => c.email === contactEmail)) {
+                return false;
+            }
+
+            ship.voyageContacts.push({
+                email: contactEmail,
+                name: contactName,
+                addedAt: new Date().toISOString()
+            });
+
+            saveData();
+            return true;
+        }
+
+        // Remove contact from voyage
+        function removeContactFromVoyage(shipId, contactEmail) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship || !ship.voyageContacts) return false;
+
+            ship.voyageContacts = ship.voyageContacts.filter(c => c.email !== contactEmail);
+            saveData();
+            return true;
         }
 
         function ensureShipFields(ship) {
@@ -5003,6 +5080,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             'DOCUMENTS': '📄 מסמכים',
             'DAILY_REPORT': '📊 דוח יומי',
             'CARGO_INFO': '📦 פרטי מטען',
+            'DISCHARGE_REPORT': '📊 דוח פריקה',
             'BULK_UPDATE': '📊 עדכון מרובה',
             'OTHER': '📝 אחר'
         };
@@ -9168,28 +9246,59 @@ ${signature}`;
             }
         }
 
+        // Default email that's always CC'd
+        const DEFAULT_CC_EMAIL = 'ops@coralgroup.co.il';
+
         // Show email notification modal after update
         function promptEmailNotification(ship, updateType, updateDetails = {}) {
             pendingEmailData = { ship, updateType, updateDetails };
             selectedEmailRecipients = [];
 
-            // Populate recipients from contacts related to this ship
             const recipientsList = document.getElementById('emailRecipientsList');
             recipientsList.innerHTML = '';
 
-            // Get relevant contacts (filter by ship name or all contacts)
-            const relevantContacts = contacts.filter(c => c.email);
+            // Section 1: Voyage-specific contacts (selected by default)
+            const voyageContacts = ship.voyageContacts || [];
+            if (voyageContacts.length > 0) {
+                const sectionHeader = document.createElement('div');
+                sectionHeader.style.cssText = 'width: 100%; font-size: 12px; color: var(--text-tertiary); margin-bottom: 6px; font-weight: 600;';
+                sectionHeader.textContent = `אנשי קשר של הפלגה ${ship.voyage || ''}:`;
+                recipientsList.appendChild(sectionHeader);
 
-            relevantContacts.forEach(contact => {
-                const chip = document.createElement('label');
-                chip.style.cssText = 'display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: 20px; cursor: pointer; font-size: 13px;';
-                chip.innerHTML = `
-                    <input type="checkbox" class="email-recipient-checkbox" value="${contact.email}" style="accent-color: var(--primary);">
-                    <span>${contact.name}</span>
-                    <span style="color: var(--text-tertiary); font-size: 11px;">${contact.email}</span>
-                `;
-                recipientsList.appendChild(chip);
-            });
+                voyageContacts.forEach(contact => {
+                    const chip = createRecipientChip(contact.email, contact.name, true, 'voyage');
+                    recipientsList.appendChild(chip);
+                });
+            }
+
+            // Section 2: Default CC (always selected)
+            const defaultSection = document.createElement('div');
+            defaultSection.style.cssText = 'width: 100%; font-size: 12px; color: var(--text-tertiary); margin: 10px 0 6px 0; font-weight: 600;';
+            defaultSection.textContent = 'ברירת מחדל:';
+            recipientsList.appendChild(defaultSection);
+
+            // Add default CC email (always checked)
+            const defaultChip = createRecipientChip(DEFAULT_CC_EMAIL, 'Coral Operations', true, 'default');
+            recipientsList.appendChild(defaultChip);
+
+            // Section 3: Other contacts from database (not selected by default)
+            const otherContacts = contacts.filter(c =>
+                c.email &&
+                c.email !== DEFAULT_CC_EMAIL &&
+                !voyageContacts.some(vc => vc.email === c.email)
+            );
+
+            if (otherContacts.length > 0) {
+                const otherSection = document.createElement('div');
+                otherSection.style.cssText = 'width: 100%; font-size: 12px; color: var(--text-tertiary); margin: 10px 0 6px 0; font-weight: 600;';
+                otherSection.textContent = 'אנשי קשר נוספים:';
+                recipientsList.appendChild(otherSection);
+
+                otherContacts.forEach(contact => {
+                    const chip = createRecipientChip(contact.email, contact.name, false, 'other');
+                    recipientsList.appendChild(chip);
+                });
+            }
 
             // Set subject
             document.getElementById('emailSubject').value = generateEmailSubject(ship, updateType);
@@ -9199,6 +9308,26 @@ ${signature}`;
 
             // Show modal
             document.getElementById('emailNotifyModal').classList.add('active');
+        }
+
+        // Create recipient chip element
+        function createRecipientChip(email, name, isChecked, type) {
+            const chip = document.createElement('label');
+
+            let bgStyle = 'background: var(--bg-secondary); border: 1px solid var(--glass-border);';
+            if (type === 'voyage') {
+                bgStyle = 'background: var(--success-glow); border: 1px solid var(--success);';
+            } else if (type === 'default') {
+                bgStyle = 'background: var(--primary-glow); border: 1px solid var(--primary);';
+            }
+
+            chip.style.cssText = `display: flex; align-items: center; gap: 6px; padding: 6px 12px; ${bgStyle} border-radius: 20px; cursor: pointer; font-size: 13px;`;
+            chip.innerHTML = `
+                <input type="checkbox" class="email-recipient-checkbox" value="${email}" ${isChecked ? 'checked' : ''} style="accent-color: var(--primary);">
+                <span>${name || email.split('@')[0]}</span>
+                <span style="color: var(--text-tertiary); font-size: 11px;">${email}</span>
+            `;
+            return chip;
         }
 
         // Add custom recipient
@@ -9244,11 +9373,50 @@ ${signature}`;
         function openInEmailClient() {
             const body = document.getElementById('emailBody').value;
             const subject = document.getElementById('emailSubject').value;
-            const recipients = getSelectedRecipients().join(',');
+            const recipients = getSelectedRecipients();
 
-            const mailtoLink = `mailto:${encodeURIComponent(recipients)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            // Save recipients to voyage if checkbox is checked
+            const saveToVoyage = document.getElementById('saveRecipientsToVoyage')?.checked;
+            if (saveToVoyage && pendingEmailData?.ship) {
+                saveRecipientsToVoyageContacts(pendingEmailData.ship, recipients);
+            }
+
+            const mailtoLink = `mailto:${encodeURIComponent(recipients.join(','))}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
             window.open(mailtoLink, '_blank');
             closeEmailModal();
+        }
+
+        // Save selected recipients to voyage contacts
+        function saveRecipientsToVoyageContacts(ship, recipientEmails) {
+            if (!ship || !recipientEmails || recipientEmails.length === 0) return;
+
+            const shipObj = ships.find(s => s.id === ship.id);
+            if (!shipObj) return;
+
+            shipObj.voyageContacts = shipObj.voyageContacts || [];
+
+            let addedCount = 0;
+            recipientEmails.forEach(email => {
+                // Skip default email - it's always included anyway
+                if (email === DEFAULT_CC_EMAIL) return;
+
+                // Check if already exists
+                if (!shipObj.voyageContacts.some(c => c.email === email)) {
+                    // Try to find name from contacts database
+                    const contact = contacts.find(c => c.email === email);
+                    shipObj.voyageContacts.push({
+                        email: email,
+                        name: contact?.name || email.split('@')[0],
+                        addedAt: new Date().toISOString()
+                    });
+                    addedCount++;
+                }
+            });
+
+            if (addedCount > 0) {
+                saveData();
+                showToast(`${addedCount} נמענים נשמרו להפלגה`, 'success');
+            }
         }
 
         // Close email modal
