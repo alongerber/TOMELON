@@ -743,6 +743,202 @@
             color: var(--text-secondary);
         }
 
+        /* ======================== CARGO BREAKDOWN SECTION ======================== */
+        .cargo-breakdown-section {
+            margin-top: 16px;
+            padding: 16px;
+            background: var(--bg-tertiary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+        }
+        .cargo-breakdown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .cargo-breakdown-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cargo-parse-area {
+            background: var(--bg-secondary);
+            border: 1px dashed var(--glass-border);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+        .cargo-parse-area textarea {
+            width: 100%;
+            height: 60px;
+            background: var(--bg-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 8px;
+            font-size: 12px;
+            resize: none;
+            margin-bottom: 8px;
+        }
+        .cargo-parse-area textarea::placeholder {
+            color: var(--text-tertiary);
+        }
+        .cargo-parse-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .cargo-parse-btn:hover {
+            background: var(--primary-hover);
+        }
+        .cargo-table-container {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .cargo-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 12px;
+        }
+        .cargo-table th {
+            background: var(--bg-secondary);
+            padding: 8px;
+            text-align: right;
+            font-weight: 500;
+            color: var(--text-secondary);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+        }
+        .cargo-table td {
+            padding: 8px;
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-primary);
+        }
+        .cargo-table tr:hover {
+            background: var(--bg-hover);
+        }
+        .cargo-table input {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 6px 8px;
+            font-size: 12px;
+        }
+        .cargo-table input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .cargo-type-select {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 6px 8px;
+            font-size: 12px;
+        }
+        .cargo-delete-btn {
+            background: none;
+            border: none;
+            color: var(--danger);
+            cursor: pointer;
+            padding: 4px;
+            border-radius: var(--radius-sm);
+        }
+        .cargo-delete-btn:hover {
+            background: var(--danger-glow);
+        }
+        .cargo-add-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .cargo-add-row:hover {
+            background: var(--primary-glow);
+            border-radius: var(--radius-sm);
+        }
+        .cargo-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .cargo-totals {
+            display: flex;
+            gap: 24px;
+        }
+        .cargo-total-item {
+            text-align: center;
+        }
+        .cargo-total-value {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+        .cargo-total-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+        .cargo-percentages {
+            display: flex;
+            gap: 4px;
+            height: 24px;
+            flex: 1;
+            max-width: 300px;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+        .cargo-percent-bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            font-weight: 500;
+            min-width: 30px;
+        }
+        .cargo-empty {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-tertiary);
+            font-size: 12px;
+        }
+        .cargo-save-btn {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            font-size: 11px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .cargo-save-btn:hover {
+            filter: brightness(1.1);
+        }
+
         /* ======================== SMART AI SEARCH ======================== */
         .smart-ai-search {
             position: fixed;
@@ -6702,6 +6898,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             const tasks = ship.tasks || [];
             const doneTasks = tasks.filter(t => t.status === 'done');
             const pendingTasks = tasks.filter(t => t.status !== 'done');
+            const cargoItems = ship.cargoBreakdown || [];
 
             return `
                 <div class="expanded-grid">
@@ -6725,11 +6922,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                         </div>
                     </div>
                     <div class="expanded-section">
-                        <div class="expanded-section-title">מטען</div>
-                        <div class="expanded-item">
-                            <span class="expanded-label">סוג מטען</span>
-                            <span class="expanded-value">${ship.cargo || '-'}</span>
-                        </div>
+                        <div class="expanded-section-title">בעלי עניין</div>
                         <div class="expanded-item">
                             <span class="expanded-label">בעלים</span>
                             <span class="expanded-value">${ship.owner || '-'}</span>
@@ -6741,6 +6934,10 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                         <div class="expanded-item">
                             <span class="expanded-label">מקבלים</span>
                             <span class="expanded-value">${ship.receivers || '-'}</span>
+                        </div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">סוכן</span>
+                            <span class="expanded-value">${ship.agent || '-'}</span>
                         </div>
                     </div>
                     <div class="expanded-section">
@@ -6770,6 +6967,63 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                             <span class="expanded-value">${ship.trackingNumber || '-'}</span>
                         </div>
                     </div>
+                </div>
+
+                <!-- Cargo Breakdown Section -->
+                <div class="cargo-breakdown-section">
+                    <div class="cargo-breakdown-header">
+                        <div class="cargo-breakdown-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                            </svg>
+                            פירוט מטען
+                        </div>
+                        <button class="cargo-save-btn" onclick="event.stopPropagation(); saveShipCargo('${ship.id}')">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                <polyline points="17 21 17 13 7 13 7 21"/>
+                                <polyline points="7 3 7 8 15 8"/>
+                            </svg>
+                            שמור
+                        </button>
+                    </div>
+
+                    <div class="cargo-parse-area">
+                        <textarea id="cargoParseText-${ship.id}" placeholder="הדבק טקסט מ-BL / מניפסט / אימייל לניתוח אוטומטי..."></textarea>
+                        <button class="cargo-parse-btn" onclick="event.stopPropagation(); parseCargoText('${ship.id}')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                            </svg>
+                            נתח אוטומטית
+                        </button>
+                    </div>
+
+                    <div class="cargo-table-container">
+                        <table class="cargo-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 40%">סוג מטען</th>
+                                    <th style="width: 20%">כמות (יח')</th>
+                                    <th style="width: 25%">משקל (MT)</th>
+                                    <th style="width: 15%"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cargoTableBody-${ship.id}">
+                                ${renderCargoTableRows(ship.id, cargoItems)}
+                            </tbody>
+                        </table>
+                        <div class="cargo-add-row" onclick="event.stopPropagation(); addCargoRow('${ship.id}')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"/>
+                                <line x1="5" y1="12" x2="19" y2="12"/>
+                            </svg>
+                            הוסף סוג מטען
+                        </div>
+                    </div>
+
+                    ${renderCargoSummary(cargoItems)}
                 </div>
 
                 <!-- Ship Images Section -->
@@ -7008,6 +7262,321 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 }
             }, 100);
         }
+
+        // ======================== CARGO BREAKDOWN FUNCTIONS ========================
+
+        const cargoColors = [
+            '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
+            '#ec4899', '#06b6d4', '#84cc16', '#f97316', '#6366f1'
+        ];
+
+        function getCargoTypeOptions(selectedValue = '') {
+            const options = referenceData.cargo.map(cargo =>
+                `<option value="${cargo.name}" ${cargo.name === selectedValue ? 'selected' : ''}>${cargo.name}</option>`
+            ).join('');
+            return `<option value="">בחר מטען...</option>${options}`;
+        }
+
+        function renderCargoTableRows(shipId, cargoItems) {
+            if (!cargoItems || cargoItems.length === 0) {
+                return `
+                    <tr>
+                        <td colspan="4" class="cargo-empty">
+                            אין פירוט מטען. הדבק טקסט לניתוח או הוסף ידנית.
+                        </td>
+                    </tr>
+                `;
+            }
+
+            return cargoItems.map((item, idx) => `
+                <tr data-cargo-index="${idx}">
+                    <td>
+                        <select class="cargo-type-select" onchange="updateCargoItem('${shipId}', ${idx}, 'type', this.value)" onclick="event.stopPropagation()">
+                            ${getCargoTypeOptions(item.type)}
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" value="${item.quantity || ''}" placeholder="0"
+                            onchange="updateCargoItem('${shipId}', ${idx}, 'quantity', this.value)"
+                            onclick="event.stopPropagation()">
+                    </td>
+                    <td>
+                        <input type="number" step="0.001" value="${item.weight || ''}" placeholder="0"
+                            onchange="updateCargoItem('${shipId}', ${idx}, 'weight', this.value)"
+                            onclick="event.stopPropagation()">
+                    </td>
+                    <td>
+                        <button class="cargo-delete-btn" onclick="event.stopPropagation(); removeCargoRow('${shipId}', ${idx})" title="מחק">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="3 6 5 6 21 6"/>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderCargoSummary(cargoItems) {
+            if (!cargoItems || cargoItems.length === 0) {
+                return '';
+            }
+
+            const totalQuantity = cargoItems.reduce((sum, item) => sum + (parseFloat(item.quantity) || 0), 0);
+            const totalWeight = cargoItems.reduce((sum, item) => sum + (parseFloat(item.weight) || 0), 0);
+
+            // Generate percentage bars
+            const percentBars = cargoItems.map((item, idx) => {
+                const percent = totalWeight > 0 ? ((parseFloat(item.weight) || 0) / totalWeight * 100) : 0;
+                if (percent < 5) return '';
+                const color = cargoColors[idx % cargoColors.length];
+                const shortName = (item.type || 'N/A').split(' ').slice(-1)[0].substring(0, 8);
+                return `<div class="cargo-percent-bar" style="width: ${percent}%; background: ${color};" title="${item.type}: ${percent.toFixed(1)}%">${shortName}</div>`;
+            }).filter(b => b).join('');
+
+            return `
+                <div class="cargo-summary">
+                    <div class="cargo-totals">
+                        <div class="cargo-total-item">
+                            <div class="cargo-total-value">${totalQuantity.toLocaleString()}</div>
+                            <div class="cargo-total-label">יחידות</div>
+                        </div>
+                        <div class="cargo-total-item">
+                            <div class="cargo-total-value">${totalWeight.toLocaleString()}</div>
+                            <div class="cargo-total-label">MT</div>
+                        </div>
+                    </div>
+                    <div class="cargo-percentages">
+                        ${percentBars}
+                    </div>
+                </div>
+            `;
+        }
+
+        function addCargoRow(shipId) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            if (!ship.cargoBreakdown) ship.cargoBreakdown = [];
+            ship.cargoBreakdown.push({ type: '', quantity: 0, weight: 0 });
+
+            refreshCargoTable(shipId);
+        }
+
+        function removeCargoRow(shipId, index) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship || !ship.cargoBreakdown) return;
+
+            ship.cargoBreakdown.splice(index, 1);
+            refreshCargoTable(shipId);
+        }
+
+        function updateCargoItem(shipId, index, field, value) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship || !ship.cargoBreakdown || !ship.cargoBreakdown[index]) return;
+
+            if (field === 'quantity' || field === 'weight') {
+                ship.cargoBreakdown[index][field] = parseFloat(value) || 0;
+            } else {
+                ship.cargoBreakdown[index][field] = value;
+            }
+
+            // Update summary without re-rendering the whole table
+            const section = document.querySelector(`#cargoTableBody-${shipId}`).closest('.cargo-breakdown-section');
+            const existingSummary = section.querySelector('.cargo-summary');
+            const newSummaryHtml = renderCargoSummary(ship.cargoBreakdown);
+
+            if (existingSummary) {
+                existingSummary.outerHTML = newSummaryHtml;
+            } else if (newSummaryHtml) {
+                section.insertAdjacentHTML('beforeend', newSummaryHtml);
+            }
+        }
+
+        function refreshCargoTable(shipId) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            const tbody = document.getElementById(`cargoTableBody-${shipId}`);
+            if (tbody) {
+                tbody.innerHTML = renderCargoTableRows(shipId, ship.cargoBreakdown || []);
+            }
+
+            // Update summary
+            const section = tbody.closest('.cargo-breakdown-section');
+            const existingSummary = section.querySelector('.cargo-summary');
+            const newSummaryHtml = renderCargoSummary(ship.cargoBreakdown || []);
+
+            if (existingSummary) {
+                existingSummary.outerHTML = newSummaryHtml || '<div></div>';
+            } else if (newSummaryHtml) {
+                section.insertAdjacentHTML('beforeend', newSummaryHtml);
+            }
+        }
+
+        async function parseCargoText(shipId) {
+            const textarea = document.getElementById(`cargoParseText-${shipId}`);
+            const text = textarea?.value?.trim();
+
+            if (!text) {
+                showToast('נא להזין טקסט לניתוח', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            // Build cargo types list for the prompt
+            const cargoTypesList = referenceData.cargo.map(c => c.name).join(', ');
+
+            showToast('מנתח מטען...', 'info');
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        parseType: 'cargo',
+                        content: text,
+                        cargoTypes: cargoTypesList
+                    })
+                });
+
+                if (!response.ok) throw new Error('API error');
+
+                const result = await response.json();
+
+                if (result.cargo && result.cargo.length > 0) {
+                    // Merge with existing or replace
+                    ship.cargoBreakdown = result.cargo.map(item => ({
+                        type: matchCargoType(item.type || item.name),
+                        quantity: parseFloat(item.quantity) || 0,
+                        weight: parseFloat(item.weight) || 0
+                    }));
+
+                    refreshCargoTable(shipId);
+                    textarea.value = '';
+                    showToast(`נמצאו ${result.cargo.length} סוגי מטען`, 'success');
+                } else {
+                    // Fallback to local parsing
+                    const localResult = parseCargoLocally(text);
+                    if (localResult.length > 0) {
+                        ship.cargoBreakdown = localResult;
+                        refreshCargoTable(shipId);
+                        textarea.value = '';
+                        showToast(`נמצאו ${localResult.length} סוגי מטען (ניתוח מקומי)`, 'success');
+                    } else {
+                        showToast('לא נמצאו פרטי מטען בטקסט', 'warning');
+                    }
+                }
+            } catch (error) {
+                console.error('Cargo parse error:', error);
+                // Fallback to local parsing
+                const localResult = parseCargoLocally(text);
+                if (localResult.length > 0) {
+                    ship.cargoBreakdown = localResult;
+                    refreshCargoTable(shipId);
+                    textarea.value = '';
+                    showToast(`נמצאו ${localResult.length} סוגי מטען`, 'success');
+                } else {
+                    showToast('לא הצלחנו לנתח את הטקסט', 'error');
+                }
+            }
+        }
+
+        function matchCargoType(inputType) {
+            if (!inputType) return '';
+            const input = inputType.toLowerCase().trim();
+
+            // Try exact match first
+            const exactMatch = referenceData.cargo.find(c => c.name.toLowerCase() === input);
+            if (exactMatch) return exactMatch.name;
+
+            // Try partial match
+            const partialMatch = referenceData.cargo.find(c =>
+                c.name.toLowerCase().includes(input) || input.includes(c.name.toLowerCase())
+            );
+            if (partialMatch) return partialMatch.name;
+
+            // Return original if no match
+            return inputType;
+        }
+
+        function parseCargoLocally(text) {
+            const results = [];
+            const lines = text.split(/[\n,;]/);
+
+            // Patterns to match: "Steel Wire Rods 1500 pcs 8500 MT" or "8500 MT Steel Wire Rods"
+            const patterns = [
+                // Pattern: Type Qty Unit Weight Unit
+                /([A-Za-z\s]+?)\s+(\d+[\d,\.]*)\s*(?:pcs|pieces|units|יח|יחידות)?\s*[\-–]?\s*(\d+[\d,\.]*)\s*(?:MT|tons?|טון)/gi,
+                // Pattern: Weight MT Type
+                /(\d+[\d,\.]*)\s*(?:MT|tons?|טון)\s+([A-Za-z\s]+)/gi,
+                // Pattern: Type: Weight MT
+                /([A-Za-z\s]+?)[\s:]+(\d+[\d,\.]*)\s*(?:MT|tons?|טון)/gi
+            ];
+
+            for (const line of lines) {
+                const trimmed = line.trim();
+                if (!trimmed) continue;
+
+                // Check each cargo type
+                for (const cargo of referenceData.cargo) {
+                    if (trimmed.toLowerCase().includes(cargo.name.toLowerCase())) {
+                        // Try to extract numbers
+                        const numbers = trimmed.match(/\d+[\d,\.]*/g) || [];
+                        const parsedNumbers = numbers.map(n => parseFloat(n.replace(/,/g, '')));
+
+                        // Heuristic: larger number is weight, smaller is quantity
+                        let weight = 0, quantity = 0;
+                        if (parsedNumbers.length >= 2) {
+                            weight = Math.max(...parsedNumbers);
+                            quantity = Math.min(...parsedNumbers);
+                        } else if (parsedNumbers.length === 1) {
+                            weight = parsedNumbers[0];
+                        }
+
+                        // Avoid duplicates
+                        if (!results.find(r => r.type === cargo.name)) {
+                            results.push({
+                                type: cargo.name,
+                                quantity: quantity,
+                                weight: weight
+                            });
+                        }
+                        break;
+                    }
+                }
+            }
+
+            return results;
+        }
+
+        async function saveShipCargo(shipId) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            try {
+                // Update cargo field with summary
+                const cargoSummary = (ship.cargoBreakdown || [])
+                    .filter(c => c.type)
+                    .map(c => c.type)
+                    .join(', ');
+
+                await db.collection("ships").doc(shipId).update({
+                    cargoBreakdown: ship.cargoBreakdown || [],
+                    cargo: cargoSummary,
+                    updatedAt: new Date().toISOString()
+                });
+
+                showToast('פירוט המטען נשמר בהצלחה', 'success');
+            } catch (error) {
+                console.error('Error saving cargo:', error);
+                showToast('שגיאה בשמירת המטען', 'error');
+            }
+        }
+
+        // ======================== END CARGO BREAKDOWN FUNCTIONS ========================
 
         function calculateDaysUntilETA(eta) {
             if (!eta) return null;

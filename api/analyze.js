@@ -337,8 +337,51 @@ Should produce:
 - cargo.remaining[0].weightRemaining: 22032.720, quantityRemaining: 7212`;
 
             userPrompt = `Analyze this tally/discharge report and extract ALL cargo information by type. Pay special attention to summary tables with Manifest, Previous, Remain values:\n\n${content}`;
+        } else if (parseType === 'cargo') {
+            // Parse cargo breakdown from BL, manifest, or free text
+            const { cargoTypes } = req.body;
+
+            systemPrompt = `You are an expert at extracting cargo information from shipping documents like Bills of Lading (BL), manifests, and email descriptions.
+
+AVAILABLE CARGO TYPES (match to these when possible):
+${cargoTypes || 'Steel Coils, Steel Rebars, Steel Wire Rods, Steel Pipes, Steel Plates, Steel Billets, Steel Beams'}
+
+Extract ALL cargo items with their quantities and weights. Return valid JSON only:
+
+{
+    "cargo": [
+        {
+            "type": "string - cargo type (match to available types above)",
+            "quantity": 0,
+            "weight": 0,
+            "blNumber": "string or null"
+        }
+    ],
+    "totalQuantity": 0,
+    "totalWeight": 0,
+    "confidence": 0.9
+}
+
+## Parsing Rules:
+- Match cargo names to the available types when possible
+- "Coils" without qualifier = "Steel Coils"
+- "Rebars" or "Deformed Bars" = "Steel Rebars"
+- "Wire Rods" = "Steel Wire Rods"
+- Keep original name if no match found
+- Weight in MT (convert kg by /1000)
+- Quantity = number of pieces/bundles/coils
+
+## Common Patterns to Recognize:
+- "1500 pcs Steel Wire Rods 8500 MT"
+- "Steel Coils: 850 units, 12,300 MT"
+- "Total: 8,500.000 MT of Steel Wire Rods in Coils"
+- "B/L: 12345 - Rebars 2000 MT"
+
+Return ONLY valid JSON.`;
+
+            userPrompt = `Extract cargo breakdown from this text:\n\n${content}`;
         } else {
-            return res.status(400).json({ error: 'Invalid parseType. Use "email", "message", or "tally"' });
+            return res.status(400).json({ error: 'Invalid parseType. Use "email", "message", "tally", or "cargo"' });
         }
 
         // Build messages array
