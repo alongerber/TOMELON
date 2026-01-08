@@ -3453,12 +3453,38 @@ Captain"></textarea>
                         </div>
                     </div>
 
-                    <!-- Ship Selection -->
-                    <div class="discharge-ship-selector">
-                        <label style="font-weight: 600; color: var(--text-primary);">בחר אנייה:</label>
-                        <select id="dischargeShipSelect" onchange="loadDischargeData()">
-                            <option value="">-- בחר אנייה --</option>
-                        </select>
+                    <!-- Ship Selection and Voyage Contacts -->
+                    <div class="discharge-ship-selector" style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
+                        <div style="flex: 1; min-width: 200px;">
+                            <label style="font-weight: 600; color: var(--text-primary);">בחר אנייה:</label>
+                            <select id="dischargeShipSelect" onchange="loadDischargeData(); loadVoyageContacts();">
+                                <option value="">-- בחר אנייה --</option>
+                            </select>
+                        </div>
+
+                        <!-- Voyage Contacts Section -->
+                        <div id="voyageContactsSection" style="flex: 2; min-width: 300px; padding: 12px; background: var(--bg-secondary); border-radius: 10px; border: 1px solid var(--glass-border); display: none;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                                <span style="font-weight: 600; color: var(--text-primary); font-size: 14px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display: inline; vertical-align: middle; margin-left: 4px;">
+                                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="9" cy="7" r="4"/>
+                                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                        <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                    </svg>
+                                    אנשי קשר להפלגה
+                                </span>
+                                <button onclick="showAddVoyageContactModal()" style="padding: 4px 10px; border-radius: 6px; border: 1px solid var(--primary); background: transparent; color: var(--primary); font-size: 12px; cursor: pointer;">
+                                    + הוסף
+                                </button>
+                            </div>
+                            <div id="voyageContactsList" style="display: flex; flex-wrap: wrap; gap: 6px;"></div>
+                            <div id="inheritContactsHint" style="display: none; margin-top: 8px; padding: 8px; background: var(--warning-glow); border-radius: 6px; font-size: 12px; color: var(--warning);">
+                                <button onclick="inheritPreviousVoyageContacts()" style="background: var(--warning); color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 11px;">
+                                    ייבא מהפלגה קודמת
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="discharge-grid">
@@ -3477,6 +3503,13 @@ Captain"></textarea>
 
                             <!-- Input Method Tabs -->
                             <div class="tally-input-tabs">
+                                <button class="tally-input-tab" onclick="switchTallyInputTab('manual')">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M12 20h9"/>
+                                        <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                                    </svg>
+                                    ידני
+                                </button>
                                 <button class="tally-input-tab active" onclick="switchTallyInputTab('text')">
                                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
@@ -3500,6 +3533,57 @@ Captain"></textarea>
                                     </svg>
                                     PDF
                                 </button>
+                            </div>
+
+                            <!-- Manual Input -->
+                            <div class="tally-input-content" id="tallyInputManual">
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                                        <div>
+                                            <label style="font-size: 12px; color: var(--text-secondary);">תאריך</label>
+                                            <input type="date" id="manualTallyDate" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                                        </div>
+                                        <div>
+                                            <label style="font-size: 12px; color: var(--text-secondary);">משמרת</label>
+                                            <select id="manualTallyShift" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                                                <option value="1">משמרת 1 (06:30-14:30)</option>
+                                                <option value="2">משמרת 2 (14:30-22:30)</option>
+                                                <option value="3">משמרת 3 (22:30-06:30)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size: 12px; color: var(--text-secondary);">מנופים/גנגים</label>
+                                        <input type="text" id="manualTallyGangs" placeholder="לדוגמא: 2 gangs" style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                                    </div>
+
+                                    <div id="manualCargoEntries">
+                                        <label style="font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; display: block;">סוגי מטען:</label>
+                                        <div class="manual-cargo-entry" style="display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px; margin-bottom: 8px;">
+                                            <input type="text" placeholder="סוג מטען" class="cargo-type-input" style="padding: 8px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                                            <input type="number" placeholder="כמות" class="cargo-qty-input" style="padding: 8px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                                            <input type="number" step="0.001" placeholder="משקל MT" class="cargo-weight-input" style="padding: 8px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                                            <button onclick="removeCargoEntry(this)" style="padding: 8px; border-radius: 6px; border: none; background: var(--danger-glow); color: var(--danger); cursor: pointer;">✕</button>
+                                        </div>
+                                    </div>
+                                    <button onclick="addManualCargoEntry()" style="padding: 8px; border-radius: 6px; border: 1px dashed var(--glass-border); background: transparent; color: var(--text-secondary); cursor: pointer; width: 100%;">
+                                        + הוסף סוג מטען
+                                    </button>
+
+                                    <div>
+                                        <label style="font-size: 12px; color: var(--text-secondary);">הערות</label>
+                                        <textarea id="manualTallyRemarks" rows="2" placeholder="גשם, עצירות, בעיות..." style="width: 100%; padding: 8px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary); resize: vertical;"></textarea>
+                                    </div>
+
+                                    <button onclick="saveManualTally()" class="parse-tally-btn">
+                                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                            <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/>
+                                            <polyline points="17 21 17 13 7 13 7 21"/>
+                                            <polyline points="7 3 7 8 15 8"/>
+                                        </svg>
+                                        שמור משמרת
+                                    </button>
+                                </div>
                             </div>
 
                             <!-- Text Input -->
@@ -6576,6 +6660,189 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // Update content visibility
             document.querySelectorAll('.tally-input-content').forEach(c => c.classList.remove('active'));
             document.getElementById(`tallyInput${tab.charAt(0).toUpperCase() + tab.slice(1)}`).classList.add('active');
+
+            // Set today's date for manual entry
+            if (tab === 'manual') {
+                document.getElementById('manualTallyDate').value = new Date().toISOString().split('T')[0];
+            }
+        }
+
+        // ==================== MANUAL TALLY ENTRY ====================
+        function addManualCargoEntry() {
+            const container = document.getElementById('manualCargoEntries');
+            const entry = document.createElement('div');
+            entry.className = 'manual-cargo-entry';
+            entry.style.cssText = 'display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 8px; margin-bottom: 8px;';
+            entry.innerHTML = `
+                <input type="text" placeholder="סוג מטען" class="cargo-type-input" style="padding: 8px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                <input type="number" placeholder="כמות" class="cargo-qty-input" style="padding: 8px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                <input type="number" step="0.001" placeholder="משקל MT" class="cargo-weight-input" style="padding: 8px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                <button onclick="removeCargoEntry(this)" style="padding: 8px; border-radius: 6px; border: none; background: var(--danger-glow); color: var(--danger); cursor: pointer;">✕</button>
+            `;
+            container.appendChild(entry);
+        }
+
+        function removeCargoEntry(btn) {
+            const entries = document.querySelectorAll('.manual-cargo-entry');
+            if (entries.length > 1) {
+                btn.closest('.manual-cargo-entry').remove();
+            } else {
+                showToast('חייב להיות לפחות שורת מטען אחת', 'warning');
+            }
+        }
+
+        function saveManualTally() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                showToast('יש לבחור אנייה קודם', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) {
+                showToast('אנייה לא נמצאה', 'error');
+                return;
+            }
+
+            const date = document.getElementById('manualTallyDate').value;
+            const shiftNum = document.getElementById('manualTallyShift').value;
+            const gangs = document.getElementById('manualTallyGangs').value;
+            const remarks = document.getElementById('manualTallyRemarks').value;
+
+            // Collect cargo entries
+            const cargoMoved = [];
+            let totalQty = 0;
+            let totalWeight = 0;
+
+            document.querySelectorAll('.manual-cargo-entry').forEach(entry => {
+                const type = entry.querySelector('.cargo-type-input').value.trim();
+                const qty = parseFloat(entry.querySelector('.cargo-qty-input').value) || 0;
+                const weight = parseFloat(entry.querySelector('.cargo-weight-input').value) || 0;
+
+                if (type && (qty > 0 || weight > 0)) {
+                    cargoMoved.push({ type, quantity: qty, weight });
+                    totalQty += qty;
+                    totalWeight += weight;
+                }
+            });
+
+            if (cargoMoved.length === 0) {
+                showToast('יש להזין לפחות סוג מטען אחד', 'warning');
+                return;
+            }
+
+            // Create shift entry
+            const shiftNames = { '1': 'משמרת 1 (06:30-14:30)', '2': 'משמרת 2 (14:30-22:30)', '3': 'משמרת 3 (22:30-06:30)' };
+            const shiftEntry = {
+                id: 'shift_' + Date.now(),
+                date: date,
+                name: shiftNames[shiftNum] || `משמרת ${shiftNum}`,
+                gangs: gangs,
+                cargoMoved: cargoMoved,
+                shiftTotalQuantity: totalQty,
+                shiftTotalWeight: totalWeight,
+                remarks: remarks ? [remarks] : [],
+                createdAt: new Date().toISOString()
+            };
+
+            // Initialize discharge data on ship if needed
+            ship.dischargeData = ship.dischargeData || { shifts: [], remarks: [] };
+            ship.dischargeData.shifts.push(shiftEntry);
+            if (remarks) {
+                ship.dischargeData.remarks.push({ date, text: remarks });
+            }
+
+            saveData();
+            showToast(`משמרת נשמרה: ${totalWeight.toLocaleString()} MT`, 'success');
+
+            // Clear form
+            document.getElementById('manualTallyGangs').value = '';
+            document.getElementById('manualTallyRemarks').value = '';
+            document.querySelectorAll('.manual-cargo-entry input').forEach(inp => inp.value = '');
+
+            // Refresh discharge view
+            loadDischargeData();
+        }
+
+        // ==================== VOYAGE CONTACTS UI ====================
+        function loadVoyageContacts() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            const section = document.getElementById('voyageContactsSection');
+            const list = document.getElementById('voyageContactsList');
+            const inheritHint = document.getElementById('inheritContactsHint');
+
+            if (!shipId) {
+                section.style.display = 'none';
+                return;
+            }
+
+            section.style.display = 'block';
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            const voyageContacts = ship.voyageContacts || [];
+            list.innerHTML = '';
+
+            if (voyageContacts.length === 0) {
+                list.innerHTML = '<span style="color: var(--text-tertiary); font-size: 12px;">אין אנשי קשר להפלגה זו</span>';
+
+                // Check if there are contacts from previous voyage
+                const prevContacts = findPreviousVoyageContacts(ship.name);
+                if (prevContacts && prevContacts.contacts.length > 0) {
+                    inheritHint.style.display = 'block';
+                    inheritHint.querySelector('button').textContent = `ייבא ${prevContacts.contacts.length} אנשי קשר מהפלגה ${prevContacts.fromVoyage}`;
+                } else {
+                    inheritHint.style.display = 'none';
+                }
+            } else {
+                inheritHint.style.display = 'none';
+                voyageContacts.forEach(contact => {
+                    const chip = document.createElement('div');
+                    chip.style.cssText = 'display: flex; align-items: center; gap: 6px; padding: 4px 10px; background: var(--success-glow); border: 1px solid var(--success); border-radius: 16px; font-size: 12px;';
+                    chip.innerHTML = `
+                        <span>${contact.name || contact.email.split('@')[0]}</span>
+                        <button onclick="removeVoyageContact('${shipId}', '${contact.email}')" style="background: none; border: none; color: var(--danger); cursor: pointer; padding: 0; font-size: 14px;">✕</button>
+                    `;
+                    list.appendChild(chip);
+                });
+            }
+        }
+
+        function removeVoyageContact(shipId, email) {
+            if (confirm('להסיר איש קשר זה מההפלגה?')) {
+                removeContactFromVoyage(shipId, email);
+                loadVoyageContacts();
+            }
+        }
+
+        function showAddVoyageContactModal() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                showToast('יש לבחור אנייה קודם', 'warning');
+                return;
+            }
+
+            // Create simple prompt for email
+            const email = prompt('הזן כתובת אימייל של איש הקשר:');
+            if (email && email.includes('@')) {
+                const name = prompt('שם איש הקשר (אופציונלי):') || '';
+                addContactToVoyage(shipId, email, name);
+                loadVoyageContacts();
+            }
+        }
+
+        function inheritPreviousVoyageContacts() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            const prevContacts = findPreviousVoyageContacts(ship.name);
+            if (prevContacts && prevContacts.contacts.length > 0) {
+                ship.voyageContacts = [...prevContacts.contacts];
+                saveData();
+                loadVoyageContacts();
+                showToast(`${prevContacts.contacts.length} אנשי קשר יובאו בהצלחה`, 'success');
+            }
         }
 
         // API endpoint for Claude analysis (using unified endpoint)
@@ -6783,18 +7050,78 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             const container = document.getElementById('parsedShiftsContainer');
             container.innerHTML = '';
 
-            data.shifts.forEach(shift => {
-                const cargoDetails = shift.cargo.map(c => c.type).join(', ') || 'Cargo';
+            // Handle new API format with cargo breakdown
+            if (data.cargo && (data.cargo.declared || data.cargo.discharged)) {
+                // Show cargo summary section
+                const cargoSummary = document.createElement('div');
+                cargoSummary.className = 'tally-cargo-summary';
+                cargoSummary.style.cssText = 'margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 8px;';
+
+                let summaryHtml = '<h4 style="margin-bottom: 10px; color: var(--text-primary);">סיכום מטען:</h4>';
+
+                // Declared cargo
+                if (data.cargo.declared && data.cargo.declared.length > 0) {
+                    summaryHtml += '<div style="margin-bottom: 8px;"><strong>מוצהר:</strong></div>';
+                    data.cargo.declared.forEach(item => {
+                        const weight = item.weightDeclared || 0;
+                        const qty = item.quantityDeclared || 0;
+                        summaryHtml += `<div style="padding: 4px 8px; font-size: 13px;">${item.type}: ${weight.toLocaleString()} MT (${qty.toLocaleString()} ${item.quantityUnit || 'pcs'})</div>`;
+                    });
+                }
+
+                // Discharged cargo
+                if (data.cargo.discharged && data.cargo.discharged.length > 0) {
+                    summaryHtml += '<div style="margin: 8px 0;"><strong>נפרק:</strong></div>';
+                    data.cargo.discharged.forEach(item => {
+                        const weight = item.weightDischarged || 0;
+                        const qty = item.quantityDischarged || 0;
+                        const pct = item.percentComplete || 0;
+                        summaryHtml += `<div style="padding: 4px 8px; font-size: 13px;">${item.type}: ${weight.toLocaleString()} MT (${qty.toLocaleString()}) - ${pct}%</div>`;
+                    });
+                }
+
+                // Remaining cargo
+                if (data.cargo.remaining && data.cargo.remaining.length > 0) {
+                    summaryHtml += '<div style="margin: 8px 0; color: var(--warning);"><strong>נותר:</strong></div>';
+                    data.cargo.remaining.forEach(item => {
+                        const weight = item.weightRemaining || 0;
+                        const qty = item.quantityRemaining || 0;
+                        summaryHtml += `<div style="padding: 4px 8px; font-size: 13px;">${item.type}: ${weight.toLocaleString()} MT (${qty.toLocaleString()})</div>`;
+                    });
+                }
+
+                // Totals
+                if (data.cargo.percentageComplete !== undefined) {
+                    summaryHtml += `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--glass-border); font-weight: 600;">התקדמות כללית: ${data.cargo.percentageComplete}%</div>`;
+                }
+
+                cargoSummary.innerHTML = summaryHtml;
+                container.appendChild(cargoSummary);
+            }
+
+            // Handle shifts - support both old and new format
+            const shifts = data.shifts || [];
+            shifts.forEach(shift => {
+                // Support both old format (cargo, quantity, weight) and new format (cargoMoved, shiftTotalQuantity, shiftTotalWeight)
+                const cargoItems = shift.cargo || shift.cargoMoved || [];
+                const cargoDetails = cargoItems.map(c => c.type).join(', ') || 'Cargo';
+                const quantity = shift.quantity ?? shift.shiftTotalQuantity ?? 0;
+                const weight = shift.weight ?? shift.shiftTotalWeight ?? 0;
+
                 const row = document.createElement('div');
                 row.className = 'tally-shift-row';
                 row.innerHTML = `
-                    <span class="tally-shift-name">${shift.name}</span>
+                    <span class="tally-shift-name">${shift.name || 'משמרת'}</span>
                     <span class="tally-cargo-details">${cargoDetails}</span>
-                    <span class="tally-quantity">${shift.quantity.toLocaleString()}</span>
-                    <span class="tally-weight">${shift.weight.toLocaleString()} MT</span>
+                    <span class="tally-quantity">${quantity.toLocaleString()}</span>
+                    <span class="tally-weight">${weight.toLocaleString()} MT</span>
                 `;
                 container.appendChild(row);
             });
+
+            // Calculate totals - support both formats
+            const totalQuantity = data.totalQuantity ?? data.dailyTotals?.quantity ?? data.cargo?.totalDischargedQuantity ?? 0;
+            const totalWeight = data.totalWeight ?? data.dailyTotals?.weight ?? data.cargo?.totalDischargedWeight ?? 0;
 
             // Add total row
             const totalRow = document.createElement('div');
@@ -6804,17 +7131,30 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             totalRow.innerHTML = `
                 <span>סה"כ</span>
                 <span></span>
-                <span class="tally-quantity">${data.totalQuantity.toLocaleString()}</span>
-                <span class="tally-weight">${data.totalWeight.toLocaleString()} MT</span>
+                <span class="tally-quantity">${totalQuantity.toLocaleString()}</span>
+                <span class="tally-weight">${totalWeight.toLocaleString()} MT</span>
             `;
             container.appendChild(totalRow);
 
             // Show remarks if any
-            if (data.remarks.length > 0) {
+            const remarks = data.remarks || [];
+            if (remarks.length > 0) {
                 document.getElementById('parsedRemarks').style.display = 'block';
-                document.getElementById('parsedRemarksText').textContent = data.remarks.join('\n');
+                document.getElementById('parsedRemarksText').textContent = remarks.join('\n');
             } else {
                 document.getElementById('parsedRemarks').style.display = 'none';
+            }
+
+            // Show stoppages if any (new format)
+            if (data.stoppages && data.stoppages.length > 0) {
+                let stoppagesHtml = '<div style="margin-top: 12px; padding: 10px; background: var(--warning-glow); border-radius: 8px; border: 1px solid var(--warning);">';
+                stoppagesHtml += '<strong style="color: var(--warning);">עצירות:</strong><br>';
+                data.stoppages.forEach(s => {
+                    stoppagesHtml += `<div style="font-size: 13px; margin-top: 4px;">${s.reason}${s.duration ? ` (${s.duration})` : ''}${s.time ? ` - ${s.time}` : ''}</div>`;
+                });
+                stoppagesHtml += '</div>';
+                document.getElementById('parsedRemarksText').innerHTML += stoppagesHtml;
+                document.getElementById('parsedRemarks').style.display = 'block';
             }
         }
 
