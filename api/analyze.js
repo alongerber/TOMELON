@@ -165,8 +165,19 @@ Return valid JSON only (no markdown, no explanation):
     "vessel": {
         "flag": "string or null",
         "draft": "number or null - in meters",
-        "loa": "number or null - length overall",
-        "beam": "number or null"
+        "loa": "number or null - length overall in meters",
+        "beam": "number or null - breadth in meters",
+        "dwt": "number or null - deadweight tonnage",
+        "gross": "number or null - gross tonnage",
+        "net": "number or null - net tonnage",
+        "yearBuilt": "number or null - year vessel was built",
+        "placeBuilt": "string or null - country/shipyard where built",
+        "class": "string or null - classification society (NK, LR, BV, etc)",
+        "holds": "number or null - number of holds",
+        "hatches": "number or null - number of hatches",
+        "grainCapacity": "number or null - grain capacity in cbm",
+        "cranes": "string or null - crane configuration (e.g., '4X30' means 4 cranes of 30 tons)",
+        "imoNumber": "string or null - IMO number"
     },
 
     "notes": ["array of important notes or remarks from the message"],
@@ -344,17 +355,16 @@ Should produce:
             systemPrompt = `You are an expert at extracting cargo information from shipping documents like Bills of Lading (BL), manifests, and email descriptions.
 
 AVAILABLE CARGO TYPES (match to these when possible):
-${cargoTypes || 'Steel Coils, Steel Rebars, Steel Wire Rods, Steel Pipes, Steel Plates, Steel Billets, Steel Beams'}
+${cargoTypes || 'Steel Coils, Steel Rebars, Steel Wire Rods, Steel Pipes, Steel Plates, Steel Billets, Steel Beams, Steel H-Beams, Galvanized Steel Coils, Cold Rolled Steel Coils'}
 
-Extract ALL cargo items with their quantities and weights. Return valid JSON only:
+Extract ALL cargo items, AGGREGATE BY CARGO TYPE, and return valid JSON:
 
 {
     "cargo": [
         {
             "type": "string - cargo type (match to available types above)",
             "quantity": 0,
-            "weight": 0,
-            "blNumber": "string or null"
+            "weight": 0
         }
     ],
     "totalQuantity": 0,
@@ -362,26 +372,64 @@ Extract ALL cargo items with their quantities and weights. Return valid JSON onl
     "confidence": 0.9
 }
 
-## Parsing Rules:
-- Match cargo names to the available types when possible
-- "Coils" without qualifier = "Steel Coils"
-- "Rebars" or "Deformed Bars" = "Steel Rebars"
-- "Wire Rods" = "Steel Wire Rods"
-- Keep original name if no match found
-- Weight in MT (convert kg by /1000)
-- Quantity = number of pieces/bundles/coils
+## CRITICAL - Aggregation Rules:
+- AGGREGATE (sum up) all entries with the same cargo type
+- If the same cargo type appears multiple times with different consignees/receivers, SUM the weights and quantities
+- Do NOT create separate entries for each consignee - group by cargo type only
+- Example: If "HOT ROLLED STEEL DEFORMED BAR" appears 10 times with different weights, sum them into ONE entry
 
-## Common Patterns to Recognize:
-- "1500 pcs Steel Wire Rods 8500 MT"
-- "Steel Coils: 850 units, 12,300 MT"
-- "Total: 8,500.000 MT of Steel Wire Rods in Coils"
-- "B/L: 12345 - Rebars 2000 MT"
+## Weight Conversion:
+- If weight column shows large numbers (thousands/millions) and says "Kg", convert to MT by dividing by 1000
+- If weight is already small (under 100,000) and context suggests MT, keep as is
+- Final weights must be in MT (Metric Tons)
+
+## Cargo Type Matching:
+- "HOT ROLLED STEEL DEFORMED BAR" or "REBARS" or "DEFORMED BAR" = "Steel Rebars"
+- "HOT ROLLED STEEL DEFORMED BAR IN COIL" or "REBARS IN COIL" = "Steel Rebars in Coils"
+- "PRIME HOT ROLLED STEEL H-BEAMS" or "H-BEAMS" or "H BEAMS" = "Steel H-Beams"
+- "HOT DIPPED GALVANIZED STEEL COILS" = "Steel Coils"
+- "COLD ROLLED STEEL COIL" = "Steel Coils"
+- "GALVANIZED STEEL COILS" or "GALVANIZED COILS" = "Steel Coils"
+- "STEEL COILS" or "HR COILS" or "CR COILS" = "Steel Coils"
+- "STEEL SHEETS IN COILS" = "Steel Coils"
+- "HR PROFILE" or "STEEL PROFILES" = "Steel Profiles"
+- "STEEL WIRE RODS IN COILS" or "WIRE RODS IN COILS" = "Steel Wire Rods in Coils"
+- "WIRE RODS" or "STEEL WIRE RODS" = "Steel Wire Rods"
+- "STEEL PLATES" or "STEEL PLATE" = "Steel Plates"
+- "STEEL PIPES" or "STEEL PIPE" = "Steel Pipes"
+- "STEEL BILLETS" or "BILLETS" = "Steel Billets"
+- Keep original name if no good match
+
+## Common Table Formats to Recognize:
+- Consignee | Notify | Goods Description | Weight(Kg) | Pack #
+- B/L No | Description | Weight | Quantity
+- Item | MT | Pieces
 
 Return ONLY valid JSON.`;
 
-            userPrompt = `Extract cargo breakdown from this text:\n\n${content}`;
+            userPrompt = `Extract and AGGREGATE cargo breakdown by cargo type from this text. Sum all weights and quantities for each cargo type:\n\n${content}`;
+        } else if (parseType === 'query') {
+            // AI-powered search query
+            const { query, context } = req.body;
+
+            systemPrompt = `You are a helpful assistant for a ship operations management system. Answer questions based on the provided context about ships, voyages, cargo, and operations.
+
+CONTEXT DATA:
+${context || 'No context provided'}
+
+INSTRUCTIONS:
+- Answer questions accurately based on the data
+- For dates, format in Hebrew locale (DD/MM/YYYY)
+- For weights, use MT (metric tons)
+- If information is not available, say so clearly
+- Keep answers concise but complete
+- Answer in Hebrew if the question is in Hebrew
+
+Return your answer as plain text, NOT JSON.`;
+
+            userPrompt = query || content;
         } else {
-            return res.status(400).json({ error: 'Invalid parseType. Use "email", "message", "tally", or "cargo"' });
+            return res.status(400).json({ error: 'Invalid parseType. Use "email", "message", "tally", "cargo", or "query"' });
         }
 
         // Build messages array
