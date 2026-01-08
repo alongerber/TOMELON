@@ -71,6 +71,30 @@
             --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.6);
         }
 
+        /* Light Theme */
+        [data-theme="light"] {
+            --bg-primary: #F5F7FA;
+            --bg-secondary: #FFFFFF;
+            --bg-tertiary: #E8ECF0;
+            --bg-card: #FFFFFF;
+            --bg-hover: rgba(0, 0, 0, 0.03);
+            --bg-active: rgba(0, 0, 0, 0.06);
+
+            --glass: rgba(0, 0, 0, 0.02);
+            --glass-heavy: rgba(0, 0, 0, 0.04);
+            --glass-border: rgba(0, 0, 0, 0.12);
+
+            --text-primary: #1A1D24;
+            --text-secondary: #4A5568;
+            --text-tertiary: #718096;
+            --text-muted: #A0AEC0;
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.08);
+            --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.12);
+            --shadow-lg: 0 8px 24px rgba(0, 0, 0, 0.16);
+            --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.2);
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -937,6 +961,118 @@
         }
         .cargo-save-btn:hover {
             filter: brightness(1.1);
+        }
+        .cargo-autocomplete-wrapper {
+            position: relative;
+            width: 100%;
+        }
+        .cargo-autocomplete-input {
+            width: 100%;
+            background: var(--bg-primary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            padding: 6px 8px;
+            font-size: 12px;
+        }
+        .cargo-autocomplete-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .cargo-autocomplete-list {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .cargo-autocomplete-list.active {
+            display: block;
+        }
+        .cargo-autocomplete-item {
+            padding: 8px 12px;
+            cursor: pointer;
+            font-size: 12px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .cargo-autocomplete-item:last-child {
+            border-bottom: none;
+        }
+        .cargo-autocomplete-item:hover,
+        .cargo-autocomplete-item.highlighted {
+            background: var(--primary-glow);
+            color: var(--primary);
+        }
+        .cargo-autocomplete-item .cargo-match {
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        /* ======================== EXPANDED TASKS ======================== */
+        .expanded-tasks-section {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .expanded-task-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 6px 8px;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 150ms;
+            margin-bottom: 4px;
+        }
+        .expanded-task-item:hover {
+            background: var(--bg-hover);
+        }
+        .task-checkbox {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 2px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            flex-shrink: 0;
+            transition: all 150ms;
+        }
+        .task-checkbox.done {
+            background: var(--success);
+            border-color: var(--success);
+            color: white;
+        }
+        .task-checkbox.in-progress {
+            background: var(--warning);
+            border-color: var(--warning);
+            color: var(--bg-primary);
+        }
+        .task-label {
+            font-size: 12px;
+            color: var(--text-primary);
+        }
+        .task-label.done {
+            text-decoration: line-through;
+            opacity: 0.6;
+        }
+        .expanded-task-more {
+            font-size: 11px;
+            color: var(--primary);
+            padding: 6px 8px;
+            cursor: pointer;
+            text-align: center;
+        }
+        .expanded-task-more:hover {
+            text-decoration: underline;
         }
 
         /* ======================== SMART AI SEARCH ======================== */
@@ -4946,6 +5082,19 @@
                 <div class="header-top">
                     <h1 class="header-title">מערכת ניהול אניות</h1>
                     <div class="header-actions">
+                        <button class="btn btn-secondary btn-icon" onclick="toggleTheme()" title="מצב יום/לילה" id="themeToggleBtn">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" id="themeIcon">
+                                <circle cx="12" cy="12" r="5"/>
+                                <line x1="12" y1="1" x2="12" y2="3"/>
+                                <line x1="12" y1="21" x2="12" y2="23"/>
+                                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                                <line x1="1" y1="12" x2="3" y2="12"/>
+                                <line x1="21" y1="12" x2="23" y2="12"/>
+                                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                            </svg>
+                        </button>
                         <button class="btn btn-secondary btn-icon" onclick="toggleActivityFeed()" title="פעילות אחרונה">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 2v4m0 12v4m-8-8h4m12 0h4"/>
@@ -6586,6 +6735,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
         // ==================== Initialize ====================
         async function init() {
+            initTheme(); // Initialize theme before anything else
             listenToData(); // התחל להאזין לשינויים מהענן
             updateStats();
             updateActivities();
@@ -6940,17 +7090,17 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                             <span class="expanded-value">${ship.agent || '-'}</span>
                         </div>
                     </div>
-                    <div class="expanded-section">
+                    <div class="expanded-section expanded-tasks-section">
                         <div class="expanded-section-title">משימות (${doneTasks.length}/${tasks.length})</div>
-                        ${pendingTasks.slice(0, 4).map(task => `
-                            <div class="expanded-item">
-                                <span class="expanded-label">${task.title}</span>
-                                <span class="expanded-value" style="color: ${task.status === 'done' ? 'var(--success)' : task.status === 'in-progress' ? 'var(--warning)' : 'var(--text-tertiary)'}">
-                                    ${task.status === 'done' ? '✓' : task.status === 'in-progress' ? '◐' : '○'}
+                        ${tasks.slice(0, 6).map(task => `
+                            <div class="expanded-task-item ${task.status}" onclick="event.stopPropagation(); toggleTaskFromDashboard('${ship.id}', '${task.key}')" title="לחץ לשנות סטטוס">
+                                <span class="task-checkbox ${task.status}">
+                                    ${task.status === 'done' ? '✓' : task.status === 'in-progress' ? '◐' : ''}
                                 </span>
+                                <span class="task-label ${task.status === 'done' ? 'done' : ''}">${task.title}</span>
                             </div>
                         `).join('')}
-                        ${pendingTasks.length > 4 ? `<div class="expanded-item"><span class="expanded-label" style="opacity: 0.6">+${pendingTasks.length - 4} נוספות...</span></div>` : ''}
+                        ${tasks.length > 6 ? `<div class="expanded-task-more" onclick="event.stopPropagation(); openShipDetails(ships.find(s => s.id === '${ship.id}'))">+${tasks.length - 6} נוספות...</div>` : ''}
                     </div>
                     <div class="expanded-section">
                         <div class="expanded-section-title">שירותים</div>
@@ -7291,9 +7441,18 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             return cargoItems.map((item, idx) => `
                 <tr data-cargo-index="${idx}">
                     <td>
-                        <select class="cargo-type-select" onchange="updateCargoItem('${shipId}', ${idx}, 'type', this.value)" onclick="event.stopPropagation()">
-                            ${getCargoTypeOptions(item.type)}
-                        </select>
+                        <div class="cargo-autocomplete-wrapper">
+                            <input type="text" class="cargo-autocomplete-input"
+                                id="cargoInput-${shipId}-${idx}"
+                                value="${item.type || ''}"
+                                placeholder="חפש סוג מטען..."
+                                oninput="filterCargoSuggestions('${shipId}', ${idx}, this.value)"
+                                onfocus="showCargoSuggestions('${shipId}', ${idx})"
+                                onblur="setTimeout(() => hideCargoSuggestions('${shipId}', ${idx}), 200)"
+                                onclick="event.stopPropagation()"
+                                autocomplete="off">
+                            <div class="cargo-autocomplete-list" id="cargoList-${shipId}-${idx}"></div>
+                        </div>
                     </td>
                     <td>
                         <input type="number" value="${item.quantity || ''}" placeholder="0"
@@ -7576,6 +7735,63 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             }
         }
 
+        // Cargo Autocomplete Functions
+        function showCargoSuggestions(shipId, index) {
+            filterCargoSuggestions(shipId, index, document.getElementById(`cargoInput-${shipId}-${index}`).value);
+        }
+
+        function hideCargoSuggestions(shipId, index) {
+            const list = document.getElementById(`cargoList-${shipId}-${index}`);
+            if (list) list.classList.remove('active');
+        }
+
+        function filterCargoSuggestions(shipId, index, searchText) {
+            const list = document.getElementById(`cargoList-${shipId}-${index}`);
+            if (!list) return;
+
+            const search = searchText.toLowerCase().trim();
+            const filtered = referenceData.cargo.filter(c =>
+                c.name.toLowerCase().includes(search)
+            ).slice(0, 10); // Limit to 10 suggestions
+
+            if (filtered.length === 0 && search.length > 0) {
+                // Allow custom entry
+                list.innerHTML = `
+                    <div class="cargo-autocomplete-item" onclick="selectCargoSuggestion('${shipId}', ${index}, '${searchText}')">
+                        <span style="opacity: 0.7">הוסף: </span>"${searchText}"
+                    </div>
+                `;
+            } else {
+                list.innerHTML = filtered.map(cargo => {
+                    // Highlight matching text
+                    const name = cargo.name;
+                    const matchIdx = name.toLowerCase().indexOf(search);
+                    let displayName = name;
+                    if (matchIdx >= 0 && search.length > 0) {
+                        displayName = name.substring(0, matchIdx) +
+                            `<span class="cargo-match">${name.substring(matchIdx, matchIdx + search.length)}</span>` +
+                            name.substring(matchIdx + search.length);
+                    }
+                    return `
+                        <div class="cargo-autocomplete-item" onclick="selectCargoSuggestion('${shipId}', ${index}, '${cargo.name}')">
+                            ${displayName}
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            list.classList.add('active');
+        }
+
+        function selectCargoSuggestion(shipId, index, cargoName) {
+            const input = document.getElementById(`cargoInput-${shipId}-${index}`);
+            if (input) {
+                input.value = cargoName;
+            }
+            hideCargoSuggestions(shipId, index);
+            updateCargoItem(shipId, index, 'type', cargoName);
+        }
+
         // ======================== END CARGO BREAKDOWN FUNCTIONS ========================
 
         function calculateDaysUntilETA(eta) {
@@ -7840,6 +8056,70 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             
             // בדוק אם כל משימות ההפלגה הושלמו
             checkPostSailedTasksComplete(ship);
+        }
+
+        async function toggleTaskFromDashboard(shipId, taskKey) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship || !ship.tasks) return;
+
+            const task = ship.tasks.find(t => t.key === taskKey);
+            if (!task) return;
+
+            // Cycle status: pending -> in-progress -> done -> pending
+            const statusCycle = ['pending', 'in-progress', 'done'];
+            const currentIndex = statusCycle.indexOf(task.status);
+            const nextIndex = (currentIndex + 1) % statusCycle.length;
+            task.status = statusCycle[nextIndex];
+
+            // Update task details
+            task.lastUpdatedAt = new Date().toISOString();
+            if (task.status === 'done') {
+                task.doneAt = new Date().toISOString();
+                task.doneBy = currentUser;
+            } else {
+                task.doneAt = null;
+                task.doneBy = null;
+            }
+
+            // Update UI immediately
+            const expandedRow = document.getElementById(`expanded-${shipId}`);
+            if (expandedRow) {
+                const taskItem = expandedRow.querySelector(`[onclick*="${taskKey}"]`);
+                if (taskItem) {
+                    taskItem.className = `expanded-task-item ${task.status}`;
+                    const checkbox = taskItem.querySelector('.task-checkbox');
+                    const label = taskItem.querySelector('.task-label');
+                    if (checkbox) {
+                        checkbox.className = `task-checkbox ${task.status}`;
+                        checkbox.textContent = task.status === 'done' ? '✓' : task.status === 'in-progress' ? '◐' : '';
+                    }
+                    if (label) {
+                        label.className = `task-label ${task.status === 'done' ? 'done' : ''}`;
+                    }
+                }
+                // Update task count in header
+                const header = expandedRow.querySelector('.expanded-section-title');
+                if (header && header.textContent.includes('משימות')) {
+                    const doneTasks = ship.tasks.filter(t => t.status === 'done').length;
+                    header.textContent = `משימות (${doneTasks}/${ship.tasks.length})`;
+                }
+            }
+
+            // Save to Firestore
+            try {
+                await db.collection("ships").doc(shipId).update({
+                    tasks: ship.tasks,
+                    updatedAt: new Date().toISOString()
+                });
+            } catch (error) {
+                console.error('Error updating task:', error);
+                showToast('שגיאה בעדכון משימה', 'error');
+            }
+
+            // Add activity
+            const statusText = task.status === 'pending' ? 'ממתין' :
+                              task.status === 'in-progress' ? 'בטיפול' : 'הושלם';
+            addActivity('עדכון משימה', `${task.title} - ${ship.name}: ${statusText}`);
         }
 
         function toggleShipDetails(shipId) {
@@ -13058,6 +13338,50 @@ Generated: ${new Date().toLocaleString('en-GB')}
             }
         }
 
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+
+            // Update icon
+            const themeIcon = document.getElementById('themeIcon');
+            if (themeIcon) {
+                if (newTheme === 'light') {
+                    themeIcon.innerHTML = `
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+                    `;
+                } else {
+                    themeIcon.innerHTML = `
+                        <circle cx="12" cy="12" r="5"/>
+                        <line x1="12" y1="1" x2="12" y2="3"/>
+                        <line x1="12" y1="21" x2="12" y2="23"/>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                        <line x1="1" y1="12" x2="3" y2="12"/>
+                        <line x1="21" y1="12" x2="23" y2="12"/>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+                    `;
+                }
+            }
+        }
+
+        // Initialize theme on load
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+
+            if (savedTheme === 'light') {
+                const themeIcon = document.getElementById('themeIcon');
+                if (themeIcon) {
+                    themeIcon.innerHTML = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>`;
+                }
+            }
+        }
+
 
         async function fullReset() {
             if (confirm('האם אתה בטוח שברצונך למחוק את כל הנתונים ולטעון מחדש מהקובץ החיצוני?')) {
@@ -14783,44 +15107,90 @@ ${signature}`;
             );
 
             if (shipMatch) {
-                // Questions about specific ship
+                // Build structured response for multiple questions
+                let answers = [];
+
+                // Check each possible question type
                 if (queryLower.includes('מקבל') || queryLower.includes('receivers')) {
-                    results.push(`<strong>מקבלים ב-${shipMatch.name}:</strong> ${shipMatch.receivers || 'לא הוגדר'}`);
+                    answers.push({ label: 'מקבלים', value: shipMatch.receivers || 'לא הוגדר' });
                 }
-                if (queryLower.includes('eta') || queryLower.includes('הגעה')) {
-                    results.push(`<strong>ETA של ${shipMatch.name}:</strong> ${shipMatch.eta ? new Date(shipMatch.eta).toLocaleString('he-IL') : 'לא הוגדר'}`);
+                if (queryLower.includes('eta') || queryLower.includes('הגעה') || queryLower.includes('מתי מגיע')) {
+                    answers.push({ label: 'ETA', value: shipMatch.eta ? new Date(shipMatch.eta).toLocaleString('he-IL') : 'לא הוגדר' });
+                }
+                if (queryLower.includes('etb') || queryLower.includes('עגינה')) {
+                    answers.push({ label: 'ETB', value: shipMatch.expected_berth_time ? new Date(shipMatch.expected_berth_time).toLocaleString('he-IL') : 'לא הוגדר' });
                 }
                 if (queryLower.includes('מטען') || queryLower.includes('cargo')) {
-                    results.push(`<strong>מטען ב-${shipMatch.name}:</strong> ${shipMatch.cargo || 'לא הוגדר'}`);
+                    answers.push({ label: 'מטען', value: shipMatch.cargo || 'לא הוגדר' });
                 }
-                if (queryLower.includes('נמל') || queryLower.includes('port')) {
-                    results.push(`<strong>נמל יעד של ${shipMatch.name}:</strong> ${shipMatch.port || 'לא הוגדר'}`);
+                if (queryLower.includes('נמל') || queryLower.includes('port') || queryLower.includes('יעד')) {
+                    answers.push({ label: 'נמל יעד', value: shipMatch.port || 'לא הוגדר' });
                 }
-                if (queryLower.includes('סטטוס') || queryLower.includes('status')) {
-                    results.push(`<strong>סטטוס ${shipMatch.name}:</strong> ${getStatusText(shipMatch.status)}`);
+                if (queryLower.includes('סטטוס') || queryLower.includes('status') || queryLower.includes('מצב')) {
+                    answers.push({ label: 'סטטוס', value: getStatusText(shipMatch.status) });
                 }
                 if (queryLower.includes('בעלים') || queryLower.includes('owner')) {
-                    results.push(`<strong>בעלים של ${shipMatch.name}:</strong> ${shipMatch.owner || 'לא הוגדר'}`);
+                    answers.push({ label: 'בעלים', value: shipMatch.owner || 'לא הוגדר' });
+                }
+                if (queryLower.includes('ספק') || queryLower.includes('supplier') || queryLower.includes('שולח')) {
+                    answers.push({ label: 'ספק', value: shipMatch.supplier || 'לא הוגדר' });
+                }
+                if (queryLower.includes('סוכן') || queryLower.includes('agent')) {
+                    answers.push({ label: 'סוכן', value: shipMatch.agent || 'לא הוגדר' });
+                }
+                if (queryLower.includes('מסע') || queryLower.includes('voyage')) {
+                    answers.push({ label: 'מס\' מסע', value: shipMatch.voyage || 'לא הוגדר' });
+                }
+
+                // Format multiple answers nicely
+                if (answers.length > 0) {
+                    results.push(`<div style="margin-bottom: 8px;"><strong>📋 ${shipMatch.name}</strong></div>`);
+                    answers.forEach(a => {
+                        results.push(`<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--glass-border);">
+                            <span style="color: var(--text-secondary);">${a.label}:</span>
+                            <span style="font-weight: 500;">${a.value}</span>
+                        </div>`);
+                    });
                 }
 
                 // If no specific question, show all info
-                if (results.length === 0) {
-                    results.push(`<strong>${shipMatch.name}</strong> (${shipMatch.voyage || 'ללא מסע'})`);
-                    results.push(`סטטוס: ${getStatusText(shipMatch.status)}`);
-                    results.push(`נמל: ${shipMatch.port || '-'}`);
-                    results.push(`ETA: ${shipMatch.eta ? new Date(shipMatch.eta).toLocaleString('he-IL') : '-'}`);
-                    results.push(`מטען: ${shipMatch.cargo || '-'}`);
-                    results.push(`מקבלים: ${shipMatch.receivers || '-'}`);
+                if (answers.length === 0) {
+                    results.push(`<div style="margin-bottom: 8px;"><strong>📋 ${shipMatch.name}</strong> (${shipMatch.voyage || 'ללא מסע'})</div>`);
+                    const allInfo = [
+                        { label: 'סטטוס', value: getStatusText(shipMatch.status) },
+                        { label: 'נמל', value: shipMatch.port || '-' },
+                        { label: 'ETA', value: shipMatch.eta ? new Date(shipMatch.eta).toLocaleString('he-IL') : '-' },
+                        { label: 'מטען', value: shipMatch.cargo || '-' },
+                        { label: 'מקבלים', value: shipMatch.receivers || '-' },
+                        { label: 'ספק', value: shipMatch.supplier || '-' },
+                        { label: 'בעלים', value: shipMatch.owner || '-' }
+                    ];
+                    allInfo.forEach(a => {
+                        if (a.value && a.value !== '-') {
+                            results.push(`<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--glass-border);">
+                                <span style="color: var(--text-secondary);">${a.label}:</span>
+                                <span style="font-weight: 500;">${a.value}</span>
+                            </div>`);
+                        }
+                    });
                 }
             }
 
             // Technical specs from reference
-            if (refVesselMatch && (queryLower.includes('אורך') || queryLower.includes('loa') || queryLower.includes('מידות') || queryLower.includes('רוחב'))) {
-                results.push(`<strong>מידות ${refVesselMatch.name}:</strong>`);
-                if (refVesselMatch.loa) results.push(`LOA: ${refVesselMatch.loa} מ'`);
-                if (refVesselMatch.beam) results.push(`רוחב: ${refVesselMatch.beam} מ'`);
-                if (refVesselMatch.dwt) results.push(`DWT: ${refVesselMatch.dwt} טון`);
-                if (refVesselMatch.grt) results.push(`GRT: ${refVesselMatch.grt}`);
+            if (refVesselMatch && (queryLower.includes('אורך') || queryLower.includes('loa') || queryLower.includes('מידות') || queryLower.includes('רוחב') || queryLower.includes('גודל'))) {
+                results.push(`<div style="margin-top: 12px; margin-bottom: 8px;"><strong>📐 מידות ${refVesselMatch.name}:</strong></div>`);
+                const specs = [];
+                if (refVesselMatch.loa) specs.push({ label: 'LOA', value: `${refVesselMatch.loa} מ'` });
+                if (refVesselMatch.beam) specs.push({ label: 'רוחב', value: `${refVesselMatch.beam} מ'` });
+                if (refVesselMatch.dwt) specs.push({ label: 'DWT', value: `${refVesselMatch.dwt} טון` });
+                if (refVesselMatch.grt) specs.push({ label: 'GRT', value: refVesselMatch.grt });
+                if (refVesselMatch.holds) specs.push({ label: 'מחסנים', value: refVesselMatch.holds });
+                specs.forEach(s => {
+                    results.push(`<div style="display: flex; justify-content: space-between; padding: 4px 0;">
+                        <span style="color: var(--text-secondary);">${s.label}:</span>
+                        <span style="font-weight: 500;">${s.value}</span>
+                    </div>`);
+                });
             }
 
             if (results.length === 0) {
@@ -14834,14 +15204,14 @@ ${signature}`;
                 if (matchingShips.length > 0) {
                     results.push(`<strong>נמצאו ${matchingShips.length} אניות:</strong>`);
                     matchingShips.forEach(s => {
-                        results.push(`• ${s.name} - ${getStatusText(s.status)} - ${s.port || '-'}`);
+                        results.push(`<div style="padding: 4px 0;">• ${s.name} - ${getStatusText(s.status)} - ${s.port || '-'}</div>`);
                     });
                 } else {
                     results.push('לא נמצא מידע מתאים. נסה לשאול שאלה ספציפית יותר או לציין שם אנייה.');
                 }
             }
 
-            return results.join('<br>');
+            return results.join('');
         }
 
         function formatAiAnswer(answer) {
