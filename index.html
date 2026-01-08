@@ -767,6 +767,219 @@
             color: var(--text-secondary);
         }
 
+        /* ======================== REPORTS SECTION ======================== */
+        .reports-section {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .reports-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .reports-section-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .reports-buttons {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .report-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .report-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-glow);
+        }
+        .report-btn.primary {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        .report-btn.primary:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Report Modal */
+        .report-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .report-modal {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: var(--shadow-lg);
+        }
+        .report-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .report-modal-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .report-modal-actions {
+            display: flex;
+            gap: 8px;
+        }
+        .report-modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: var(--radius-sm);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms;
+        }
+        .report-modal-close:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .report-modal-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .report-preview {
+            background: white;
+            color: #000;
+            padding: 40px;
+            border-radius: var(--radius-md);
+            font-family: 'Times New Roman', serif;
+            line-height: 1.6;
+            direction: ltr;
+        }
+        .report-preview.rtl {
+            direction: rtl;
+            font-family: 'David', 'Heebo', serif;
+        }
+        .report-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 20px;
+        }
+        .report-header h1 {
+            font-size: 24px;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+        }
+        .report-header h2 {
+            font-size: 18px;
+            margin: 0;
+            font-weight: normal;
+        }
+        .report-section-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin: 20px 0 10px 0;
+            text-transform: uppercase;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 5px;
+        }
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .report-table th,
+        .report-table td {
+            border: 1px solid #333;
+            padding: 8px 12px;
+            text-align: left;
+        }
+        .report-table th {
+            background: #f0f0f0;
+            font-weight: bold;
+        }
+        .report-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px dotted #ccc;
+        }
+        .report-row-label {
+            font-weight: bold;
+        }
+        .report-footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
+        .report-signature {
+            margin-top: 60px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .report-signature-box {
+            text-align: center;
+            width: 200px;
+        }
+        .report-signature-line {
+            border-top: 1px solid #333;
+            margin-top: 50px;
+            padding-top: 5px;
+        }
+
+        @media print {
+            .report-modal-header,
+            .report-modal-actions {
+                display: none !important;
+            }
+            .report-modal {
+                max-width: 100%;
+                max-height: 100%;
+                box-shadow: none;
+            }
+            .report-preview {
+                padding: 0;
+            }
+        }
+
         /* ======================== CARGO BREAKDOWN SECTION ======================== */
         .cargo-breakdown-section {
             margin-top: 16px;
@@ -7018,7 +7231,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     </td>
                     <td>
                         <div class="table-eta">
-                            <span class="table-eta-date">${ship.eta ? new Date(ship.eta).toLocaleDateString('he-IL', {day: '2-digit', month: '2-digit'}) : '-'}</span>
+                            <span class="table-eta-date">${ship.eta ? formatEtaDate(ship.eta) : '-'}</span>
                             ${etaDays !== null ? `<span class="table-eta-days ${etaDays <= 1 ? 'urgent' : etaDays <= 3 ? 'warning' : ''}">${formatEtaDays(etaDays)}</span>` : ''}
                         </div>
                     </td>
@@ -7194,6 +7407,46 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     </div>
                 </div>
 
+                <!-- Reports Section -->
+                <div class="reports-section">
+                    <div class="reports-section-header">
+                        <div class="reports-section-title">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                                <polyline points="10 9 9 9 8 9"/>
+                            </svg>
+                            דוחות הפלגה
+                        </div>
+                    </div>
+                    <div class="reports-buttons">
+                        <button class="report-btn" onclick="event.stopPropagation(); generateReport('${ship.id}', 'sof')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            דוח עובדות (SOF)
+                        </button>
+                        <button class="report-btn" onclick="event.stopPropagation(); generateReport('${ship.id}', 'operational')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20V10"/>
+                                <path d="M18 20V4"/>
+                                <path d="M6 20v-4"/>
+                            </svg>
+                            דוח תפעולי
+                        </button>
+                        <button class="report-btn" onclick="event.stopPropagation(); generateReport('${ship.id}', 'general')">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                            </svg>
+                            דוח כללי
+                        </button>
+                    </div>
+                </div>
+
                 <div class="expanded-actions">
                     <button onclick="event.stopPropagation(); openShipDetails(ships.find(s => s.id === '${ship.id}'))">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -7286,6 +7539,498 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     </div>
                 `;
             }
+        }
+
+        // ======================== REPORTS MODULE ========================
+        function generateReport(shipId, reportType) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) {
+                showToast('אנייה לא נמצאה', 'error');
+                return;
+            }
+
+            let reportContent = '';
+            let reportTitle = '';
+
+            switch (reportType) {
+                case 'sof':
+                    reportContent = generateSOFReport(ship);
+                    reportTitle = 'Statement of Facts (SOF)';
+                    break;
+                case 'operational':
+                    reportContent = generateOperationalReport(ship);
+                    reportTitle = 'דוח תפעולי';
+                    break;
+                case 'general':
+                    reportContent = generateGeneralReport(ship);
+                    reportTitle = 'דוח כללי';
+                    break;
+            }
+
+            showReportModal(reportTitle, reportContent, ship.name);
+        }
+
+        function generateSOFReport(ship) {
+            const formatDate = (dateStr) => {
+                if (!dateStr) return '________________';
+                const d = new Date(dateStr);
+                return d.toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) + ' ' +
+                       d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+            };
+
+            const cargoTotal = (ship.cargoBreakdown || []).reduce((sum, c) => sum + (c.weight || 0), 0);
+            const cargoQty = (ship.cargoBreakdown || []).reduce((sum, c) => sum + (c.quantity || 0), 0);
+
+            return `
+                <div class="report-header">
+                    <h1>STATEMENT OF FACTS</h1>
+                    <h2>M/V ${ship.name || '________________'}</h2>
+                </div>
+
+                <div class="report-section-title">Vessel Particulars</div>
+                <table class="report-table">
+                    <tr>
+                        <th>Vessel Name</th>
+                        <td>${ship.name || '-'}</td>
+                        <th>Flag</th>
+                        <td>${ship.flag || '-'}</td>
+                    </tr>
+                    <tr>
+                        <th>IMO Number</th>
+                        <td>${ship.imoNumber || '-'}</td>
+                        <th>Voyage No.</th>
+                        <td>${ship.voyageNumber || '-'}</td>
+                    </tr>
+                    <tr>
+                        <th>LOA</th>
+                        <td>${ship.loa || '-'} m</td>
+                        <th>Draft</th>
+                        <td>${ship.draft || '-'} m</td>
+                    </tr>
+                </table>
+
+                <div class="report-section-title">Port Information</div>
+                <table class="report-table">
+                    <tr>
+                        <th>Port</th>
+                        <td>${ship.port || 'Ashdod'}</td>
+                        <th>Berth</th>
+                        <td>${ship.berth || '-'}</td>
+                    </tr>
+                    <tr>
+                        <th>Agent</th>
+                        <td colspan="3">${ship.agent || '-'}</td>
+                    </tr>
+                </table>
+
+                <div class="report-section-title">Time Log</div>
+                <table class="report-table">
+                    <tr>
+                        <th>Event</th>
+                        <th>Date / Time</th>
+                    </tr>
+                    <tr>
+                        <td>NOR Tendered</td>
+                        <td>${formatDate(ship.norTendered)}</td>
+                    </tr>
+                    <tr>
+                        <td>NOR Accepted</td>
+                        <td>${formatDate(ship.norAccepted)}</td>
+                    </tr>
+                    <tr>
+                        <td>Arrived at Anchorage (ETA)</td>
+                        <td>${formatDate(ship.eta)}</td>
+                    </tr>
+                    <tr>
+                        <td>All Fast (ETB)</td>
+                        <td>${formatDate(ship.etb)}</td>
+                    </tr>
+                    <tr>
+                        <td>Commenced Discharge</td>
+                        <td>${formatDate(ship.commencedDischarge)}</td>
+                    </tr>
+                    <tr>
+                        <td>Completed Discharge</td>
+                        <td>${formatDate(ship.completedDischarge)}</td>
+                    </tr>
+                    <tr>
+                        <td>Sailed (ETD/ETS)</td>
+                        <td>${formatDate(ship.etd || ship.ets)}</td>
+                    </tr>
+                </table>
+
+                <div class="report-section-title">Cargo Details</div>
+                <table class="report-table">
+                    <tr>
+                        <th>Cargo Type</th>
+                        <th>Quantity</th>
+                        <th>Weight (MT)</th>
+                    </tr>
+                    ${(ship.cargoBreakdown || []).map(c => `
+                        <tr>
+                            <td>${c.type || '-'}</td>
+                            <td>${c.quantity?.toLocaleString() || '-'}</td>
+                            <td>${c.weight?.toLocaleString() || '-'}</td>
+                        </tr>
+                    `).join('') || '<tr><td colspan="3">No cargo data</td></tr>'}
+                    <tr style="font-weight: bold; background: #e8e8e8;">
+                        <td>TOTAL</td>
+                        <td>${cargoQty.toLocaleString()}</td>
+                        <td>${cargoTotal.toLocaleString()} MT</td>
+                    </tr>
+                </table>
+
+                <div class="report-section-title">Remarks</div>
+                <div style="border: 1px solid #333; padding: 15px; min-height: 100px;">
+                    ${ship.remarks || 'No remarks'}
+                </div>
+
+                <div class="report-signature">
+                    <div class="report-signature-box">
+                        <div class="report-signature-line">Master</div>
+                    </div>
+                    <div class="report-signature-box">
+                        <div class="report-signature-line">Agent</div>
+                    </div>
+                </div>
+
+                <div class="report-footer">
+                    Generated: ${new Date().toLocaleString('en-GB')}
+                </div>
+            `;
+        }
+
+        function generateOperationalReport(ship) {
+            const formatDateHeb = (dateStr) => {
+                if (!dateStr) return '-';
+                const d = new Date(dateStr);
+                return d.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' }) + ' ' +
+                       d.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+            };
+
+            const tasks = getShipTasks(ship);
+            const completedTasks = tasks.filter(t => t.status === 'done');
+            const pendingTasks = tasks.filter(t => t.status !== 'done');
+
+            const cargoTotal = (ship.cargoBreakdown || []).reduce((sum, c) => sum + (c.weight || 0), 0);
+
+            return `
+                <div class="report-preview rtl">
+                    <div class="report-header">
+                        <h1>דוח תפעולי</h1>
+                        <h2>${ship.name || '________________'}</h2>
+                    </div>
+
+                    <div class="report-section-title">פרטי אנייה</div>
+                    <div class="report-row">
+                        <span class="report-row-label">שם אנייה:</span>
+                        <span>${ship.name || '-'}</span>
+                    </div>
+                    <div class="report-row">
+                        <span class="report-row-label">מספר IMO:</span>
+                        <span>${ship.imoNumber || '-'}</span>
+                    </div>
+                    <div class="report-row">
+                        <span class="report-row-label">מספר הפלגה:</span>
+                        <span>${ship.voyageNumber || '-'}</span>
+                    </div>
+                    <div class="report-row">
+                        <span class="report-row-label">נמל יעד:</span>
+                        <span>${ship.port || 'אשדוד'}</span>
+                    </div>
+                    <div class="report-row">
+                        <span class="report-row-label">רציף:</span>
+                        <span>${ship.berth || '-'}</span>
+                    </div>
+                    <div class="report-row">
+                        <span class="report-row-label">סטטוס נוכחי:</span>
+                        <span style="font-weight: bold; color: ${getStatusColor(ship.status)}">${translateStatus(ship.status)}</span>
+                    </div>
+
+                    <div class="report-section-title">זמנים</div>
+                    <div class="report-row">
+                        <span class="report-row-label">ETA (הגעה צפויה):</span>
+                        <span>${formatDateHeb(ship.eta)}</span>
+                    </div>
+                    <div class="report-row">
+                        <span class="report-row-label">ETB (עגינה):</span>
+                        <span>${formatDateHeb(ship.etb)}</span>
+                    </div>
+                    <div class="report-row">
+                        <span class="report-row-label">ETD/ETS (הפלגה):</span>
+                        <span>${formatDateHeb(ship.etd || ship.ets)}</span>
+                    </div>
+
+                    <div class="report-section-title">פירוט מטען</div>
+                    <table class="report-table">
+                        <tr>
+                            <th>סוג מטען</th>
+                            <th>כמות (יח')</th>
+                            <th>משקל (MT)</th>
+                        </tr>
+                        ${(ship.cargoBreakdown || []).map(c => `
+                            <tr>
+                                <td>${c.type || '-'}</td>
+                                <td>${c.quantity?.toLocaleString() || '-'}</td>
+                                <td>${c.weight?.toLocaleString() || '-'}</td>
+                            </tr>
+                        `).join('') || '<tr><td colspan="3">אין נתוני מטען</td></tr>'}
+                        <tr style="font-weight: bold; background: #e8e8e8;">
+                            <td>סה"כ</td>
+                            <td></td>
+                            <td>${cargoTotal.toLocaleString()} MT</td>
+                        </tr>
+                    </table>
+
+                    <div class="report-section-title">שירותים</div>
+                    <div class="report-row">
+                        <span class="report-row-label">מים:</span>
+                        <span>${ship.waterSupply ? `כן (${ship.waterAmount || '?'} טון)` : 'לא'}</span>
+                    </div>
+                    <div class="report-row">
+                        <span class="report-row-label">חבילות:</span>
+                        <span>${ship.package ? `כן (${ship.packageWeight || '?'} ק"ג)` : 'לא'}</span>
+                    </div>
+                    <div class="report-row">
+                        <span class="report-row-label">מספר מעקב:</span>
+                        <span>${ship.trackingNumber || '-'}</span>
+                    </div>
+
+                    <div class="report-section-title">משימות (${completedTasks.length}/${tasks.length})</div>
+                    <table class="report-table">
+                        <tr>
+                            <th>משימה</th>
+                            <th>סטטוס</th>
+                        </tr>
+                        ${tasks.map(t => `
+                            <tr>
+                                <td>${t.title}</td>
+                                <td style="color: ${t.status === 'done' ? 'green' : t.status === 'in-progress' ? 'orange' : 'gray'}">
+                                    ${t.status === 'done' ? '✓ בוצע' : t.status === 'in-progress' ? '◐ בתהליך' : '○ ממתין'}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </table>
+
+                    <div class="report-section-title">הערות</div>
+                    <div style="border: 1px solid #333; padding: 15px; min-height: 60px;">
+                        ${ship.remarks || 'אין הערות'}
+                    </div>
+
+                    <div class="report-footer">
+                        הופק: ${new Date().toLocaleString('he-IL')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateGeneralReport(ship) {
+            const formatDateHeb = (dateStr) => {
+                if (!dateStr) return '-';
+                const d = new Date(dateStr);
+                return d.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            };
+
+            const cargoTotal = (ship.cargoBreakdown || []).reduce((sum, c) => sum + (c.weight || 0), 0);
+            const cargoTypes = (ship.cargoBreakdown || []).map(c => c.type).filter(Boolean).join(', ') || '-';
+
+            return `
+                <div class="report-preview rtl">
+                    <div class="report-header">
+                        <h1>דוח כללי</h1>
+                        <h2>${ship.name || '________________'}</h2>
+                    </div>
+
+                    <div class="report-section-title">סיכום הפלגה</div>
+
+                    <table class="report-table">
+                        <tr>
+                            <th style="width: 30%">פרט</th>
+                            <th>ערך</th>
+                        </tr>
+                        <tr>
+                            <td>שם אנייה</td>
+                            <td>${ship.name || '-'}</td>
+                        </tr>
+                        <tr>
+                            <td>מספר הפלגה</td>
+                            <td>${ship.voyageNumber || '-'}</td>
+                        </tr>
+                        <tr>
+                            <td>נמל מוצא</td>
+                            <td>${ship.origin || '-'}</td>
+                        </tr>
+                        <tr>
+                            <td>נמל יעד</td>
+                            <td>${ship.port || 'אשדוד'}</td>
+                        </tr>
+                        <tr>
+                            <td>תאריך הגעה</td>
+                            <td>${formatDateHeb(ship.eta)}</td>
+                        </tr>
+                        <tr>
+                            <td>תאריך עגינה</td>
+                            <td>${formatDateHeb(ship.etb)}</td>
+                        </tr>
+                        <tr>
+                            <td>תאריך הפלגה</td>
+                            <td>${formatDateHeb(ship.etd || ship.ets)}</td>
+                        </tr>
+                        <tr>
+                            <td>סוגי מטען</td>
+                            <td>${cargoTypes}</td>
+                        </tr>
+                        <tr>
+                            <td>סה"כ משקל מטען</td>
+                            <td>${cargoTotal.toLocaleString()} MT</td>
+                        </tr>
+                        <tr>
+                            <td>ספק</td>
+                            <td>${ship.supplier || '-'}</td>
+                        </tr>
+                        <tr>
+                            <td>מקבלים</td>
+                            <td>${ship.receivers || '-'}</td>
+                        </tr>
+                        <tr>
+                            <td>סוכן</td>
+                            <td>${ship.agent || '-'}</td>
+                        </tr>
+                        <tr>
+                            <td>סטטוס</td>
+                            <td>${translateStatus(ship.status)}</td>
+                        </tr>
+                    </table>
+
+                    ${ship.remarks ? `
+                        <div class="report-section-title">הערות</div>
+                        <div style="border: 1px solid #333; padding: 15px;">
+                            ${ship.remarks}
+                        </div>
+                    ` : ''}
+
+                    <div class="report-footer">
+                        הופק: ${new Date().toLocaleString('he-IL')}
+                    </div>
+                </div>
+            `;
+        }
+
+        function translateStatus(status) {
+            const statusMap = {
+                'nominated': 'נומינציה',
+                'loading': 'בטעינה',
+                'en-route': 'בדרך',
+                'at-anchor': 'בעוגן',
+                'berthed': 'ברציף',
+                'working': 'בפריקה',
+                'sailed': 'הפליגה',
+                'completed': 'הושלם'
+            };
+            return statusMap[status] || status || '-';
+        }
+
+        function getStatusColor(status) {
+            const colors = {
+                'nominated': '#9CA3AF',
+                'loading': '#F59E0B',
+                'en-route': '#3B82F6',
+                'at-anchor': '#8B5CF6',
+                'berthed': '#10B981',
+                'working': '#EF4444',
+                'sailed': '#6B7280',
+                'completed': '#059669'
+            };
+            return colors[status] || '#9CA3AF';
+        }
+
+        function showReportModal(title, content, vesselName) {
+            const modalHtml = `
+                <div class="report-modal-overlay" id="reportModalOverlay" onclick="closeReportModal(event)">
+                    <div class="report-modal" onclick="event.stopPropagation()">
+                        <div class="report-modal-header">
+                            <div class="report-modal-title">${title} - ${vesselName}</div>
+                            <div class="report-modal-actions">
+                                <button class="report-btn" onclick="printReport()">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="6 9 6 2 18 2 18 9"/>
+                                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
+                                        <rect x="6" y="14" width="12" height="8"/>
+                                    </svg>
+                                    הדפס
+                                </button>
+                                <button class="report-modal-close" onclick="closeReportModal()">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="report-modal-content">
+                            <div class="report-preview" id="reportPreviewContent">
+                                ${content}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+        }
+
+        function closeReportModal(event) {
+            if (event && event.target.id !== 'reportModalOverlay') return;
+            const modal = document.getElementById('reportModalOverlay');
+            if (modal) modal.remove();
+        }
+
+        function printReport() {
+            const content = document.getElementById('reportPreviewContent');
+            if (!content) return;
+
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>Print Report</title>
+                    <style>
+                        body {
+                            font-family: 'Times New Roman', serif;
+                            padding: 20px;
+                            line-height: 1.6;
+                        }
+                        .rtl { direction: rtl; font-family: 'David', 'Heebo', serif; }
+                        .report-header { text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px; }
+                        .report-header h1 { font-size: 24px; margin: 0 0 10px 0; text-transform: uppercase; }
+                        .report-header h2 { font-size: 18px; margin: 0; font-weight: normal; }
+                        .report-section-title { font-size: 14px; font-weight: bold; margin: 20px 0 10px 0; text-transform: uppercase; border-bottom: 1px solid #ccc; padding-bottom: 5px; }
+                        .report-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+                        .report-table th, .report-table td { border: 1px solid #333; padding: 8px 12px; text-align: left; }
+                        .report-table th { background: #f0f0f0; font-weight: bold; }
+                        .report-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px dotted #ccc; }
+                        .report-row-label { font-weight: bold; }
+                        .report-footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #ccc; text-align: center; font-size: 12px; color: #666; }
+                        .report-signature { margin-top: 60px; display: flex; justify-content: space-between; }
+                        .report-signature-box { text-align: center; width: 200px; }
+                        .report-signature-line { border-top: 1px solid #333; margin-top: 50px; padding-top: 5px; }
+                        @media print {
+                            body { padding: 0; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    ${content.innerHTML}
+                </body>
+                </html>
+            `);
+            printWindow.document.close();
+            printWindow.focus();
+            setTimeout(() => {
+                printWindow.print();
+                printWindow.close();
+            }, 250);
         }
 
         function openShipImageUpload(shipId, vesselName) {
@@ -7605,9 +8350,13 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
                 const result = await response.json();
 
-                if (result.cargo && result.cargo.length > 0) {
+                // API returns { success, parsed } where parsed contains the cargo data
+                const parsedData = result.parsed || result;
+                const cargoData = parsedData.cargo || [];
+
+                if (cargoData.length > 0) {
                     // Merge with existing or replace
-                    ship.cargoBreakdown = result.cargo.map(item => ({
+                    ship.cargoBreakdown = cargoData.map(item => ({
                         type: matchCargoType(item.type || item.name),
                         quantity: parseFloat(item.quantity) || 0,
                         weight: parseFloat(item.weight) || 0
@@ -7615,7 +8364,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
                     refreshCargoTable(shipId);
                     textarea.value = '';
-                    showToast(`נמצאו ${result.cargo.length} סוגי מטען`, 'success');
+                    showToast(`נמצאו ${cargoData.length} סוגי מטען`, 'success');
                 } else {
                     // Fallback to local parsing
                     const localResult = parseCargoLocally(text);
@@ -7806,6 +8555,21 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             if (days <= 0) return 'היום!';
             if (days <= 1) return 'מחר';
             return `${Math.round(days)} ימים`;
+        }
+
+        function formatEtaDate(eta) {
+            if (!eta) return '-';
+            const etaDate = new Date(eta);
+            if (isNaN(etaDate.getTime())) return '-';
+
+            const currentYear = new Date().getFullYear();
+            const etaYear = etaDate.getFullYear();
+
+            // If different year, show year too
+            if (etaYear !== currentYear) {
+                return etaDate.toLocaleDateString('he-IL', {day: '2-digit', month: '2-digit', year: '2-digit'});
+            }
+            return etaDate.toLocaleDateString('he-IL', {day: '2-digit', month: '2-digit'});
         }
 
         function getShipUrgency(ship) {
@@ -15123,6 +15887,18 @@ ${signature}`;
                 if (queryLower.includes('מטען') || queryLower.includes('cargo')) {
                     answers.push({ label: 'מטען', value: shipMatch.cargo || 'לא הוגדר' });
                 }
+                if (queryLower.includes('פירוט') || queryLower.includes('סחורה') || queryLower.includes('breakdown')) {
+                    // Show cargo breakdown if available
+                    if (shipMatch.cargoBreakdown && shipMatch.cargoBreakdown.length > 0) {
+                        const breakdownText = shipMatch.cargoBreakdown
+                            .filter(c => c.type)
+                            .map(c => `${c.type}: ${c.quantity ? c.quantity + ' יח\' / ' : ''}${c.weight ? c.weight.toLocaleString() + ' MT' : ''}`)
+                            .join('<br>');
+                        answers.push({ label: 'פירוט מטען', value: breakdownText || shipMatch.cargo || 'לא הוגדר', isHtml: true });
+                    } else {
+                        answers.push({ label: 'פירוט מטען', value: shipMatch.cargo || 'לא הוגדר' });
+                    }
+                }
                 if (queryLower.includes('נמל') || queryLower.includes('port') || queryLower.includes('יעד')) {
                     answers.push({ label: 'נמל יעד', value: shipMatch.port || 'לא הוגדר' });
                 }
@@ -15146,10 +15922,17 @@ ${signature}`;
                 if (answers.length > 0) {
                     results.push(`<div style="margin-bottom: 8px;"><strong>📋 ${shipMatch.name}</strong></div>`);
                     answers.forEach(a => {
-                        results.push(`<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--glass-border);">
-                            <span style="color: var(--text-secondary);">${a.label}:</span>
-                            <span style="font-weight: 500;">${a.value}</span>
-                        </div>`);
+                        if (a.isHtml) {
+                            results.push(`<div style="padding: 4px 0; border-bottom: 1px solid var(--glass-border);">
+                                <div style="color: var(--text-secondary); margin-bottom: 4px;">${a.label}:</div>
+                                <div style="font-weight: 500; font-size: 11px; line-height: 1.6;">${a.value}</div>
+                            </div>`);
+                        } else {
+                            results.push(`<div style="display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid var(--glass-border);">
+                                <span style="color: var(--text-secondary);">${a.label}:</span>
+                                <span style="font-weight: 500;">${a.value}</span>
+                            </div>`);
+                        }
                     });
                 }
 
