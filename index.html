@@ -3711,6 +3711,70 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         </div>
     </div>
 
+    <!-- Email Notification Modal -->
+    <div class="modal-overlay" id="emailNotifyModal" onclick="closeEmailModal(event)">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="modal-header" style="background: linear-gradient(135deg, var(--primary-glow), transparent); border-bottom: 1px solid var(--primary);">
+                <h2 class="modal-title" style="display: flex; align-items: center; gap: 10px;">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                        <polyline points="22,6 12,13 2,6"/>
+                    </svg>
+                    שליחת עדכון במייל
+                </h2>
+                <button class="modal-close" onclick="closeEmailModal()">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" style="padding: 20px;">
+                <!-- Recipients Selection -->
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: block;">נמענים:</label>
+                    <div id="emailRecipientsList" style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px;"></div>
+                    <input type="email" id="additionalEmail" placeholder="הוסף כתובת נוספת..."
+                        style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);"
+                        onkeypress="if(event.key==='Enter') addCustomRecipient()">
+                </div>
+
+                <!-- Subject -->
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: block;">נושא:</label>
+                    <input type="text" id="emailSubject"
+                        style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
+                </div>
+
+                <!-- Email Body -->
+                <div style="margin-bottom: 16px;">
+                    <label style="font-weight: 600; color: var(--text-primary); margin-bottom: 8px; display: block;">תוכן:</label>
+                    <textarea id="emailBody" rows="12"
+                        style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary); font-family: monospace; font-size: 13px; line-height: 1.5; resize: vertical;"></textarea>
+                </div>
+
+                <!-- Actions -->
+                <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                    <button onclick="closeEmailModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">
+                        דלג
+                    </button>
+                    <button onclick="copyEmailToClipboard()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--primary); background: transparent; color: var(--primary); cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        העתק
+                    </button>
+                    <button onclick="openInEmailClient()" style="padding: 10px 20px; border-radius: 8px; border: none; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                        פתח באאוטלוק
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
 
@@ -6129,6 +6193,21 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
             showToast(`שדה "${fieldKey}" עודכן בהצלחה`, 'success');
             addActivity('עדכון מניתוח', `עודכן ${fieldKey} לאנייה ${ship.name}`);
+
+            // Prompt email notification for significant updates
+            if (fieldKey === 'eta') {
+                askToSendEmail(ship, 'eta', { eta: value });
+            } else if (fieldKey === 'etb') {
+                askToSendEmail(ship, 'etb', { etb: value });
+            } else if (fieldKey === 'status') {
+                // Map status to email type
+                const statusLower = value.toLowerCase();
+                if (statusLower.includes('הפליגה') || statusLower.includes('sailed')) {
+                    askToSendEmail(ship, 'sailed');
+                } else if (statusLower.includes('ברציף') || statusLower.includes('berthed')) {
+                    askToSendEmail(ship, 'berthed');
+                }
+            }
         }
 
         function applyService(serviceIndex) {
@@ -6251,6 +6330,15 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     </button>
                 </div>
             `;
+
+            // Prompt email notification for significant updates
+            if (updates.eta && updates.etb) {
+                askToSendEmail(ship, 'eta_etb', { eta: updates.eta, etb: updates.etb });
+            } else if (updates.eta) {
+                askToSendEmail(ship, 'eta', { eta: updates.eta });
+            } else if (updates.etb) {
+                askToSendEmail(ship, 'etb', { etb: updates.etb });
+            }
         }
 
         function updateApplyButtons() {
@@ -8975,6 +9063,207 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         function closeModal(event) {
             if (event && event.target !== event.currentTarget) return;
             document.getElementById('modalOverlay').classList.remove('active');
+        }
+
+        // ==================== EMAIL NOTIFICATION SYSTEM ====================
+        let pendingEmailData = null;
+        let selectedEmailRecipients = [];
+
+        // User signature - stored in localStorage
+        function getUserSignature() {
+            return localStorage.getItem('shipops_email_signature') || `Best Regards
+
+Operations Department | Coral Maritime Services Ltd. (as agents only)
+  +972-4-8671266	 ops@coralgroup.co.il
+ 	 www.coralgroup.co.il`;
+        }
+
+        function setUserSignature(signature) {
+            localStorage.setItem('shipops_email_signature', signature);
+        }
+
+        // Generate email template based on update type
+        function generateEmailTemplate(ship, updateType, updateDetails = {}) {
+            const vesselName = ship.name || 'Unknown';
+            const voyage = ship.voyage || '';
+            const port = ship.port || 'Israel';
+
+            // Build cargo section
+            let cargoSection = '';
+            if (ship.cargo) {
+                cargoSection = `\nCargo (declared):\n${ship.cargo}\n`;
+            }
+
+            // Build update message based on type
+            let updateMessage = '';
+            const signature = getUserSignature();
+
+            switch (updateType) {
+                case 'eta':
+                    const etaDisplay = updateDetails.eta ? formatDateFromISO(updateDetails.eta) : 'TBA';
+                    updateMessage = `Per master vessel's ETA ${etaDisplay} agw wp.`;
+                    break;
+
+                case 'etb':
+                    const etbDisplay = updateDetails.etb ? formatDateFromISO(updateDetails.etb) : 'TBA';
+                    updateMessage = `As per port info ETB & comm disch on abt ${etbDisplay} agw and sub wp.`;
+                    break;
+
+                case 'eta_etb':
+                    const eta = updateDetails.eta ? formatDateFromISO(updateDetails.eta) : 'TBA';
+                    const etb = updateDetails.etb ? formatDateFromISO(updateDetails.etb) : 'TBA';
+                    updateMessage = `Per master vessel's ETA ${eta} agw wp.\n\nAs per port info ETB & comm disch on abt ${etb} agw and sub wp.`;
+                    break;
+
+                case 'berthed':
+                    updateMessage = `Pls be advised vessel has berthed and commenced discharge operations.`;
+                    break;
+
+                case 'sailed':
+                    updateMessage = `Pls be advised vessel has completed discharge and sailed.`;
+                    break;
+
+                case 'arrival':
+                    const arrivalEta = updateDetails.eta ? formatDateFromISO(updateDetails.eta) : 'shortly';
+                    updateMessage = `Per master vessel's ETA ${arrivalEta}. Arrival notice.`;
+                    break;
+
+                default:
+                    updateMessage = `Status update for vessel ${vesselName}.`;
+            }
+
+            const emailBody = `Vessel: ${vesselName}
+Voyage: ${voyage}
+Port: ${port}
+${cargoSection}
+${updateMessage}
+
+Reverting,
+
+${signature}`;
+
+            return emailBody;
+        }
+
+        // Generate email subject
+        function generateEmailSubject(ship, updateType) {
+            const vesselName = ship.name || 'Unknown';
+            const port = ship.port || '';
+
+            switch (updateType) {
+                case 'eta':
+                    return `${vesselName} - ETA Update - ${port}`;
+                case 'etb':
+                    return `${vesselName} - ETB Update - ${port}`;
+                case 'eta_etb':
+                    return `${vesselName} - ETA/ETB Update - ${port}`;
+                case 'berthed':
+                    return `${vesselName} - Berthed - ${port}`;
+                case 'sailed':
+                    return `${vesselName} - Sailed - ${port}`;
+                case 'arrival':
+                    return `${vesselName} - Arrival Notice - ${port}`;
+                default:
+                    return `${vesselName} - Update - ${port}`;
+            }
+        }
+
+        // Show email notification modal after update
+        function promptEmailNotification(ship, updateType, updateDetails = {}) {
+            pendingEmailData = { ship, updateType, updateDetails };
+            selectedEmailRecipients = [];
+
+            // Populate recipients from contacts related to this ship
+            const recipientsList = document.getElementById('emailRecipientsList');
+            recipientsList.innerHTML = '';
+
+            // Get relevant contacts (filter by ship name or all contacts)
+            const relevantContacts = contacts.filter(c => c.email);
+
+            relevantContacts.forEach(contact => {
+                const chip = document.createElement('label');
+                chip.style.cssText = 'display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: 20px; cursor: pointer; font-size: 13px;';
+                chip.innerHTML = `
+                    <input type="checkbox" class="email-recipient-checkbox" value="${contact.email}" style="accent-color: var(--primary);">
+                    <span>${contact.name}</span>
+                    <span style="color: var(--text-tertiary); font-size: 11px;">${contact.email}</span>
+                `;
+                recipientsList.appendChild(chip);
+            });
+
+            // Set subject
+            document.getElementById('emailSubject').value = generateEmailSubject(ship, updateType);
+
+            // Set body
+            document.getElementById('emailBody').value = generateEmailTemplate(ship, updateType, updateDetails);
+
+            // Show modal
+            document.getElementById('emailNotifyModal').classList.add('active');
+        }
+
+        // Add custom recipient
+        function addCustomRecipient() {
+            const input = document.getElementById('additionalEmail');
+            const email = input.value.trim();
+
+            if (email && email.includes('@')) {
+                const recipientsList = document.getElementById('emailRecipientsList');
+                const chip = document.createElement('label');
+                chip.style.cssText = 'display: flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--primary-glow); border: 1px solid var(--primary); border-radius: 20px; cursor: pointer; font-size: 13px;';
+                chip.innerHTML = `
+                    <input type="checkbox" class="email-recipient-checkbox" value="${email}" checked style="accent-color: var(--primary);">
+                    <span>${email}</span>
+                `;
+                recipientsList.appendChild(chip);
+                input.value = '';
+            }
+        }
+
+        // Get selected recipients
+        function getSelectedRecipients() {
+            const checkboxes = document.querySelectorAll('.email-recipient-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        // Copy email to clipboard
+        function copyEmailToClipboard() {
+            const body = document.getElementById('emailBody').value;
+            const subject = document.getElementById('emailSubject').value;
+            const recipients = getSelectedRecipients().join('; ');
+
+            const fullText = `To: ${recipients}\nSubject: ${subject}\n\n${body}`;
+
+            navigator.clipboard.writeText(fullText).then(() => {
+                showToast('הועתק ללוח', 'success');
+            }).catch(() => {
+                showToast('שגיאה בהעתקה', 'error');
+            });
+        }
+
+        // Open in email client (mailto)
+        function openInEmailClient() {
+            const body = document.getElementById('emailBody').value;
+            const subject = document.getElementById('emailSubject').value;
+            const recipients = getSelectedRecipients().join(',');
+
+            const mailtoLink = `mailto:${encodeURIComponent(recipients)}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            window.open(mailtoLink, '_blank');
+            closeEmailModal();
+        }
+
+        // Close email modal
+        function closeEmailModal(event) {
+            if (event && event.target !== event.currentTarget) return;
+            document.getElementById('emailNotifyModal').classList.remove('active');
+            pendingEmailData = null;
+        }
+
+        // Ask user if they want to send email after update
+        function askToSendEmail(ship, updateType, updateDetails = {}) {
+            // Show confirmation first
+            if (confirm('האם לשלוח עדכון במייל לכל הנוגעים בדבר?')) {
+                promptEmailNotification(ship, updateType, updateDetails);
+            }
         }
 
         function showToast(message, type = 'info') {
