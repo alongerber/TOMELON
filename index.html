@@ -2908,25 +2908,49 @@
             text-align: left;
         }
 
-        /* Ship Selection for Discharge */
+        /* Ship Selection for Discharge - Modern Style */
         .discharge-ship-selector {
             display: flex;
-            gap: var(--spacing-md);
-            align-items: center;
-            margin-bottom: var(--spacing-lg);
+            gap: var(--spacing-lg);
+            align-items: flex-start;
+            margin-bottom: var(--spacing-xl);
+            padding: var(--spacing-lg);
+            background: linear-gradient(135deg, var(--bg-card), var(--bg-secondary));
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-md);
         }
         .discharge-ship-selector select {
             flex: 1;
-            padding: var(--spacing-sm) var(--spacing-md);
-            background: var(--bg-card);
-            border: 1px solid var(--glass-border);
+            max-width: 300px;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--glass-border);
             border-radius: var(--radius-md);
             color: var(--text-primary);
-            font-size: 14px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms ease;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 18px;
+            padding-left: 40px;
+        }
+        .discharge-ship-selector select:hover {
+            border-color: var(--primary);
+            background-color: var(--bg-tertiary);
         }
         .discharge-ship-selector select:focus {
             outline: none;
             border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-glow);
+        }
+        .discharge-ship-selector select option {
+            padding: 12px;
+            background: var(--bg-secondary);
         }
 
         /* Apply Tally Button */
@@ -7050,59 +7074,96 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             const container = document.getElementById('parsedShiftsContainer');
             container.innerHTML = '';
 
+            // Get selected ship for remaining calculation
+            const shipId = document.getElementById('dischargeShipSelect')?.value;
+            const ship = shipId ? ships.find(s => s.id === shipId) : null;
+
+            // Calculate cumulative from ship's discharge data
+            let cumulativeWeight = 0;
+            let cumulativeQty = 0;
+            if (ship && ship.dischargeData && ship.dischargeData.shifts) {
+                ship.dischargeData.shifts.forEach(shift => {
+                    cumulativeWeight += shift.shiftTotalWeight || 0;
+                    cumulativeQty += shift.shiftTotalQuantity || 0;
+                });
+            }
+
             // Handle new API format with cargo breakdown
             if (data.cargo && (data.cargo.declared || data.cargo.discharged)) {
-                // Show cargo summary section
                 const cargoSummary = document.createElement('div');
                 cargoSummary.className = 'tally-cargo-summary';
-                cargoSummary.style.cssText = 'margin-bottom: 16px; padding: 12px; background: var(--bg-secondary); border-radius: 8px;';
+                cargoSummary.style.cssText = 'margin-bottom: 20px; padding: 16px; background: linear-gradient(135deg, var(--bg-secondary), var(--bg-card)); border-radius: 12px; border: 1px solid var(--glass-border);';
 
-                let summaryHtml = '<h4 style="margin-bottom: 10px; color: var(--text-primary);">סיכום מטען:</h4>';
+                let summaryHtml = '<h4 style="margin-bottom: 12px; color: var(--text-primary); font-size: 15px;">📦 סיכום מטען:</h4>';
 
-                // Declared cargo
+                // Declared cargo (from manifest)
+                const declaredWeight = data.cargo.totalDeclaredWeight || 0;
+                const declaredQty = data.cargo.totalDeclaredQuantity || 0;
+
                 if (data.cargo.declared && data.cargo.declared.length > 0) {
-                    summaryHtml += '<div style="margin-bottom: 8px;"><strong>מוצהר:</strong></div>';
+                    summaryHtml += '<div style="margin-bottom: 12px; padding: 10px; background: var(--bg-tertiary); border-radius: 8px;"><strong style="color: var(--text-secondary);">📋 מוצהר (מניפסט):</strong></div>';
                     data.cargo.declared.forEach(item => {
                         const weight = item.weightDeclared || 0;
                         const qty = item.quantityDeclared || 0;
-                        summaryHtml += `<div style="padding: 4px 8px; font-size: 13px;">${item.type}: ${weight.toLocaleString()} MT (${qty.toLocaleString()} ${item.quantityUnit || 'pcs'})</div>`;
+                        summaryHtml += `<div style="padding: 6px 12px; font-size: 13px; display: flex; justify-content: space-between;">
+                            <span>${item.type}</span>
+                            <span style="font-weight: 600;">${weight.toLocaleString()} MT (${qty.toLocaleString()} ${item.quantityUnit || 'pcs'})</span>
+                        </div>`;
                     });
                 }
 
-                // Discharged cargo
-                if (data.cargo.discharged && data.cargo.discharged.length > 0) {
-                    summaryHtml += '<div style="margin: 8px 0;"><strong>נפרק:</strong></div>';
-                    data.cargo.discharged.forEach(item => {
-                        const weight = item.weightDischarged || 0;
-                        const qty = item.quantityDischarged || 0;
-                        const pct = item.percentComplete || 0;
-                        summaryHtml += `<div style="padding: 4px 8px; font-size: 13px;">${item.type}: ${weight.toLocaleString()} MT (${qty.toLocaleString()}) - ${pct}%</div>`;
-                    });
+                // Cumulative discharged (from system tracking)
+                const cumulativeSection = data.cumulativeTotals || { weight: cumulativeWeight, quantity: cumulativeQty };
+                const totalDischarged = cumulativeSection.weight + (data.dailyTotals?.weight || 0);
+                const totalDischargedQty = cumulativeSection.quantity + (data.dailyTotals?.quantity || 0);
+
+                summaryHtml += `<div style="margin: 12px 0; padding: 10px; background: var(--success-glow); border-radius: 8px; border: 1px solid var(--success);">
+                    <strong style="color: var(--success);">✓ נפרק עד כה:</strong>
+                    <div style="font-size: 18px; font-weight: 700; margin-top: 6px;">${totalDischarged.toLocaleString()} MT (${totalDischargedQty.toLocaleString()} pcs)</div>
+                </div>`;
+
+                // Calculate remaining = manifest - cumulative discharged
+                const manifestWeight = declaredWeight || (ship?.cargoWeight || 0);
+                const manifestQty = declaredQty || 0;
+                const remainingWeight = Math.max(0, manifestWeight - totalDischarged);
+                const remainingQty = Math.max(0, manifestQty - totalDischargedQty);
+                const percentComplete = manifestWeight > 0 ? Math.round((totalDischarged / manifestWeight) * 100) : 0;
+
+                if (remainingWeight > 0 || remainingQty > 0) {
+                    summaryHtml += `<div style="margin: 12px 0; padding: 10px; background: var(--warning-glow); border-radius: 8px; border: 1px solid var(--warning);">
+                        <strong style="color: var(--warning);">⏳ נותר לפריקה:</strong>
+                        <div style="font-size: 18px; font-weight: 700; margin-top: 6px;">${remainingWeight.toLocaleString()} MT (${remainingQty.toLocaleString()} pcs)</div>
+                    </div>`;
+                } else {
+                    summaryHtml += `<div style="margin: 12px 0; padding: 10px; background: var(--success-glow); border-radius: 8px; border: 1px solid var(--success);">
+                        <strong style="color: var(--success);">🎉 פריקה הושלמה!</strong>
+                    </div>`;
                 }
 
-                // Remaining cargo
-                if (data.cargo.remaining && data.cargo.remaining.length > 0) {
-                    summaryHtml += '<div style="margin: 8px 0; color: var(--warning);"><strong>נותר:</strong></div>';
-                    data.cargo.remaining.forEach(item => {
-                        const weight = item.weightRemaining || 0;
-                        const qty = item.quantityRemaining || 0;
-                        summaryHtml += `<div style="padding: 4px 8px; font-size: 13px;">${item.type}: ${weight.toLocaleString()} MT (${qty.toLocaleString()})</div>`;
-                    });
-                }
-
-                // Totals
-                if (data.cargo.percentageComplete !== undefined) {
-                    summaryHtml += `<div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--glass-border); font-weight: 600;">התקדמות כללית: ${data.cargo.percentageComplete}%</div>`;
-                }
+                // Progress bar
+                summaryHtml += `<div style="margin-top: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                        <span style="font-size: 13px; color: var(--text-secondary);">התקדמות כללית</span>
+                        <span style="font-size: 15px; font-weight: 700; color: var(--primary);">${percentComplete}%</span>
+                    </div>
+                    <div style="height: 10px; background: var(--bg-tertiary); border-radius: 5px; overflow: hidden;">
+                        <div style="height: 100%; width: ${percentComplete}%; background: linear-gradient(90deg, var(--primary), var(--success)); border-radius: 5px; transition: width 0.3s;"></div>
+                    </div>
+                </div>`;
 
                 cargoSummary.innerHTML = summaryHtml;
                 container.appendChild(cargoSummary);
             }
 
+            // Today's shifts section header
+            const shiftsHeader = document.createElement('div');
+            shiftsHeader.style.cssText = 'margin: 16px 0 10px 0; font-weight: 600; color: var(--text-primary); font-size: 14px;';
+            shiftsHeader.textContent = `📊 משמרות היום (${data.date || 'היום'}):`;
+            container.appendChild(shiftsHeader);
+
             // Handle shifts - support both old and new format
             const shifts = data.shifts || [];
             shifts.forEach(shift => {
-                // Support both old format (cargo, quantity, weight) and new format (cargoMoved, shiftTotalQuantity, shiftTotalWeight)
                 const cargoItems = shift.cargo || shift.cargoMoved || [];
                 const cargoDetails = cargoItems.map(c => c.type).join(', ') || 'Cargo';
                 const quantity = shift.quantity ?? shift.shiftTotalQuantity ?? 0;
@@ -7110,29 +7171,29 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
                 const row = document.createElement('div');
                 row.className = 'tally-shift-row';
+                row.style.cssText = 'display: grid; grid-template-columns: 1fr 1.5fr 0.8fr 1fr; gap: 8px; padding: 12px; background: var(--bg-secondary); border-radius: 8px; margin-bottom: 8px; align-items: center;';
                 row.innerHTML = `
-                    <span class="tally-shift-name">${shift.name || 'משמרת'}</span>
-                    <span class="tally-cargo-details">${cargoDetails}</span>
-                    <span class="tally-quantity">${quantity.toLocaleString()}</span>
-                    <span class="tally-weight">${weight.toLocaleString()} MT</span>
+                    <span class="tally-shift-name" style="font-weight: 600; color: var(--primary);">${shift.name || 'משמרת'}</span>
+                    <span class="tally-cargo-details" style="font-size: 12px; color: var(--text-secondary);">${cargoDetails}</span>
+                    <span class="tally-quantity" style="text-align: center;">${quantity.toLocaleString()}</span>
+                    <span class="tally-weight" style="text-align: left; font-weight: 600;">${weight.toLocaleString()} MT</span>
                 `;
                 container.appendChild(row);
             });
 
-            // Calculate totals - support both formats
+            // Calculate totals for today
             const totalQuantity = data.totalQuantity ?? data.dailyTotals?.quantity ?? data.cargo?.totalDischargedQuantity ?? 0;
             const totalWeight = data.totalWeight ?? data.dailyTotals?.weight ?? data.cargo?.totalDischargedWeight ?? 0;
 
             // Add total row
             const totalRow = document.createElement('div');
             totalRow.className = 'tally-shift-row';
-            totalRow.style.borderTop = '2px solid var(--primary)';
-            totalRow.style.fontWeight = '600';
+            totalRow.style.cssText = 'display: grid; grid-template-columns: 1fr 1.5fr 0.8fr 1fr; gap: 8px; padding: 12px; background: linear-gradient(135deg, var(--primary-glow), transparent); border: 1px solid var(--primary); border-radius: 8px; margin-top: 8px; align-items: center;';
             totalRow.innerHTML = `
-                <span>סה"כ</span>
+                <span style="font-weight: 700; color: var(--primary);">סה"כ היום</span>
                 <span></span>
-                <span class="tally-quantity">${totalQuantity.toLocaleString()}</span>
-                <span class="tally-weight">${totalWeight.toLocaleString()} MT</span>
+                <span style="text-align: center; font-weight: 600;">${totalQuantity.toLocaleString()}</span>
+                <span style="text-align: left; font-weight: 700; font-size: 16px;">${totalWeight.toLocaleString()} MT</span>
             `;
             container.appendChild(totalRow);
 
@@ -7145,12 +7206,12 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 document.getElementById('parsedRemarks').style.display = 'none';
             }
 
-            // Show stoppages if any (new format)
+            // Show stoppages if any
             if (data.stoppages && data.stoppages.length > 0) {
-                let stoppagesHtml = '<div style="margin-top: 12px; padding: 10px; background: var(--warning-glow); border-radius: 8px; border: 1px solid var(--warning);">';
-                stoppagesHtml += '<strong style="color: var(--warning);">עצירות:</strong><br>';
+                let stoppagesHtml = '<div style="margin-top: 12px; padding: 12px; background: var(--warning-glow); border-radius: 8px; border: 1px solid var(--warning);">';
+                stoppagesHtml += '<strong style="color: var(--warning);">⚠️ עצירות:</strong><br>';
                 data.stoppages.forEach(s => {
-                    stoppagesHtml += `<div style="font-size: 13px; margin-top: 4px;">${s.reason}${s.duration ? ` (${s.duration})` : ''}${s.time ? ` - ${s.time}` : ''}</div>`;
+                    stoppagesHtml += `<div style="font-size: 13px; margin-top: 6px; padding: 4px 8px; background: rgba(255,193,7,0.1); border-radius: 4px;">${s.reason}${s.duration ? ` (${s.duration})` : ''}${s.time ? ` - ${s.time}` : ''}</div>`;
                 });
                 stoppagesHtml += '</div>';
                 document.getElementById('parsedRemarksText').innerHTML += stoppagesHtml;
