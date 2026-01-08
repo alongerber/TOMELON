@@ -4896,6 +4896,13 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 // Voyage-specific contacts for email notifications
                 voyageContacts: baseData.voyageContacts || [],
 
+                // Manifest - declared cargo for this voyage
+                manifest: baseData.manifest || {
+                    totalWeight: 0,
+                    totalQuantity: 0,
+                    items: [] // Array of { type, weight, quantity, unit, blNumber }
+                },
+
                 // Timestamps
                 createdAt: baseData.createdAt || new Date().toISOString(),
                 updatedAt: baseData.updatedAt || new Date().toISOString()
@@ -10468,8 +10475,48 @@ LUCKY SAILOR - Marshall Islands - 9876543
                     <div class="form-group"><label>מסע:</label><input type="text" name="voyage" value="${ship.voyage || ''}"></div>
                     <div class="form-group"><label>סטטוס:</label><select name="status">${Object.values(STATUS).map(s => `<option value="${s}" ${ship.status === s ? 'selected' : ''}>${getStatusText(s)}</option>`).join('')}</select></div>
                     <div class="form-group"><label>ETA:</label><input type="datetime-local" name="eta" value="${ship.eta ? new Date(ship.eta).toISOString().slice(0, 16) : ''}"></div>
-                    <div class="form-group"><label>מטען:</label><textarea name="cargo" rows="2">${ship.cargo || ''}</textarea></div>
-                    
+                    <div class="form-group"><label>מטען (תיאור):</label><textarea name="cargo" rows="2">${ship.cargo || ''}</textarea></div>
+
+                    <!-- Manifest Section -->
+                    <div class="manifest-section" style="padding: var(--spacing-md); background: var(--bg-secondary); border-radius: var(--radius-md); border: 1px solid var(--glass-border);">
+                        <h4 style="margin-bottom: var(--spacing-md); display: flex; align-items: center; gap: 8px;">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                            </svg>
+                            מניפסט (הצהרת מטען)
+                        </h4>
+                        <div id="manifestItemsList" style="margin-bottom: var(--spacing-md);">
+                            ${(ship.manifest?.items || []).map((item, idx) => `
+                                <div class="manifest-item" data-idx="${idx}" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 8px; padding: 8px; background: var(--bg-tertiary); border-radius: var(--radius-sm);">
+                                    <input type="text" placeholder="סוג מטען" value="${item.type || ''}" class="manifest-type" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);">
+                                    <input type="number" placeholder="משקל" value="${item.weight || 0}" class="manifest-weight" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);">
+                                    <input type="number" placeholder="כמות" value="${item.quantity || 0}" class="manifest-quantity" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);">
+                                    <select class="manifest-unit" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);">
+                                        <option value="MT" ${item.unit === 'MT' ? 'selected' : ''}>MT</option>
+                                        <option value="PCS" ${item.unit === 'PCS' ? 'selected' : ''}>PCS</option>
+                                        <option value="Coils" ${item.unit === 'Coils' ? 'selected' : ''}>Coils</option>
+                                        <option value="Bundles" ${item.unit === 'Bundles' ? 'selected' : ''}>Bundles</option>
+                                    </select>
+                                    <button type="button" onclick="this.parentElement.remove(); updateManifestTotals();" style="padding: 8px; background: var(--danger); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer;">✕</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <button type="button" onclick="addManifestItem()" style="padding: 8px 16px; background: var(--success); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer; display: flex; align-items: center; gap: 6px; margin-bottom: var(--spacing-md);">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            הוסף סוג מטען
+                        </button>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: var(--spacing-sm); border-top: 1px solid var(--glass-border);">
+                            <div style="text-align: center;">
+                                <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase;">סה"כ משקל</div>
+                                <div id="manifestTotalWeight" style="font-size: 20px; font-weight: 700; color: var(--primary);">${(ship.manifest?.totalWeight || 0).toLocaleString()} MT</div>
+                            </div>
+                            <div style="text-align: center;">
+                                <div style="font-size: 11px; color: var(--text-tertiary); text-transform: uppercase;">סה"כ כמות</div>
+                                <div id="manifestTotalQuantity" style="font-size: 20px; font-weight: 700; color: var(--primary);">${(ship.manifest?.totalQuantity || 0).toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="checklist-section" style="padding: var(--spacing-md);">
                         <h4>ETB (תאריך עגינה צפוי)</h4>
                         <div id="etb-options" style="display: flex; gap: var(--spacing-sm); margin-bottom: var(--spacing-md);">
@@ -10525,27 +10572,31 @@ LUCKY SAILOR - Marshall Islands - 9876543
                 ship.status = data.status;
                 ship.eta = data.eta ? new Date(data.eta).toISOString() : null;
                 ship.cargo = data.cargo;
-                
+
                 // Process and save the new ETB object
                 ship.etb = getEtbObject(data);
                 ship.expected_berth_time = ship.etb.sortDate; // Keep legacy field for basic sorting
-                
+
+                // Process and save manifest
+                ship.manifest = getManifestFromForm();
+
                 ship.updatedAt = new Date().toISOString();
-                
+
                 ensureChecklistForStatus(ship);
-                checkPostSailedTasksComplete(ship); 
-                
+                checkPostSailedTasksComplete(ship);
+
                 // Update to Firestore
-                const shipDataToUpdate = { 
-                    name: data.name, 
-                    voyage: data.voyage, 
-                    status: data.status, 
-                    eta: ship.eta, 
-                    cargo: data.cargo, 
-                    etb: ship.etb, 
-                    expected_berth_time: ship.expected_berth_time, 
+                const shipDataToUpdate = {
+                    name: data.name,
+                    voyage: data.voyage,
+                    status: data.status,
+                    eta: ship.eta,
+                    cargo: data.cargo,
+                    etb: ship.etb,
+                    expected_berth_time: ship.expected_berth_time,
+                    manifest: ship.manifest,
                     tasks: ship.tasks,
-                    updatedAt: new Date().toISOString() 
+                    updatedAt: new Date().toISOString()
                 };
                 
                 db.collection("ships").doc(ship.id).update(shipDataToUpdate)
@@ -10582,6 +10633,66 @@ LUCKY SAILOR - Marshall Islands - 9876543
                     break;
             }
             return etb;
+        }
+
+        // ==================== Manifest Functions ====================
+        function addManifestItem() {
+            const container = document.getElementById('manifestItemsList');
+            const idx = container.children.length;
+            const itemHtml = `
+                <div class="manifest-item" data-idx="${idx}" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 8px; margin-bottom: 8px; padding: 8px; background: var(--bg-tertiary); border-radius: var(--radius-sm);">
+                    <input type="text" placeholder="סוג מטען" class="manifest-type" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);" oninput="updateManifestTotals()">
+                    <input type="number" placeholder="משקל" value="0" class="manifest-weight" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);" oninput="updateManifestTotals()">
+                    <input type="number" placeholder="כמות" value="0" class="manifest-quantity" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);" oninput="updateManifestTotals()">
+                    <select class="manifest-unit" style="padding: 8px; border: 1px solid var(--glass-border); border-radius: var(--radius-sm); background: var(--bg-secondary); color: var(--text-primary);">
+                        <option value="MT">MT</option>
+                        <option value="PCS">PCS</option>
+                        <option value="Coils">Coils</option>
+                        <option value="Bundles">Bundles</option>
+                    </select>
+                    <button type="button" onclick="this.parentElement.remove(); updateManifestTotals();" style="padding: 8px; background: var(--danger); color: white; border: none; border-radius: var(--radius-sm); cursor: pointer;">✕</button>
+                </div>
+            `;
+            container.insertAdjacentHTML('beforeend', itemHtml);
+        }
+
+        function updateManifestTotals() {
+            const items = document.querySelectorAll('.manifest-item');
+            let totalWeight = 0;
+            let totalQuantity = 0;
+
+            items.forEach(item => {
+                const weight = parseFloat(item.querySelector('.manifest-weight')?.value) || 0;
+                const quantity = parseFloat(item.querySelector('.manifest-quantity')?.value) || 0;
+                totalWeight += weight;
+                totalQuantity += quantity;
+            });
+
+            const weightEl = document.getElementById('manifestTotalWeight');
+            const quantityEl = document.getElementById('manifestTotalQuantity');
+            if (weightEl) weightEl.textContent = `${totalWeight.toLocaleString()} MT`;
+            if (quantityEl) quantityEl.textContent = totalQuantity.toLocaleString();
+        }
+
+        function getManifestFromForm() {
+            const items = [];
+            let totalWeight = 0;
+            let totalQuantity = 0;
+
+            document.querySelectorAll('.manifest-item').forEach(item => {
+                const type = item.querySelector('.manifest-type')?.value?.trim() || '';
+                const weight = parseFloat(item.querySelector('.manifest-weight')?.value) || 0;
+                const quantity = parseFloat(item.querySelector('.manifest-quantity')?.value) || 0;
+                const unit = item.querySelector('.manifest-unit')?.value || 'MT';
+
+                if (type || weight || quantity) {
+                    items.push({ type, weight, quantity, unit });
+                    totalWeight += weight;
+                    totalQuantity += quantity;
+                }
+            });
+
+            return { totalWeight, totalQuantity, items };
         }
 
         function openServices(id) {
