@@ -16234,11 +16234,13 @@ ${signature}`;
             );
 
             if (matchingShips.length > 0) {
+                // For NOMINATION, don't auto-select existing ships - let user choose
+                const autoSelectExisting = messageType !== 'NOMINATION';
                 matchingShips.forEach((ship, idx) => {
                     matchHtml += `
-                        <div class="ship-match-option ${idx === 0 ? 'selected' : ''}"
+                        <div class="ship-match-option ${autoSelectExisting && idx === 0 ? 'selected' : ''}"
                              data-ship-id="${ship.id}" onclick="selectShipMatch(this)">
-                            ${ship.name} (${ship.voyage})
+                            ${ship.name} (${ship.voyage || 'ללא מסע'})
                         </div>
                     `;
                 });
@@ -16246,8 +16248,10 @@ ${signature}`;
 
             // Add "new ship" option for nominations
             if (messageType === 'NOMINATION' || matchingShips.length === 0) {
+                // For NOMINATION, always default to "new ship" option
+                const selectNewShip = messageType === 'NOMINATION' || matchingShips.length === 0;
                 matchHtml += `
-                    <div class="ship-match-option new-ship ${matchingShips.length === 0 ? 'selected' : ''}"
+                    <div class="ship-match-option new-ship ${selectNewShip ? 'selected' : ''}"
                          data-new-ship="true" onclick="selectShipMatch(this)">
                         + אנייה חדשה: ${vesselName || 'לא מזוהה'}
                     </div>
