@@ -4939,6 +4939,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             'DOCUMENTS': '📄 מסמכים',
             'DAILY_REPORT': '📊 דוח יומי',
             'CARGO_INFO': '📦 פרטי מטען',
+            'BULK_UPDATE': '📊 עדכון מרובה',
             'OTHER': '📝 אחר'
         };
 
@@ -4962,6 +4963,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 identified_ship_id: null,
                 matched_ship: null,
                 is_new_ship: false,
+                bulkVessels: [], // For BULK_UPDATE message type
                 updates: {
                     name: null,
                     status: null,
@@ -5089,6 +5091,30 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // Map contacts
             if (claudeData.contacts && claudeData.contacts.length > 0) {
                 result.contacts = claudeData.contacts;
+            }
+
+            // Handle bulk vessels (for BULK_UPDATE message type)
+            if (claudeData.bulkVessels && claudeData.bulkVessels.length > 0) {
+                result.bulkVessels = claudeData.bulkVessels.map(vessel => {
+                    const matchedShip = findMatchingShip(vessel.vesselName);
+                    return {
+                        vesselName: vessel.vesselName?.toUpperCase() || '',
+                        matchedShip: matchedShip,
+                        isMatched: !!matchedShip,
+                        etb: vessel.etb ? {
+                            iso: vessel.etb.iso,
+                            original: vessel.etb.original,
+                            display: formatDateFromISO(vessel.etb.iso)
+                        } : null,
+                        eta: vessel.eta ? {
+                            iso: vessel.eta.iso,
+                            original: vessel.eta.original,
+                            display: formatDateFromISO(vessel.eta.iso)
+                        } : null,
+                        berth: vessel.berth || null,
+                        selected: true // Default selected for bulk update
+                    };
+                });
             }
 
             return result;
@@ -5527,6 +5553,12 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         function displayParsedResult(data) {
             const container = document.getElementById('parsedResult');
 
+            // Handle BULK_UPDATE message type
+            if (data.messageType === 'BULK_UPDATE' && data.bulkVessels && data.bulkVessels.length > 0) {
+                displayBulkUpdateResult(data, container);
+                return;
+            }
+
             if (!data.updates.name && !data.updates.eta && data.updates.services_to_add.length === 0) {
                 container.innerHTML = `
                     <div class="uncertainty-note">
@@ -5722,6 +5754,225 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             `;
 
             container.innerHTML = html;
+        }
+
+        // Display bulk update result for multiple vessels (port schedule, berthing list)
+        function displayBulkUpdateResult(data, container) {
+            const bulkVessels = data.bulkVessels || [];
+
+            if (bulkVessels.length === 0) {
+                container.innerHTML = `
+                    <div class="uncertainty-note">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 16v-4M12 8h.01"/>
+                        </svg>
+                        <span>לא נמצאו אניות בהודעה.</span>
+                    </div>
+                `;
+                return;
+            }
+
+            // Store bulk data globally for apply function
+            window.pendingBulkUpdate = bulkVessels;
+
+            let html = `
+                <div class="message-type-header" style="background: linear-gradient(135deg, var(--success-glow), transparent); border: 1px solid var(--success); border-radius: 12px; padding: 12px 16px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+                    <span style="font-size: 16px; font-weight: 600; color: var(--success);">📊 עדכון מרובה - ${bulkVessels.length} אניות</span>
+                    <span style="font-size: 12px; color: var(--text-secondary);">סמן לעדכון והחל</span>
+                </div>
+
+                <div class="bulk-actions" style="display: flex; gap: 8px; margin-bottom: 16px;">
+                    <button onclick="toggleAllBulkVessels(true)" class="btn-outline" style="flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-secondary); cursor: pointer;">
+                        בחר הכל
+                    </button>
+                    <button onclick="toggleAllBulkVessels(false)" class="btn-outline" style="flex: 1; padding: 8px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--glass); color: var(--text-secondary); cursor: pointer;">
+                        נקה בחירה
+                    </button>
+                </div>
+
+                <div class="bulk-vessels-list" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 16px;">
+            `;
+
+            bulkVessels.forEach((vessel, index) => {
+                const matchedShip = findMatchingShip(vessel.vesselName);
+                const isMatched = !!matchedShip;
+                const etbDisplay = vessel.etb ? formatDateFromISO(vessel.etb.iso) : '-';
+                const etaDisplay = vessel.eta ? formatDateFromISO(vessel.eta.iso) : '-';
+                const matchIndicator = isMatched
+                    ? `<span style="color: var(--success); font-size: 11px;">✓ ${matchedShip.name}</span>`
+                    : `<span style="color: var(--warning); font-size: 11px;">? חדשה</span>`;
+
+                html += `
+                    <div class="bulk-vessel-item" style="background: var(--bg-card); border-radius: 12px; padding: 14px; border: 1px solid var(--glass-border);">
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;">
+                            <div style="display: flex; align-items: flex-start; gap: 12px; flex: 1;">
+                                <label style="display: flex; align-items: center; cursor: pointer; margin-top: 3px;">
+                                    <input type="checkbox" id="bulkVessel_${index}" ${isMatched ? 'checked' : ''}
+                                        style="width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary);">
+                                </label>
+                                <div style="flex: 1;">
+                                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                                        <span style="font-weight: 700; font-size: 15px; color: var(--text-primary);">${vessel.vesselName || 'לא זוהה'}</span>
+                                        ${matchIndicator}
+                                    </div>
+                                    <div style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--text-secondary);">
+                                        ${vessel.etb ? `
+                                            <div>
+                                                <span style="color: var(--text-tertiary);">ETB:</span>
+                                                <span style="font-weight: 600; color: var(--text-primary); margin-right: 4px;">${etbDisplay}</span>
+                                                ${vessel.etb.original ? `<span style="font-size: 11px; color: var(--text-tertiary);">(${vessel.etb.original})</span>` : ''}
+                                            </div>
+                                        ` : ''}
+                                        ${vessel.eta ? `
+                                            <div>
+                                                <span style="color: var(--text-tertiary);">ETA:</span>
+                                                <span style="font-weight: 600; color: var(--text-primary); margin-right: 4px;">${etaDisplay}</span>
+                                            </div>
+                                        ` : ''}
+                                        ${vessel.berth ? `
+                                            <div>
+                                                <span style="color: var(--text-tertiary);">רציף:</span>
+                                                <span style="font-weight: 600; color: var(--text-primary); margin-right: 4px;">${vessel.berth}</span>
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                            ${!isMatched ? `
+                                <select id="bulkShipSelect_${index}" style="padding: 6px 10px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary); font-size: 12px;">
+                                    <option value="new">+ הוסף חדשה</option>
+                                    ${ships.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+                                </select>
+                            ` : `
+                                <input type="hidden" id="bulkShipSelect_${index}" value="${matchedShip.id}">
+                            `}
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+
+                <button class="apply-all-btn" onclick="applyBulkUpdates()" style="width: 100%; padding: 14px; background: linear-gradient(135deg, var(--success), var(--success-dark)); border: none; border-radius: 12px; color: white; font-size: 16px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                    החל עדכונים נבחרים
+                </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        // Toggle all bulk vessel checkboxes
+        function toggleAllBulkVessels(selectAll) {
+            const checkboxes = document.querySelectorAll('[id^="bulkVessel_"]');
+            checkboxes.forEach(cb => {
+                cb.checked = selectAll;
+            });
+        }
+
+        // Apply bulk updates for selected vessels
+        function applyBulkUpdates() {
+            const bulkVessels = window.pendingBulkUpdate || [];
+            if (bulkVessels.length === 0) {
+                showToast('אין נתונים להחלה', 'error');
+                return;
+            }
+
+            let updatedCount = 0;
+            let addedCount = 0;
+            let errors = [];
+
+            bulkVessels.forEach((vessel, index) => {
+                const checkbox = document.getElementById(`bulkVessel_${index}`);
+                if (!checkbox || !checkbox.checked) return;
+
+                const shipSelectEl = document.getElementById(`bulkShipSelect_${index}`);
+                const shipId = shipSelectEl ? shipSelectEl.value : null;
+
+                try {
+                    if (shipId === 'new') {
+                        // Create new ship
+                        const newShip = {
+                            id: generateId(),
+                            name: vessel.vesselName?.toUpperCase() || 'UNKNOWN',
+                            status: 'מינוי',
+                            port: 'Ashdod',
+                            eta: vessel.eta?.iso || null,
+                            etb: vessel.etb ? {
+                                type: 'specific',
+                                sortDate: vessel.etb.iso,
+                                displayValue: formatDateFromISO(vessel.etb.iso)
+                            } : null,
+                            services: [],
+                            checklist: {},
+                            notes: [],
+                            history: [{
+                                date: new Date().toISOString(),
+                                action: 'נוספה מעדכון מרובה',
+                                user: currentUser
+                            }]
+                        };
+                        ships.push(newShip);
+                        addedCount++;
+                    } else {
+                        // Update existing ship
+                        const ship = ships.find(s => s.id === shipId);
+                        if (ship) {
+                            if (vessel.etb?.iso) {
+                                ship.etb = {
+                                    type: 'specific',
+                                    sortDate: vessel.etb.iso,
+                                    displayValue: formatDateFromISO(vessel.etb.iso)
+                                };
+                            }
+                            if (vessel.eta?.iso) {
+                                ship.eta = vessel.eta.iso;
+                            }
+                            if (vessel.berth) {
+                                ship.berth = vessel.berth;
+                            }
+                            // Add history entry
+                            if (!ship.history) ship.history = [];
+                            ship.history.push({
+                                date: new Date().toISOString(),
+                                action: `עודכן ETB מעדכון מרובה`,
+                                user: currentUser
+                            });
+                            updatedCount++;
+                        }
+                    }
+                } catch (e) {
+                    errors.push(vessel.vesselName || `אנייה ${index + 1}`);
+                }
+            });
+
+            // Save and refresh
+            saveData();
+            renderShips();
+            updateStats();
+
+            // Close modal and show result
+            const modal = document.getElementById('parserModal');
+            if (modal) modal.style.display = 'none';
+
+            // Build result message
+            let message = '';
+            if (updatedCount > 0) message += `עודכנו ${updatedCount} אניות. `;
+            if (addedCount > 0) message += `נוספו ${addedCount} אניות חדשות. `;
+            if (errors.length > 0) message += `שגיאות: ${errors.join(', ')}`;
+
+            if (updatedCount > 0 || addedCount > 0) {
+                showToast(message || 'העדכונים הוחלו בהצלחה', 'success');
+            } else {
+                showToast('לא נבחרו אניות לעדכון', 'warning');
+            }
+
+            // Clear pending data
+            window.pendingBulkUpdate = null;
         }
 
         function createParsedField(label, value, fieldKey, rawValue = null) {

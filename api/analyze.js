@@ -46,20 +46,38 @@ Determine the message type based on content:
 - DOCUMENTS: Sending documents (BL, manifest, cargo list)
 - DAILY_REPORT: Daily status report from captain
 - CARGO_INFO: Cargo details, stowage plan, quantities
+- BULK_UPDATE: Multiple vessels with ETB/ETA dates (port schedule, berthing plan)
 - OTHER: Doesn't fit above categories
 
 ## STEP 2: Extract All Relevant Fields
 
+IMPORTANT: If message contains MULTIPLE vessels (like a port schedule or berthing list), set messageType to "BULK_UPDATE" and populate the "bulkVessels" array.
+
 Return valid JSON only (no markdown, no explanation):
 
 {
-    "messageType": "NOMINATION|ETA_UPDATE|ARRIVAL_NOTICE|BERTHING_NOTICE|SAILING_NOTICE|SERVICE_REQUEST|DOCUMENTS|DAILY_REPORT|CARGO_INFO|OTHER",
+    "messageType": "NOMINATION|ETA_UPDATE|ARRIVAL_NOTICE|BERTHING_NOTICE|SAILING_NOTICE|SERVICE_REQUEST|DOCUMENTS|DAILY_REPORT|CARGO_INFO|BULK_UPDATE|OTHER",
     "messageTypeConfidence": 0.95,
 
-    "vesselName": "string - clean vessel name without MV/M.V prefix",
+    "vesselName": "string - clean vessel name without MV/M.V prefix (for single vessel messages)",
     "vesselNameVariations": ["array of name variations found"],
     "imoNumber": "string or null - IMO number if found",
     "voyageNumber": "string or null",
+
+    "bulkVessels": [
+        {
+            "vesselName": "string - vessel name",
+            "etb": {
+                "original": "string - as written",
+                "iso": "YYYY-MM-DDTHH:mm:00"
+            },
+            "eta": {
+                "original": "string or null",
+                "iso": "string or null"
+            },
+            "berth": "string or null - berth number if specified"
+        }
+    ],
 
     "dates": {
         "eta": {
