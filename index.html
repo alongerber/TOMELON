@@ -426,6 +426,409 @@
             gap: var(--spacing-lg);
         }
 
+        /* ======================== HYBRID TABLE VIEW ======================== */
+        .ships-table-view {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+        .ships-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .ships-table th {
+            text-align: right;
+            padding: 14px 16px;
+            background: var(--bg-secondary);
+            border-bottom: 2px solid var(--glass-border);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+        .ships-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--glass-border);
+            font-size: 14px;
+            color: var(--text-primary);
+            vertical-align: middle;
+        }
+        .ships-table tr.ship-row {
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .ships-table tr.ship-row:hover {
+            background: var(--bg-hover);
+        }
+        .ships-table tr.ship-row.urgent {
+            border-right: 4px solid var(--danger);
+        }
+        .ships-table tr.ship-row.warning {
+            border-right: 4px solid var(--warning);
+        }
+        .ships-table tr.ship-row.success {
+            border-right: 4px solid var(--success);
+        }
+
+        /* Table Ship Name Cell */
+        .table-ship-name {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .table-expand-btn {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            border: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms;
+        }
+        .table-expand-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .table-expand-btn.expanded {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+            transform: rotate(90deg);
+        }
+        .table-ship-info {
+            display: flex;
+            flex-direction: column;
+        }
+        .table-ship-title {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .table-ship-voyage {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+
+        /* Table Status Badge */
+        .table-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Table ETA Cell */
+        .table-eta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+        .table-eta-date {
+            font-weight: 500;
+        }
+        .table-eta-days {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+        .table-eta-days.urgent {
+            color: var(--danger);
+            font-weight: 600;
+        }
+        .table-eta-days.warning {
+            color: var(--warning);
+        }
+
+        /* Table Tasks Cell */
+        .table-tasks {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .table-tasks-bar {
+            flex: 1;
+            height: 6px;
+            background: var(--bg-hover);
+            border-radius: 3px;
+            overflow: hidden;
+            max-width: 80px;
+        }
+        .table-tasks-progress {
+            height: 100%;
+            background: var(--success);
+            border-radius: 3px;
+            transition: width 300ms;
+        }
+        .table-tasks-text {
+            font-size: 12px;
+            color: var(--text-secondary);
+            white-space: nowrap;
+        }
+
+        /* Table Urgency Badge */
+        .table-urgency {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+        .table-urgency.urgent { background: var(--danger); }
+        .table-urgency.warning { background: var(--warning); }
+        .table-urgency.normal { background: var(--success); }
+
+        /* Expanded Row */
+        .ship-expanded-row {
+            display: none;
+        }
+        .ship-expanded-row.active {
+            display: table-row;
+        }
+        .ship-expanded-content {
+            background: var(--bg-secondary);
+            padding: 20px;
+            border-bottom: 2px solid var(--glass-border);
+        }
+        .expanded-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        .expanded-section {
+            background: var(--bg-card);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            border: 1px solid var(--glass-border);
+        }
+        .expanded-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .expanded-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .expanded-item:last-child {
+            border-bottom: none;
+        }
+        .expanded-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+        .expanded-value {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .expanded-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            justify-content: flex-end;
+        }
+        .expanded-actions button {
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 200ms;
+        }
+        .expanded-actions button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .expanded-actions button.primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* ======================== SMART AI SEARCH ======================== */
+        .smart-ai-search {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 600px;
+            z-index: 1500;
+            display: none;
+        }
+        .smart-ai-search.active {
+            display: block;
+            animation: slideUp 300ms ease-out;
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateX(-50%) translateY(20px); }
+            to { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+        .ai-search-container {
+            background: var(--bg-card);
+            border: 1px solid var(--primary);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(79, 70, 229, 0.2);
+            overflow: hidden;
+        }
+        .ai-search-header {
+            padding: 12px 16px;
+            background: linear-gradient(135deg, var(--primary-glow), transparent);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .ai-search-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+        .ai-search-close {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .ai-search-input-container {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            gap: 12px;
+        }
+        .ai-search-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 15px;
+            outline: none;
+        }
+        .ai-search-input::placeholder {
+            color: var(--text-tertiary);
+        }
+        .ai-search-submit {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--radius-md);
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms;
+        }
+        .ai-search-submit:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+        .ai-search-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .ai-search-results {
+            max-height: 300px;
+            overflow-y: auto;
+            border-top: 1px solid var(--glass-border);
+        }
+        .ai-search-result {
+            padding: 16px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .ai-search-result:last-child {
+            border-bottom: none;
+        }
+        .ai-search-answer {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--text-primary);
+        }
+        .ai-search-answer strong {
+            color: var(--primary);
+        }
+        .ai-search-loading {
+            padding: 20px;
+            text-align: center;
+            color: var(--text-secondary);
+        }
+        .ai-search-loading .spinner {
+            width: 24px;
+            height: 24px;
+            border: 2px solid var(--glass-border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 8px;
+        }
+        .ai-search-examples {
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .ai-search-examples span {
+            cursor: pointer;
+            padding: 4px 8px;
+            background: var(--bg-hover);
+            border-radius: 12px;
+            margin: 0 4px;
+            transition: all 200ms;
+        }
+        .ai-search-examples span:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* AI Search Toggle Button */
+        .ai-search-toggle {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary), #6366f1);
+            border: none;
+            border-radius: var(--radius-full);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 10px 40px rgba(79, 70, 229, 0.4);
+            transition: all 200ms;
+            z-index: 1400;
+        }
+        .ai-search-toggle:hover {
+            transform: translateX(-50%) translateY(-3px);
+            box-shadow: 0 15px 50px rgba(79, 70, 229, 0.5);
+        }
+
         /* Ship Card */
         .ship-card {
             background: var(--bg-card);
@@ -5506,6 +5909,53 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         </div>
     </div>
 
+    <!-- Smart AI Search -->
+    <button class="ai-search-toggle" onclick="toggleAiSearch()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 16v-4M12 8h.01"/>
+        </svg>
+        שאל על כל אנייה...
+    </button>
+
+    <div class="smart-ai-search" id="smartAiSearch">
+        <div class="ai-search-container">
+            <div class="ai-search-header">
+                <div class="ai-search-title">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    חיפוש חכם - שאל כל שאלה
+                </div>
+                <button class="ai-search-close" onclick="toggleAiSearch()">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="ai-search-input-container">
+                <input type="text" class="ai-search-input" id="aiSearchInput"
+                       placeholder="מה ה-ETA של האנייה? מי המקבלים ב-X? מה האורך של Y?"
+                       onkeypress="if(event.key==='Enter') performAiSearch()">
+                <button class="ai-search-submit" onclick="performAiSearch()" id="aiSearchBtn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="22" y1="2" x2="11" y2="13"/>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="ai-search-results" id="aiSearchResults" style="display: none;"></div>
+            <div class="ai-search-examples">
+                דוגמאות:
+                <span onclick="setAiSearchExample('מי המקבלים באנייה X?')">מקבלים</span>
+                <span onclick="setAiSearchExample('מה ה-ETA של X?')">ETA</span>
+                <span onclick="setAiSearchExample('מה אורך האנייה X?')">מידות</span>
+                <span onclick="setAiSearchExample('כמה מטען יש ב-X?')">מטען</span>
+            </div>
+        </div>
+    </div>
+
     <!-- File Input -->
     <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleFileUpload(event)">
 
@@ -6042,25 +6492,27 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         }
 
         // ==================== Rendering ====================
+        let expandedShipId = null;
+
         function renderShips() {
             console.log('renderShips called. currentTab:', currentTab);
-            
+
             // FIX: If we're in quick view, call renderQuickView instead
             if (currentTab === 'quick') {
                 console.log('Redirecting to renderQuickView');
-                return renderQuickView(); 
+                return renderQuickView();
             }
-            
+
             const grid = document.getElementById('shipsGrid');
-            grid.style.display = ''; // איפוס התצוגה חזרה ל-grid
+            grid.style.display = 'block';
 
             const filtered = filterShips();
-            
+
             updateBadges();
-            
+
             if (filtered.length === 0) {
                 grid.innerHTML = `
-                    <div class="empty-state" style="grid-column: 1/-1;">
+                    <div class="empty-state">
                         <svg class="empty-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
                             <path d="M2 21l2-7h16l2 7M4 14V4a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10"/>
                             <path d="M12 2v12"/>
@@ -6078,7 +6530,221 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 return;
             }
 
-            grid.innerHTML = filtered.map(ship => createShipCard(ship)).join('');
+            // Render hybrid table view
+            grid.innerHTML = renderShipsTable(filtered);
+        }
+
+        function renderShipsTable(ships) {
+            return `
+                <div class="ships-table-view">
+                    <table class="ships-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 220px;">אנייה</th>
+                                <th style="width: 100px;">סטטוס</th>
+                                <th style="width: 120px;">ETA</th>
+                                <th style="width: 130px;">משימות</th>
+                                <th style="width: 120px;">מטען</th>
+                                <th style="width: 100px;">נמל</th>
+                                <th style="width: 50px;"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${ships.map(ship => renderShipTableRow(ship)).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function renderShipTableRow(ship) {
+            const urgency = getShipUrgency(ship);
+            const etaDays = calculateDaysUntilETA(ship.eta);
+            const tasks = ship.tasks || [];
+            const doneTasks = tasks.filter(t => t.status === 'done').length;
+            const totalTasks = tasks.length;
+            const taskPercent = totalTasks > 0 ? Math.round((doneTasks / totalTasks) * 100) : 0;
+            const isExpanded = expandedShipId === ship.id;
+
+            return `
+                <tr class="ship-row ${urgency}" onclick="toggleShipExpanded('${ship.id}')">
+                    <td>
+                        <div class="table-ship-name">
+                            <button class="table-expand-btn ${isExpanded ? 'expanded' : ''}" onclick="event.stopPropagation(); toggleShipExpanded('${ship.id}')">
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="9 18 15 12 9 6"/>
+                                </svg>
+                            </button>
+                            <div class="table-ship-info">
+                                <span class="table-ship-title">${ship.name}</span>
+                                ${ship.voyage ? `<span class="table-ship-voyage">${ship.voyage}</span>` : ''}
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="table-status ${getStatusClass(ship.status)}">${getStatusText(ship.status)}</span>
+                    </td>
+                    <td>
+                        <div class="table-eta">
+                            <span class="table-eta-date">${ship.eta ? new Date(ship.eta).toLocaleDateString('he-IL', {day: '2-digit', month: '2-digit'}) : '-'}</span>
+                            ${etaDays !== null ? `<span class="table-eta-days ${etaDays <= 1 ? 'urgent' : etaDays <= 3 ? 'warning' : ''}">${formatEtaDays(etaDays)}</span>` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <div class="table-tasks">
+                            <div class="table-tasks-bar">
+                                <div class="table-tasks-progress" style="width: ${taskPercent}%"></div>
+                            </div>
+                            <span class="table-tasks-text">${doneTasks}/${totalTasks}</span>
+                        </div>
+                    </td>
+                    <td>${ship.cargo || '-'}</td>
+                    <td>${ship.port || '-'}</td>
+                    <td><div class="table-urgency ${urgency}"></div></td>
+                </tr>
+                <tr class="ship-expanded-row ${isExpanded ? 'active' : ''}" id="expanded-${ship.id}">
+                    <td colspan="7">
+                        <div class="ship-expanded-content">
+                            ${renderExpandedContent(ship)}
+                        </div>
+                    </td>
+                </tr>
+            `;
+        }
+
+        function renderExpandedContent(ship) {
+            const tasks = ship.tasks || [];
+            const doneTasks = tasks.filter(t => t.status === 'done');
+            const pendingTasks = tasks.filter(t => t.status !== 'done');
+
+            return `
+                <div class="expanded-grid">
+                    <div class="expanded-section">
+                        <div class="expanded-section-title">פרטי הפלגה</div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">מס' מסע</span>
+                            <span class="expanded-value">${ship.voyage || '-'}</span>
+                        </div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">נמל יעד</span>
+                            <span class="expanded-value">${ship.port || '-'}</span>
+                        </div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">ETA</span>
+                            <span class="expanded-value">${ship.eta ? new Date(ship.eta).toLocaleString('he-IL') : '-'}</span>
+                        </div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">ETB</span>
+                            <span class="expanded-value">${ship.expected_berth_time ? new Date(ship.expected_berth_time).toLocaleString('he-IL') : '-'}</span>
+                        </div>
+                    </div>
+                    <div class="expanded-section">
+                        <div class="expanded-section-title">מטען</div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">סוג מטען</span>
+                            <span class="expanded-value">${ship.cargo || '-'}</span>
+                        </div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">בעלים</span>
+                            <span class="expanded-value">${ship.owner || '-'}</span>
+                        </div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">ספק</span>
+                            <span class="expanded-value">${ship.supplier || '-'}</span>
+                        </div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">מקבלים</span>
+                            <span class="expanded-value">${ship.receivers || '-'}</span>
+                        </div>
+                    </div>
+                    <div class="expanded-section">
+                        <div class="expanded-section-title">משימות (${doneTasks.length}/${tasks.length})</div>
+                        ${pendingTasks.slice(0, 4).map(task => `
+                            <div class="expanded-item">
+                                <span class="expanded-label">${task.title}</span>
+                                <span class="expanded-value" style="color: ${task.status === 'done' ? 'var(--success)' : task.status === 'in-progress' ? 'var(--warning)' : 'var(--text-tertiary)'}">
+                                    ${task.status === 'done' ? '✓' : task.status === 'in-progress' ? '◐' : '○'}
+                                </span>
+                            </div>
+                        `).join('')}
+                        ${pendingTasks.length > 4 ? `<div class="expanded-item"><span class="expanded-label" style="opacity: 0.6">+${pendingTasks.length - 4} נוספות...</span></div>` : ''}
+                    </div>
+                    <div class="expanded-section">
+                        <div class="expanded-section-title">שירותים</div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">מים</span>
+                            <span class="expanded-value">${ship.waterSupply ? `כן (${ship.waterAmount || '?'} טון)` : 'לא'}</span>
+                        </div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">חבילות</span>
+                            <span class="expanded-value">${ship.package ? `כן (${ship.packageWeight || '?'} ק"ג)` : 'לא'}</span>
+                        </div>
+                        <div class="expanded-item">
+                            <span class="expanded-label">מס' מעקב</span>
+                            <span class="expanded-value">${ship.trackingNumber || '-'}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="expanded-actions">
+                    <button onclick="event.stopPropagation(); openShipDetails(ships.find(s => s.id === '${ship.id}'))">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                        </svg>
+                        ערוך פרטים
+                    </button>
+                    <button onclick="event.stopPropagation(); openEmailNotifyModal('${ship.id}')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                            <polyline points="22,6 12,13 2,6"/>
+                        </svg>
+                        שלח עדכון
+                    </button>
+                    <button class="primary" onclick="event.stopPropagation(); selectShipForDischarge('${ship.id}')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                        </svg>
+                        מעקב פריקה
+                    </button>
+                </div>
+            `;
+        }
+
+        function toggleShipExpanded(shipId) {
+            if (expandedShipId === shipId) {
+                expandedShipId = null;
+            } else {
+                expandedShipId = shipId;
+            }
+            renderShips();
+        }
+
+        function formatEtaDays(days) {
+            if (days <= 0) return 'היום!';
+            if (days <= 1) return 'מחר';
+            return `${Math.round(days)} ימים`;
+        }
+
+        function getShipUrgency(ship) {
+            const etaDays = calculateDaysUntilETA(ship.eta);
+            if (ship.status === STATUS.SAILED) return 'normal';
+            if (etaDays !== null && etaDays <= 1) return 'urgent';
+            if (etaDays !== null && etaDays <= 3) return 'warning';
+            return 'success';
+        }
+
+        function selectShipForDischarge(shipId) {
+            const ship = ships.find(s => s.id === shipId);
+            if (ship) {
+                switchToDischargeView();
+                setTimeout(() => {
+                    const selector = document.getElementById('dischargeShipSelect');
+                    if (selector) {
+                        selector.value = shipId;
+                        loadShipDischargeData();
+                    }
+                }, 100);
+            }
         }
 
         function renderQuickView() {
@@ -13053,6 +13719,200 @@ ${signature}`;
             if (minutes < 60) return `לפני ${minutes} דקות`;
             if (hours < 24) return `לפני ${hours} שעות`;
             return `לפני ${days} ימים`;
+        }
+
+        // ==================== Smart AI Search Functions ====================
+        let aiSearchVisible = false;
+
+        function toggleAiSearch() {
+            aiSearchVisible = !aiSearchVisible;
+            const searchPanel = document.getElementById('smartAiSearch');
+            const toggleBtn = document.querySelector('.ai-search-toggle');
+
+            if (aiSearchVisible) {
+                searchPanel.classList.add('active');
+                toggleBtn.style.display = 'none';
+                document.getElementById('aiSearchInput').focus();
+            } else {
+                searchPanel.classList.remove('active');
+                toggleBtn.style.display = 'flex';
+                document.getElementById('aiSearchResults').style.display = 'none';
+            }
+        }
+
+        function setAiSearchExample(example) {
+            document.getElementById('aiSearchInput').value = example;
+            document.getElementById('aiSearchInput').focus();
+        }
+
+        async function performAiSearch() {
+            const query = document.getElementById('aiSearchInput').value.trim();
+            if (!query) return;
+
+            const resultsDiv = document.getElementById('aiSearchResults');
+            const submitBtn = document.getElementById('aiSearchBtn');
+
+            // Show loading
+            resultsDiv.style.display = 'block';
+            resultsDiv.innerHTML = `
+                <div class="ai-search-loading">
+                    <div class="spinner"></div>
+                    <p>מחפש מידע...</p>
+                </div>
+            `;
+            submitBtn.disabled = true;
+
+            try {
+                // Build context from all ships and reference data
+                const context = buildSearchContext();
+
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'query',
+                        query: query,
+                        context: context
+                    })
+                });
+
+                if (!response.ok) throw new Error('API Error');
+
+                const data = await response.json();
+
+                resultsDiv.innerHTML = `
+                    <div class="ai-search-result">
+                        <div class="ai-search-answer">${formatAiAnswer(data.answer || data.response || 'לא נמצא מידע')}</div>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('AI Search error:', error);
+
+                // Fallback to local search
+                const localResult = performLocalSearch(query);
+                resultsDiv.innerHTML = `
+                    <div class="ai-search-result">
+                        <div class="ai-search-answer">${localResult}</div>
+                    </div>
+                `;
+            } finally {
+                submitBtn.disabled = false;
+            }
+        }
+
+        function buildSearchContext() {
+            // Build a comprehensive context string for AI
+            let context = 'מידע על אניות במערכת:\n\n';
+
+            ships.forEach(ship => {
+                context += `אנייה: ${ship.name}\n`;
+                context += `  - מסע: ${ship.voyage || 'לא ידוע'}\n`;
+                context += `  - סטטוס: ${getStatusText(ship.status)}\n`;
+                context += `  - נמל: ${ship.port || 'לא ידוע'}\n`;
+                context += `  - ETA: ${ship.eta ? new Date(ship.eta).toLocaleString('he-IL') : 'לא ידוע'}\n`;
+                context += `  - מטען: ${ship.cargo || 'לא ידוע'}\n`;
+                context += `  - בעלים: ${ship.owner || 'לא ידוע'}\n`;
+                context += `  - מקבלים: ${ship.receivers || 'לא ידוע'}\n`;
+                context += `  - ספק: ${ship.supplier || 'לא ידוע'}\n`;
+                if (ship.manifest && ship.manifest.items && ship.manifest.items.length > 0) {
+                    context += `  - מניפסט: ${ship.manifest.items.map(i => `${i.type} (${i.weight} טון)`).join(', ')}\n`;
+                }
+                context += '\n';
+            });
+
+            // Add reference vessel data
+            if (referenceData.vessels && referenceData.vessels.length > 0) {
+                context += '\nמידע טכני על אניות:\n';
+                referenceData.vessels.forEach(v => {
+                    context += `${v.name}: LOA=${v.loa || '?'}מ, רוחב=${v.beam || '?'}מ, DWT=${v.dwt || '?'}, IMO=${v.imo || '?'}\n`;
+                });
+            }
+
+            return context;
+        }
+
+        function performLocalSearch(query) {
+            const queryLower = query.toLowerCase();
+            let results = [];
+
+            // Find ship name in query
+            const shipMatch = ships.find(s =>
+                queryLower.includes(s.name.toLowerCase()) ||
+                (s.voyage && queryLower.includes(s.voyage.toLowerCase()))
+            );
+
+            // Also check reference vessels
+            const refVesselMatch = referenceData.vessels?.find(v =>
+                queryLower.includes(v.name.toLowerCase())
+            );
+
+            if (shipMatch) {
+                // Questions about specific ship
+                if (queryLower.includes('מקבל') || queryLower.includes('receivers')) {
+                    results.push(`<strong>מקבלים ב-${shipMatch.name}:</strong> ${shipMatch.receivers || 'לא הוגדר'}`);
+                }
+                if (queryLower.includes('eta') || queryLower.includes('הגעה')) {
+                    results.push(`<strong>ETA של ${shipMatch.name}:</strong> ${shipMatch.eta ? new Date(shipMatch.eta).toLocaleString('he-IL') : 'לא הוגדר'}`);
+                }
+                if (queryLower.includes('מטען') || queryLower.includes('cargo')) {
+                    results.push(`<strong>מטען ב-${shipMatch.name}:</strong> ${shipMatch.cargo || 'לא הוגדר'}`);
+                }
+                if (queryLower.includes('נמל') || queryLower.includes('port')) {
+                    results.push(`<strong>נמל יעד של ${shipMatch.name}:</strong> ${shipMatch.port || 'לא הוגדר'}`);
+                }
+                if (queryLower.includes('סטטוס') || queryLower.includes('status')) {
+                    results.push(`<strong>סטטוס ${shipMatch.name}:</strong> ${getStatusText(shipMatch.status)}`);
+                }
+                if (queryLower.includes('בעלים') || queryLower.includes('owner')) {
+                    results.push(`<strong>בעלים של ${shipMatch.name}:</strong> ${shipMatch.owner || 'לא הוגדר'}`);
+                }
+
+                // If no specific question, show all info
+                if (results.length === 0) {
+                    results.push(`<strong>${shipMatch.name}</strong> (${shipMatch.voyage || 'ללא מסע'})`);
+                    results.push(`סטטוס: ${getStatusText(shipMatch.status)}`);
+                    results.push(`נמל: ${shipMatch.port || '-'}`);
+                    results.push(`ETA: ${shipMatch.eta ? new Date(shipMatch.eta).toLocaleString('he-IL') : '-'}`);
+                    results.push(`מטען: ${shipMatch.cargo || '-'}`);
+                    results.push(`מקבלים: ${shipMatch.receivers || '-'}`);
+                }
+            }
+
+            // Technical specs from reference
+            if (refVesselMatch && (queryLower.includes('אורך') || queryLower.includes('loa') || queryLower.includes('מידות') || queryLower.includes('רוחב'))) {
+                results.push(`<strong>מידות ${refVesselMatch.name}:</strong>`);
+                if (refVesselMatch.loa) results.push(`LOA: ${refVesselMatch.loa} מ'`);
+                if (refVesselMatch.beam) results.push(`רוחב: ${refVesselMatch.beam} מ'`);
+                if (refVesselMatch.dwt) results.push(`DWT: ${refVesselMatch.dwt} טון`);
+                if (refVesselMatch.grt) results.push(`GRT: ${refVesselMatch.grt}`);
+            }
+
+            if (results.length === 0) {
+                // General search - list matching ships
+                const matchingShips = ships.filter(s =>
+                    s.name.toLowerCase().includes(queryLower) ||
+                    (s.cargo && s.cargo.toLowerCase().includes(queryLower)) ||
+                    (s.port && s.port.toLowerCase().includes(queryLower))
+                );
+
+                if (matchingShips.length > 0) {
+                    results.push(`<strong>נמצאו ${matchingShips.length} אניות:</strong>`);
+                    matchingShips.forEach(s => {
+                        results.push(`• ${s.name} - ${getStatusText(s.status)} - ${s.port || '-'}`);
+                    });
+                } else {
+                    results.push('לא נמצא מידע מתאים. נסה לשאול שאלה ספציפית יותר או לציין שם אנייה.');
+                }
+            }
+
+            return results.join('<br>');
+        }
+
+        function formatAiAnswer(answer) {
+            // Format the AI response for display
+            return answer
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
         }
 
         // ==================== Smart Parser Functions ====================
