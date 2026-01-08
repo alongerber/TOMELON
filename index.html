@@ -2953,6 +2953,372 @@
             background: var(--bg-secondary);
         }
 
+        /* ==================== FLOATING AI PARSER BUTTON ==================== */
+        .floating-ai-btn {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #6366f1);
+            border: none;
+            box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4), 0 0 0 0 rgba(99, 102, 241, 0.4);
+            cursor: pointer;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 300ms ease;
+            animation: pulse-glow 2s infinite;
+        }
+        .floating-ai-btn svg {
+            color: white;
+            transition: transform 200ms;
+        }
+        .floating-ai-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.5);
+        }
+        .floating-ai-btn:hover svg {
+            transform: scale(1.1);
+        }
+        .floating-ai-label {
+            position: absolute;
+            right: 72px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            white-space: nowrap;
+            box-shadow: var(--shadow-lg);
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 200ms;
+            pointer-events: none;
+        }
+        .floating-ai-btn:hover .floating-ai-label {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4), 0 0 0 0 rgba(99, 102, 241, 0.4); }
+            50% { box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4), 0 0 0 8px rgba(99, 102, 241, 0.1); }
+        }
+
+        /* ==================== SMART PARSER MODAL ==================== */
+        .smart-parser-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .smart-parser-overlay.active {
+            display: flex;
+        }
+        .smart-parser-container {
+            background: var(--bg-card);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+        }
+        .smart-parser-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--glass-border);
+            background: linear-gradient(135deg, var(--primary-glow), transparent);
+        }
+        .smart-parser-header h2 {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+        .smart-parser-header h2 svg {
+            color: var(--primary);
+        }
+        .smart-parser-close {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .smart-parser-close:hover {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Input Section */
+        .smart-parser-input-section {
+            padding: 24px;
+        }
+        .smart-parser-dropzone {
+            border: 2px dashed var(--glass-border);
+            border-radius: 16px;
+            padding: 32px;
+            text-align: center;
+            margin-bottom: 16px;
+            transition: all 200ms;
+            cursor: pointer;
+        }
+        .smart-parser-dropzone:hover, .smart-parser-dropzone.dragover {
+            border-color: var(--primary);
+            background: var(--primary-glow);
+        }
+        .smart-parser-dropzone svg {
+            color: var(--text-tertiary);
+            margin-bottom: 12px;
+        }
+        .smart-parser-dropzone p {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
+        }
+        .smart-parser-dropzone span {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .smart-parser-textarea {
+            width: 100%;
+            min-height: 120px;
+            max-height: 300px;
+            padding: 16px;
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: border-color 200ms;
+        }
+        .smart-parser-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .smart-parser-analyze-btn {
+            width: 100%;
+            padding: 16px;
+            margin-top: 16px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary), #6366f1);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 200ms;
+        }
+        .smart-parser-analyze-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.4);
+        }
+
+        /* Loading Section */
+        .smart-parser-loading {
+            padding: 48px 24px;
+            text-align: center;
+        }
+        .smart-parser-spinner {
+            width: 48px;
+            height: 48px;
+            border: 3px solid var(--glass-border);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            animation: spin 1s linear infinite;
+        }
+        .smart-parser-loading p {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
+        }
+        .smart-parser-loading span {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+
+        /* Results Section */
+        .smart-parser-results {
+            padding: 24px;
+        }
+        .smart-parser-type-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, var(--primary-glow), transparent);
+            border: 1px solid var(--primary);
+            border-radius: 30px;
+            margin-bottom: 20px;
+        }
+        .smart-parser-type-badge .type-icon {
+            font-size: 20px;
+        }
+        .smart-parser-type-badge .type-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .smart-parser-type-badge .type-confidence {
+            font-size: 12px;
+            padding: 2px 8px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+        }
+
+        .smart-parser-action {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+        .smart-parser-action h3 {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin: 0 0 8px 0;
+            font-weight: 500;
+        }
+        .smart-parser-action p {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        .smart-parser-ship-match {
+            margin-bottom: 16px;
+        }
+        .smart-parser-ship-match label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+        .ship-match-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .ship-match-option {
+            padding: 10px 16px;
+            border-radius: 10px;
+            border: 2px solid var(--glass-border);
+            background: var(--bg-secondary);
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .ship-match-option:hover {
+            border-color: var(--primary);
+        }
+        .ship-match-option.selected {
+            border-color: var(--primary);
+            background: var(--primary-glow);
+        }
+        .ship-match-option.new-ship {
+            border-style: dashed;
+            color: var(--success);
+        }
+
+        .smart-parser-fields {
+            display: grid;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .parser-field-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 12px;
+            align-items: center;
+            padding: 12px;
+            background: var(--bg-secondary);
+            border-radius: 10px;
+        }
+        .parser-field-label {
+            font-size: 13px;
+            color: var(--text-tertiary);
+        }
+        .parser-field-value {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .parser-field-value.highlight {
+            color: var(--primary);
+        }
+
+        .smart-parser-actions {
+            display: flex;
+            gap: 12px;
+            padding-top: 16px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .smart-parser-actions .btn-secondary {
+            flex: 1;
+            padding: 14px;
+            border: 1px solid var(--glass-border);
+            border-radius: 10px;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 200ms;
+        }
+        .smart-parser-actions .btn-secondary:hover {
+            background: var(--bg-secondary);
+        }
+        .smart-parser-actions .btn-primary {
+            flex: 2;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 200ms;
+        }
+        .smart-parser-actions .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(34, 197, 94, 0.4);
+        }
+
         /* Apply Tally Button */
         .apply-tally-btn {
             padding: var(--spacing-sm) var(--spacing-lg);
@@ -3896,6 +4262,111 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
     <!-- Toast Container -->
     <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Floating AI Parser Button -->
+    <button class="floating-ai-btn" id="floatingAiBtn" onclick="openSmartParser()">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            <path d="M12 7v2M12 13h.01"/>
+        </svg>
+        <span class="floating-ai-label">נתח הודעה</span>
+    </button>
+
+    <!-- Smart AI Parser Modal -->
+    <div class="smart-parser-overlay" id="smartParserModal" onclick="closeSmartParser(event)">
+        <div class="smart-parser-container" onclick="event.stopPropagation()">
+            <!-- Header -->
+            <div class="smart-parser-header">
+                <h2>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 16v-4M12 8h.01"/>
+                    </svg>
+                    ניתוח חכם
+                </h2>
+                <button class="smart-parser-close" onclick="closeSmartParser()">✕</button>
+            </div>
+
+            <!-- Input Section -->
+            <div class="smart-parser-input-section" id="parserInputSection">
+                <div class="smart-parser-dropzone" id="smartParserDropzone"
+                     ondragover="event.preventDefault(); this.classList.add('dragover')"
+                     ondragleave="this.classList.remove('dragover')"
+                     ondrop="handleSmartParserDrop(event)">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                        <polyline points="17 8 12 3 7 8"/>
+                        <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <p>הדבק טקסט, גרור קובץ, או הקלד</p>
+                    <span>מיילים, הודעות וואטסאפ, דוחות טאלי</span>
+                </div>
+                <textarea id="smartParserInput" class="smart-parser-textarea"
+                    placeholder="הדבק כאן מייל, הודעת וואטסאפ, או כל טקסט רלוונטי..."
+                    oninput="autoResizeTextarea(this)"></textarea>
+                <button class="smart-parser-analyze-btn" onclick="analyzeSmartInput()">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                    נתח ואפיין
+                </button>
+            </div>
+
+            <!-- Loading State -->
+            <div class="smart-parser-loading" id="parserLoadingSection" style="display: none;">
+                <div class="smart-parser-spinner"></div>
+                <p>מנתח את ההודעה...</p>
+                <span>זיהוי סוג, חילוץ פרטים, התאמה לאניות</span>
+            </div>
+
+            <!-- Results Section -->
+            <div class="smart-parser-results" id="parserResultsSection" style="display: none;">
+                <!-- Message Type Badge -->
+                <div class="smart-parser-type-badge" id="parserTypeBadge">
+                    <span class="type-icon">📋</span>
+                    <span class="type-label">סוג ההודעה</span>
+                    <span class="type-confidence">95%</span>
+                </div>
+
+                <!-- Detected Action -->
+                <div class="smart-parser-action" id="parserDetectedAction">
+                    <h3>פעולה מזוהה:</h3>
+                    <p id="parserActionDescription">עדכון ETA לאנייה ELA S</p>
+                </div>
+
+                <!-- Ship Match -->
+                <div class="smart-parser-ship-match" id="parserShipMatch">
+                    <label>אנייה:</label>
+                    <div class="ship-match-options" id="shipMatchOptions">
+                        <!-- Populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Extracted Fields Preview -->
+                <div class="smart-parser-fields" id="parserExtractedFields">
+                    <!-- Populated dynamically -->
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="smart-parser-actions">
+                    <button class="btn-secondary" onclick="resetSmartParser()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                            <path d="M3 3v5h5"/>
+                        </svg>
+                        נתח מחדש
+                    </button>
+                    <button class="btn-primary" onclick="applySmartParserAction()" id="applyParserBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        אשר והחל
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- File Input -->
     <input type="file" id="fileInput" accept=".xlsx,.xls,.csv" style="display: none;" onchange="handleFileUpload(event)">
@@ -9908,6 +10379,415 @@ ${signature}`;
             if (minutes < 60) return `לפני ${minutes} דקות`;
             if (hours < 24) return `לפני ${hours} שעות`;
             return `לפני ${days} ימים`;
+        }
+
+        // ==================== Smart Parser Functions ====================
+        let smartParserData = null; // Stores the parsed result for applying
+
+        function openSmartParser() {
+            const modal = document.getElementById('smartParserModal');
+            modal.classList.add('active');
+            document.getElementById('smartParserInput').focus();
+        }
+
+        function closeSmartParser(event) {
+            // If called from overlay click, only close if clicking the overlay itself
+            if (event && event.target !== event.currentTarget) return;
+            const modal = document.getElementById('smartParserModal');
+            modal.classList.remove('active');
+            resetSmartParser();
+        }
+
+        function handleSmartParserDrop(event) {
+            event.preventDefault();
+            event.target.classList.remove('dragover');
+
+            const files = event.dataTransfer.files;
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type.startsWith('text/') || file.name.endsWith('.txt') || file.name.endsWith('.eml')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        document.getElementById('smartParserInput').value = e.target.result;
+                        autoResizeTextarea(document.getElementById('smartParserInput'));
+                    };
+                    reader.readAsText(file);
+                } else if (file.type.startsWith('image/')) {
+                    // Handle image files - convert to base64 for AI vision
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const base64 = e.target.result.split(',')[1];
+                        document.getElementById('smartParserInput').value = `[IMAGE FILE: ${file.name}]`;
+                        document.getElementById('smartParserInput').dataset.imageBase64 = base64;
+                        document.getElementById('smartParserInput').dataset.mimeType = file.type;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        }
+
+        function autoResizeTextarea(textarea) {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 300) + 'px';
+        }
+
+        async function analyzeSmartInput() {
+            const input = document.getElementById('smartParserInput');
+            const content = input.value.trim();
+
+            if (!content) {
+                showToast('נא להזין טקסט לניתוח', 'warning');
+                return;
+            }
+
+            // Show loading
+            document.getElementById('parserInputSection').style.display = 'none';
+            document.getElementById('parserLoadingSection').style.display = 'block';
+            document.getElementById('parserResultsSection').style.display = 'none';
+
+            try {
+                // Prepare request body
+                const requestBody = {
+                    parseType: 'email',
+                    content: content,
+                    existingShips: ships.map(s => `${s.name} (${s.voyage})`),
+                    currentYear: new Date().getFullYear()
+                };
+
+                // Check if there's an image
+                if (input.dataset.imageBase64) {
+                    requestBody.imageBase64 = input.dataset.imageBase64;
+                    requestBody.mimeType = input.dataset.mimeType;
+                }
+
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(requestBody)
+                });
+
+                const result = await response.json();
+
+                if (result.success && result.parsed) {
+                    smartParserData = result.parsed;
+                    displaySmartParserResults(result.parsed);
+                } else {
+                    showToast('לא הצלחתי לנתח את ההודעה', 'error');
+                    resetSmartParser();
+                }
+            } catch (error) {
+                console.error('Analysis error:', error);
+                showToast('שגיאה בניתוח', 'error');
+                resetSmartParser();
+            }
+        }
+
+        function displaySmartParserResults(data) {
+            // Hide loading, show results
+            document.getElementById('parserLoadingSection').style.display = 'none';
+            document.getElementById('parserResultsSection').style.display = 'block';
+
+            // Message type badge
+            const typeIcons = {
+                'NOMINATION': '🚢',
+                'ETA_UPDATE': '📅',
+                'ARRIVAL_NOTICE': '⚓',
+                'BERTHING_NOTICE': '🏗️',
+                'SAILING_NOTICE': '🌊',
+                'SERVICE_REQUEST': '🔧',
+                'DOCUMENTS': '📄',
+                'DAILY_REPORT': '📊',
+                'CARGO_INFO': '📦',
+                'DISCHARGE_REPORT': '📋',
+                'BULK_UPDATE': '📑',
+                'OTHER': '❓'
+            };
+
+            const typeLabels = {
+                'NOMINATION': 'נומינציה חדשה',
+                'ETA_UPDATE': 'עדכון ETA',
+                'ARRIVAL_NOTICE': 'הודעת הגעה',
+                'BERTHING_NOTICE': 'הודעת עגינה',
+                'SAILING_NOTICE': 'הודעת הפלגה',
+                'SERVICE_REQUEST': 'בקשת שירות',
+                'DOCUMENTS': 'מסמכים',
+                'DAILY_REPORT': 'דוח יומי',
+                'CARGO_INFO': 'מידע מטען',
+                'DISCHARGE_REPORT': 'דוח פריקה',
+                'BULK_UPDATE': 'עדכון מרובה',
+                'OTHER': 'אחר'
+            };
+
+            const messageType = data.messageType || 'OTHER';
+            const typeBadge = document.getElementById('parserTypeBadge');
+            typeBadge.innerHTML = `
+                <span class="type-icon">${typeIcons[messageType] || '📝'}</span>
+                <span class="type-label">${typeLabels[messageType] || messageType}</span>
+                <span class="type-confidence">${Math.round((data.messageTypeConfidence || 0.8) * 100)}%</span>
+            `;
+
+            // Determine suggested action
+            const actionDesc = document.getElementById('parserActionDescription');
+            let actionText = '';
+
+            if (messageType === 'NOMINATION') {
+                actionText = `פתיחת אנייה חדשה: ${data.vesselName || 'לא זוהה'}`;
+            } else if (messageType === 'ETA_UPDATE' && data.dates?.eta?.iso) {
+                actionText = `עדכון ETA ל-${formatDateTimeForDisplay(data.dates.eta.iso)}`;
+            } else if (messageType === 'BERTHING_NOTICE' && data.dates?.etb?.iso) {
+                actionText = `עדכון ETB ל-${formatDateTimeForDisplay(data.dates.etb.iso)}`;
+            } else if (messageType === 'SAILING_NOTICE') {
+                actionText = `עדכון סטטוס: הפליגה`;
+            } else if (messageType === 'DISCHARGE_REPORT') {
+                actionText = `עדכון נתוני פריקה`;
+            } else if (messageType === 'BULK_UPDATE' && data.bulkVessels?.length > 0) {
+                actionText = `עדכון ${data.bulkVessels.length} אניות`;
+            } else {
+                actionText = `עדכון פרטים עבור ${data.vesselName || 'אנייה לא מזוהה'}`;
+            }
+            actionDesc.textContent = actionText;
+
+            // Ship match options
+            const shipMatchOptions = document.getElementById('shipMatchOptions');
+            let matchHtml = '';
+
+            // Try to find matching ships
+            const vesselName = data.vesselName || '';
+            const matchingShips = ships.filter(s =>
+                s.name.toLowerCase().includes(vesselName.toLowerCase()) ||
+                vesselName.toLowerCase().includes(s.name.toLowerCase())
+            );
+
+            if (matchingShips.length > 0) {
+                matchingShips.forEach((ship, idx) => {
+                    matchHtml += `
+                        <div class="ship-match-option ${idx === 0 ? 'selected' : ''}"
+                             data-ship-id="${ship.id}" onclick="selectShipMatch(this)">
+                            ${ship.name} (${ship.voyage})
+                        </div>
+                    `;
+                });
+            }
+
+            // Add "new ship" option for nominations
+            if (messageType === 'NOMINATION' || matchingShips.length === 0) {
+                matchHtml += `
+                    <div class="ship-match-option new-ship ${matchingShips.length === 0 ? 'selected' : ''}"
+                         data-new-ship="true" onclick="selectShipMatch(this)">
+                        + אנייה חדשה: ${vesselName || 'לא מזוהה'}
+                    </div>
+                `;
+            }
+
+            shipMatchOptions.innerHTML = matchHtml;
+
+            // Extracted fields preview
+            const fieldsContainer = document.getElementById('parserExtractedFields');
+            let fieldsHtml = '';
+
+            if (data.vesselName) {
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">שם אנייה</span>
+                        <span class="parser-field-value">${data.vesselName}</span>
+                    </div>
+                `;
+            }
+
+            if (data.dates?.eta?.iso) {
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">ETA</span>
+                        <span class="parser-field-value highlight">${formatDateTimeForDisplay(data.dates.eta.iso)}</span>
+                    </div>
+                `;
+            }
+
+            if (data.dates?.etb?.iso) {
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">ETB</span>
+                        <span class="parser-field-value highlight">${formatDateTimeForDisplay(data.dates.etb.iso)}</span>
+                    </div>
+                `;
+            }
+
+            if (data.ports?.destination) {
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">נמל</span>
+                        <span class="parser-field-value">${data.ports.destination}</span>
+                    </div>
+                `;
+            }
+
+            if (data.cargo?.types?.length > 0) {
+                const cargoText = data.cargo.types.map(c => c.name).join(', ');
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">מטען</span>
+                        <span class="parser-field-value">${cargoText}</span>
+                    </div>
+                `;
+            }
+
+            if (data.status?.current) {
+                fieldsHtml += `
+                    <div class="parser-field-row">
+                        <span class="parser-field-label">סטטוס</span>
+                        <span class="parser-field-value">${data.status.current}</span>
+                    </div>
+                `;
+            }
+
+            fieldsContainer.innerHTML = fieldsHtml || '<p style="color: var(--text-tertiary); text-align: center;">לא זוהו שדות נוספים</p>';
+        }
+
+        function selectShipMatch(element) {
+            // Remove selection from all
+            element.parentElement.querySelectorAll('.ship-match-option').forEach(el => {
+                el.classList.remove('selected');
+            });
+            // Select this one
+            element.classList.add('selected');
+        }
+
+        function formatDateTimeForDisplay(isoString) {
+            if (!isoString) return '';
+            try {
+                const date = new Date(isoString);
+                return date.toLocaleString('he-IL', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+            } catch {
+                return isoString;
+            }
+        }
+
+        async function applySmartParserAction() {
+            if (!smartParserData) {
+                showToast('אין נתונים להחלה', 'error');
+                return;
+            }
+
+            const selectedShipEl = document.querySelector('.ship-match-option.selected');
+            if (!selectedShipEl) {
+                showToast('נא לבחור אנייה', 'warning');
+                return;
+            }
+
+            const isNewShip = selectedShipEl.dataset.newShip === 'true';
+            const shipId = selectedShipEl.dataset.shipId;
+
+            try {
+                if (isNewShip) {
+                    // Create new ship
+                    const newShip = createShipObject({
+                        name: smartParserData.vesselName || '',
+                        voyage: smartParserData.voyageNumber || '',
+                        port: smartParserData.ports?.destination || '',
+                        eta: smartParserData.dates?.eta?.iso || new Date().toISOString(),
+                        expected_berth_time: smartParserData.dates?.etb?.iso || null,
+                        cargo: smartParserData.cargo?.types?.map(c => c.name).join(', ') || '',
+                        status: mapStatusFromParsed(smartParserData.status?.current) || STATUS.AT_SEA
+                    });
+
+                    ships.push(newShip);
+                    await saveShipToFirestore(newShip);
+                    showToast(`אנייה ${newShip.name} נוספה בהצלחה!`, 'success');
+
+                } else {
+                    // Update existing ship
+                    const ship = ships.find(s => s.id === shipId);
+                    if (!ship) {
+                        showToast('אנייה לא נמצאה', 'error');
+                        return;
+                    }
+
+                    let updates = [];
+
+                    // Apply ETA update
+                    if (smartParserData.dates?.eta?.iso) {
+                        ship.eta = smartParserData.dates.eta.iso;
+                        updates.push('ETA');
+                    }
+
+                    // Apply ETB update
+                    if (smartParserData.dates?.etb?.iso) {
+                        ship.expected_berth_time = smartParserData.dates.etb.iso;
+                        updates.push('ETB');
+                    }
+
+                    // Apply status update
+                    if (smartParserData.status?.current) {
+                        const newStatus = mapStatusFromParsed(smartParserData.status.current);
+                        if (newStatus) {
+                            ship.status = newStatus;
+                            updates.push('סטטוס');
+                        }
+                    }
+
+                    // Apply port update
+                    if (smartParserData.ports?.destination && !ship.port) {
+                        ship.port = smartParserData.ports.destination;
+                        updates.push('נמל');
+                    }
+
+                    await saveShipToFirestore(ship);
+                    showToast(`${ship.name}: עודכן ${updates.join(', ')}`, 'success');
+
+                    // Prompt for email notification
+                    if (updates.includes('ETA') || updates.includes('ETB') || updates.includes('סטטוס')) {
+                        setTimeout(() => {
+                            if (confirm('האם לשלוח עדכון למעורבים?')) {
+                                promptEmailNotification(ship, updates[0].toLowerCase(), {});
+                            }
+                        }, 500);
+                    }
+                }
+
+                renderShips();
+                closeSmartParser();
+
+            } catch (error) {
+                console.error('Apply error:', error);
+                showToast('שגיאה בעדכון', 'error');
+            }
+        }
+
+        function mapStatusFromParsed(parsedStatus) {
+            if (!parsedStatus) return null;
+            const statusMap = {
+                'NOMINATED': STATUS.AT_SEA,
+                'LOADING': STATUS.AT_SEA,
+                'EN_ROUTE': STATUS.AT_SEA,
+                'AT_ANCHOR': STATUS.AT_PORT,
+                'BERTHED': STATUS.AT_PORT,
+                'WORKING': STATUS.UNDER_OPERATION,
+                'SAILED': STATUS.SAILED
+            };
+            return statusMap[parsedStatus] || null;
+        }
+
+        function resetSmartParser() {
+            // Reset to input state
+            document.getElementById('parserInputSection').style.display = 'block';
+            document.getElementById('parserLoadingSection').style.display = 'none';
+            document.getElementById('parserResultsSection').style.display = 'none';
+
+            // Clear input
+            const input = document.getElementById('smartParserInput');
+            input.value = '';
+            input.style.height = 'auto';
+            delete input.dataset.imageBase64;
+            delete input.dataset.mimeType;
+
+            // Clear data
+            smartParserData = null;
         }
 
         // ==================== Initialize App ====================
