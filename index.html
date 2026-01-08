@@ -3575,6 +3575,497 @@
             color: var(--text-tertiary);
         }
 
+        /* ======================== OPERATIONS VIEW ======================== */
+        .operations-view {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+        .operations-view.active {
+            display: block;
+        }
+        .operations-header {
+            margin-bottom: var(--spacing-xl);
+        }
+        .operations-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0 0 var(--spacing-sm) 0;
+        }
+        .operations-title svg {
+            color: var(--primary);
+        }
+        .operations-subtitle {
+            color: var(--text-tertiary);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* Operations Summary Cards */
+        .ops-summary-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        .ops-summary-card {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            padding: var(--spacing-lg);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            backdrop-filter: blur(20px);
+        }
+        .ops-summary-card.urgent {
+            border-color: var(--danger);
+            background: rgba(239, 68, 68, 0.1);
+        }
+        .ops-summary-card.warning {
+            border-color: var(--warning);
+            background: rgba(245, 158, 11, 0.1);
+        }
+        .ops-summary-card.normal {
+            border-color: var(--success);
+            background: rgba(16, 185, 129, 0.1);
+        }
+        .ops-summary-card.completed {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.1);
+        }
+        .ops-summary-icon {
+            font-size: 24px;
+        }
+        .ops-summary-content {
+            display: flex;
+            flex-direction: column;
+        }
+        .ops-summary-value {
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+        .ops-summary-label {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Operations Filter Tabs */
+        .ops-filter-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: var(--spacing-lg);
+            background: var(--bg-secondary);
+            padding: 6px;
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            width: fit-content;
+        }
+        .ops-filter-tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .ops-filter-tab:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .ops-filter-tab.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Operations Tasks Container */
+        .ops-tasks-container {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            padding: var(--spacing-lg);
+        }
+        .ops-tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+        }
+
+        /* Task Item */
+        .ops-task-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto;
+            gap: var(--spacing-md);
+            align-items: center;
+            padding: var(--spacing-md) var(--spacing-lg);
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            transition: all 200ms;
+        }
+        .ops-task-item:hover {
+            border-color: var(--primary);
+            transform: translateX(-4px);
+        }
+        .ops-task-item.urgent {
+            border-right: 4px solid var(--danger);
+        }
+        .ops-task-item.warning {
+            border-right: 4px solid var(--warning);
+        }
+        .ops-task-item.completed {
+            opacity: 0.6;
+            border-right: 4px solid var(--success);
+        }
+
+        .ops-task-checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid var(--glass-border);
+            background: transparent;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 200ms;
+        }
+        .ops-task-checkbox:hover {
+            border-color: var(--primary);
+        }
+        .ops-task-checkbox.done {
+            background: var(--success);
+            border-color: var(--success);
+        }
+        .ops-task-checkbox.in-progress {
+            background: var(--warning);
+            border-color: var(--warning);
+        }
+
+        .ops-task-content {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .ops-task-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .ops-task-ship {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .ops-task-ship-link {
+            color: var(--primary);
+            cursor: pointer;
+        }
+        .ops-task-ship-link:hover {
+            text-decoration: underline;
+        }
+
+        .ops-task-eta {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            white-space: nowrap;
+        }
+
+        .ops-task-urgency {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .ops-task-urgency.urgent {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger);
+        }
+        .ops-task-urgency.warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+        .ops-task-urgency.normal {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+
+        .ops-task-status {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            background: var(--bg-hover);
+            color: var(--text-secondary);
+        }
+        .ops-task-status.done {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+        }
+        .ops-task-status.in-progress {
+            background: rgba(245, 158, 11, 0.15);
+            color: var(--warning);
+        }
+
+        .ops-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-tertiary);
+        }
+        .ops-empty-state svg {
+            margin-bottom: var(--spacing-md);
+            opacity: 0.5;
+        }
+        .ops-empty-state h3 {
+            margin: 0 0 8px 0;
+            color: var(--text-secondary);
+        }
+        .ops-empty-state p {
+            margin: 0;
+        }
+
+        /* ======================== GALLERY VIEW ======================== */
+        .gallery-view {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: var(--spacing-xl);
+            overflow-y: auto;
+            background: var(--bg-primary);
+        }
+        .gallery-view.active {
+            display: block;
+        }
+        .gallery-header {
+            margin-bottom: var(--spacing-xl);
+        }
+        .gallery-title {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+            font-size: 28px;
+            font-weight: 800;
+            color: var(--text-primary);
+            margin: 0 0 var(--spacing-sm) 0;
+        }
+        .gallery-title svg {
+            color: var(--primary);
+        }
+        .gallery-subtitle {
+            color: var(--text-tertiary);
+            font-size: 14px;
+            margin: 0;
+        }
+
+        /* Gallery Toolbar */
+        .gallery-toolbar {
+            display: flex;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+        .gallery-search {
+            flex: 1;
+            max-width: 400px;
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-sm);
+            padding: var(--spacing-sm) var(--spacing-md);
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+        }
+        .gallery-search svg {
+            color: var(--text-tertiary);
+        }
+        .gallery-search input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .gallery-search input::placeholder {
+            color: var(--text-tertiary);
+        }
+        .gallery-upload-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: var(--spacing-sm) var(--spacing-lg);
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none;
+            border-radius: var(--radius-lg);
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .gallery-upload-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--spacing-lg);
+        }
+        .gallery-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all 200ms;
+            cursor: pointer;
+        }
+        .gallery-item:hover {
+            border-color: var(--primary);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+        .gallery-item-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: var(--bg-secondary);
+        }
+        .gallery-item-info {
+            padding: var(--spacing-md);
+        }
+        .gallery-item-vessel {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 0 0 4px 0;
+        }
+        .gallery-item-meta {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .gallery-item-type {
+            padding: 2px 8px;
+            background: var(--bg-hover);
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        .gallery-item-actions {
+            display: flex;
+            gap: 8px;
+            padding: 0 var(--spacing-md) var(--spacing-md);
+        }
+        .gallery-item-actions button {
+            flex: 1;
+            padding: 8px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .gallery-item-actions button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .gallery-item-actions button.delete:hover {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .gallery-empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-tertiary);
+        }
+        .gallery-empty svg {
+            margin-bottom: var(--spacing-md);
+            opacity: 0.3;
+        }
+        .gallery-empty h3 {
+            margin: 0 0 8px 0;
+            color: var(--text-secondary);
+            font-size: 18px;
+        }
+        .gallery-empty p {
+            margin: 0;
+        }
+
+        /* Image Lightbox */
+        .lightbox-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox-overlay.active {
+            display: flex;
+        }
+        .lightbox-content {
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        .lightbox-content img {
+            max-width: 100%;
+            max-height: 85vh;
+            object-fit: contain;
+            border-radius: var(--radius-lg);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-md);
+        }
+
         /* ======================== PORT STATUS GRID ======================== */
         .port-status-grid {
             display: grid;
@@ -3649,6 +4140,13 @@
                     </svg>
                     <span>ראשי</span>
                 </div>
+                <div class="nav-item" onclick="switchToOperationsView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"/>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
+                    <span>לוח תפעול</span>
+                </div>
                 <div class="nav-item" onclick="switchToQuickView()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -3690,6 +4188,14 @@
                         <line x1="8" y1="10" x2="8" y2="10"/>
                     </svg>
                     <span>נתוני יסוד</span>
+                </div>
+                <div class="nav-item" onclick="switchToGalleryView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                        <circle cx="8.5" cy="8.5" r="1.5"/>
+                        <polyline points="21 15 16 10 5 21"/>
+                    </svg>
+                    <span>גלריית תמונות</span>
                 </div>
             </nav>
 
@@ -4525,11 +5031,21 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                 <table class="reference-table" id="refVesselsTable">
                                     <thead>
                                         <tr>
+                                            <th>מס'</th>
                                             <th>שם אנייה</th>
                                             <th>דגל</th>
+                                            <th>שנת בנייה</th>
+                                            <th>מעמסות</th>
+                                            <th>LOA</th>
+                                            <th>רוחב</th>
+                                            <th>DWT</th>
+                                            <th>Grain</th>
+                                            <th>Bale</th>
+                                            <th>NRT</th>
+                                            <th>GRT</th>
                                             <th>IMO</th>
-                                            <th>סוג</th>
-                                            <th>בעלים</th>
+                                            <th>תאימות דגון</th>
+                                            <th>מס' נמל ישראלי</th>
                                             <th>פעולות</th>
                                         </tr>
                                     </thead>
@@ -4649,6 +5165,126 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                 </table>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Operations View - Global Tasks Dashboard -->
+            <div class="operations-view" id="operationsView">
+                <div class="operations-header">
+                    <h2 class="operations-title">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        לוח תפעול יומי
+                    </h2>
+                    <p class="operations-subtitle">כל המשימות הפתוחות בכל האניות</p>
+                </div>
+
+                <!-- Operations Summary Cards -->
+                <div class="ops-summary-cards">
+                    <div class="ops-summary-card urgent">
+                        <div class="ops-summary-icon">🔴</div>
+                        <div class="ops-summary-content">
+                            <span class="ops-summary-value" id="opsUrgentCount">0</span>
+                            <span class="ops-summary-label">דחוף - היום</span>
+                        </div>
+                    </div>
+                    <div class="ops-summary-card warning">
+                        <div class="ops-summary-icon">🟡</div>
+                        <div class="ops-summary-content">
+                            <span class="ops-summary-value" id="opsWarningCount">0</span>
+                            <span class="ops-summary-label">ב-48 שעות</span>
+                        </div>
+                    </div>
+                    <div class="ops-summary-card normal">
+                        <div class="ops-summary-icon">🟢</div>
+                        <div class="ops-summary-content">
+                            <span class="ops-summary-value" id="opsNormalCount">0</span>
+                            <span class="ops-summary-label">שוטף</span>
+                        </div>
+                    </div>
+                    <div class="ops-summary-card completed">
+                        <div class="ops-summary-icon">✅</div>
+                        <div class="ops-summary-content">
+                            <span class="ops-summary-value" id="opsCompletedCount">0</span>
+                            <span class="ops-summary-label">הושלם היום</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Filter Tabs -->
+                <div class="ops-filter-tabs">
+                    <button class="ops-filter-tab active" data-filter="all" onclick="filterOperationsTasks('all')">
+                        הכל
+                    </button>
+                    <button class="ops-filter-tab" data-filter="urgent" onclick="filterOperationsTasks('urgent')">
+                        🔴 דחוף
+                    </button>
+                    <button class="ops-filter-tab" data-filter="today" onclick="filterOperationsTasks('today')">
+                        📅 היום
+                    </button>
+                    <button class="ops-filter-tab" data-filter="pending" onclick="filterOperationsTasks('pending')">
+                        ⏳ ממתין
+                    </button>
+                    <button class="ops-filter-tab" data-filter="in-progress" onclick="filterOperationsTasks('in-progress')">
+                        🔄 בביצוע
+                    </button>
+                </div>
+
+                <!-- Tasks List -->
+                <div class="ops-tasks-container">
+                    <div class="ops-tasks-list" id="opsTasksList">
+                        <!-- Tasks will be rendered here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gallery View - Vessel Images -->
+            <div class="gallery-view" id="galleryView">
+                <div class="gallery-header">
+                    <h2 class="gallery-title">
+                        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        גלריית תמונות
+                    </h2>
+                    <p class="gallery-subtitle">תמונות מעמסות, מסמכים ותיעוד אניות</p>
+                </div>
+
+                <!-- Gallery Search & Filter -->
+                <div class="gallery-toolbar">
+                    <div class="gallery-search">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        <input type="text" id="gallerySearch" placeholder="חפש לפי שם אנייה..." oninput="filterGallery()">
+                    </div>
+                    <button class="gallery-upload-btn" onclick="openGalleryUpload()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        העלה תמונה
+                    </button>
+                </div>
+
+                <!-- Gallery Grid -->
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Images will be rendered here -->
+                    <div class="gallery-empty" id="galleryEmpty">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        <h3>אין תמונות עדיין</h3>
+                        <p>העלה תמונות של מעמסות, מסמכים או תיעוד אנייה</p>
                     </div>
                 </div>
             </div>
@@ -6027,6 +6663,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('contactsView').classList.remove('active');
             document.getElementById('dischargeView').classList.remove('active');
             document.getElementById('referenceView').classList.remove('active');
+            document.getElementById('operationsView').classList.remove('active');
+            document.getElementById('galleryView').classList.remove('active');
             document.getElementById('shipsGrid').style.display = 'grid';
 
             currentTab = 'all'; // אפס לטאב "כל האניות"
@@ -6047,7 +6685,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // הסר 'active' מכל כפתורי הניווט הראשי
             document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
             // הוסף 'active' לכפתור "מבט מהיר"
-            document.querySelectorAll('.nav-menu .nav-item')[1].classList.add('active');
+            document.querySelectorAll('.nav-menu .nav-item')[2].classList.add('active');
 
             // הסתר את הטאבים והסטטיסטיקות שאינם רלוונטיים
             document.querySelector('.tabs').style.display = 'none';
@@ -6058,6 +6696,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('contactsView').classList.remove('active');
             document.getElementById('dischargeView').classList.remove('active');
             document.getElementById('referenceView').classList.remove('active');
+            document.getElementById('operationsView').classList.remove('active');
+            document.getElementById('galleryView').classList.remove('active');
             document.getElementById('shipsGrid').style.display = 'grid';
 
             currentTab = 'quick'; // עדכן את המצב הנוכחי
@@ -6068,7 +6708,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // הסר 'active' מכל כפתורי הניווט הראשי
             document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
             // הוסף 'active' לכפתור "ניתוח הודעות"
-            document.querySelectorAll('.nav-menu .nav-item')[2].classList.add('active');
+            document.querySelectorAll('.nav-menu .nav-item')[3].classList.add('active');
 
             // הסתר את הטאבים והסטטיסטיקות
             document.querySelector('.tabs').style.display = 'none';
@@ -6079,6 +6719,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('contactsView').classList.remove('active');
             document.getElementById('dischargeView').classList.remove('active');
             document.getElementById('referenceView').classList.remove('active');
+            document.getElementById('operationsView').classList.remove('active');
+            document.getElementById('galleryView').classList.remove('active');
             document.getElementById('emailParserView').classList.add('active');
 
             currentTab = 'parser';
@@ -7544,8 +8186,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         function switchToContactsView() {
             // Remove 'active' from all nav items
             document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
-            // Add 'active' to contacts nav item
-            document.querySelectorAll('.nav-menu .nav-item')[3].classList.add('active');
+            // Add 'active' to contacts nav item (index 4)
+            document.querySelectorAll('.nav-menu .nav-item')[4].classList.add('active');
 
             // Hide tabs and stats
             document.querySelector('.tabs').style.display = 'none';
@@ -7556,6 +8198,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('emailParserView').classList.remove('active');
             document.getElementById('dischargeView').classList.remove('active');
             document.getElementById('referenceView').classList.remove('active');
+            document.getElementById('operationsView').classList.remove('active');
+            document.getElementById('galleryView').classList.remove('active');
             document.getElementById('contactsView').classList.add('active');
 
             currentTab = 'contacts';
@@ -7572,8 +8216,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         function switchToDischargeView() {
             // Remove 'active' from all nav items
             document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
-            // Add 'active' to discharge nav item (index 4)
-            document.querySelectorAll('.nav-menu .nav-item')[4].classList.add('active');
+            // Add 'active' to discharge nav item (index 5)
+            document.querySelectorAll('.nav-menu .nav-item')[5].classList.add('active');
 
             // Hide tabs and stats
             document.querySelector('.tabs').style.display = 'none';
@@ -7584,6 +8228,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('emailParserView').classList.remove('active');
             document.getElementById('contactsView').classList.remove('active');
             document.getElementById('referenceView').classList.remove('active');
+            document.getElementById('operationsView').classList.remove('active');
+            document.getElementById('galleryView').classList.remove('active');
             document.getElementById('dischargeView').classList.add('active');
 
             currentTab = 'discharge';
@@ -7601,8 +8247,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         function switchToReferenceView() {
             // Remove 'active' from all nav items
             document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
-            // Add 'active' to reference nav item (index 5)
-            document.querySelectorAll('.nav-menu .nav-item')[5].classList.add('active');
+            // Add 'active' to reference nav item (index 6)
+            document.querySelectorAll('.nav-menu .nav-item')[6].classList.add('active');
 
             // Hide tabs and stats
             document.querySelector('.tabs').style.display = 'none';
@@ -7613,10 +8259,493 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             document.getElementById('emailParserView').classList.remove('active');
             document.getElementById('contactsView').classList.remove('active');
             document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('operationsView').classList.remove('active');
+            document.getElementById('galleryView').classList.remove('active');
             document.getElementById('referenceView').classList.add('active');
 
             currentTab = 'reference';
             loadReferenceData();
+        }
+
+        // ==================== OPERATIONS VIEW ====================
+        let currentOpsFilter = 'all';
+
+        function switchToOperationsView() {
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.nav-menu .nav-item')[1].classList.add('active');
+
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+
+            document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('referenceView').classList.remove('active');
+            document.getElementById('galleryView').classList.remove('active');
+            document.getElementById('operationsView').classList.add('active');
+
+            currentTab = 'operations';
+            renderOperationsTasks();
+        }
+
+        function renderOperationsTasks() {
+            const tasksList = document.getElementById('opsTasksList');
+            const allTasks = [];
+
+            // Collect all tasks from all active ships
+            ships.filter(s => s.status !== STATUS.SAILED).forEach(ship => {
+                const etaDays = calculateDaysUntilETA(ship.eta);
+
+                (ship.tasks || []).forEach(task => {
+                    // Only include tasks relevant to current status
+                    if (!task.statuses || task.statuses.includes(ship.status)) {
+                        allTasks.push({
+                            ...task,
+                            shipId: ship.id,
+                            shipName: ship.name,
+                            shipVoyage: ship.voyage,
+                            shipStatus: ship.status,
+                            shipEta: ship.eta,
+                            etaDays: etaDays,
+                            urgency: getTaskUrgency(task, ship)
+                        });
+                    }
+                });
+            });
+
+            // Sort by urgency then by ETA
+            allTasks.sort((a, b) => {
+                const urgencyOrder = { urgent: 0, warning: 1, normal: 2, completed: 3 };
+                if (urgencyOrder[a.urgency] !== urgencyOrder[b.urgency]) {
+                    return urgencyOrder[a.urgency] - urgencyOrder[b.urgency];
+                }
+                return (a.etaDays || 999) - (b.etaDays || 999);
+            });
+
+            // Filter based on current filter
+            const filteredTasks = filterTasksList(allTasks, currentOpsFilter);
+
+            // Update summary counts
+            updateOpsSummaryCounts(allTasks);
+
+            if (filteredTasks.length === 0) {
+                tasksList.innerHTML = `
+                    <div class="ops-empty-state">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+                            <path d="M9 11l3 3L22 4"/>
+                            <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                        </svg>
+                        <h3>אין משימות להצגה</h3>
+                        <p>כל המשימות הושלמו או שאין אניות פעילות</p>
+                    </div>
+                `;
+                return;
+            }
+
+            tasksList.innerHTML = filteredTasks.map(task => `
+                <div class="ops-task-item ${task.urgency} ${task.status === 'done' ? 'completed' : ''}" data-task-key="${task.key}" data-ship-id="${task.shipId}">
+                    <button class="ops-task-checkbox ${task.status}" onclick="cycleOpsTaskStatus('${task.shipId}', '${task.key}')" title="שנה סטטוס">
+                        ${task.status === 'done' ? '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>' : ''}
+                    </button>
+                    <div class="ops-task-content">
+                        <span class="ops-task-title">${task.title}</span>
+                        <span class="ops-task-ship">
+                            <span class="ops-task-ship-link" onclick="openShipFromOps('${task.shipId}')">${task.shipName}</span>
+                            ${task.shipVoyage ? `<span style="opacity: 0.6">• ${task.shipVoyage}</span>` : ''}
+                        </span>
+                    </div>
+                    <span class="ops-task-eta">${formatEtaForOps(task.shipEta, task.etaDays)}</span>
+                    <span class="ops-task-urgency ${task.urgency}">${getUrgencyLabel(task.urgency)}</span>
+                    <span class="ops-task-status ${task.status}">${getStatusLabel(task.status)}</span>
+                </div>
+            `).join('');
+        }
+
+        function getTaskUrgency(task, ship) {
+            if (task.status === 'done') return 'completed';
+
+            const etaDays = calculateDaysUntilETA(ship.eta);
+
+            // Check if task is overdue based on its due rule
+            if (task.due && task.due.startsWith('eta_minus_days:')) {
+                const daysBefore = parseInt(task.due.split(':')[1]);
+                if (etaDays <= daysBefore - 2) return 'urgent';
+                if (etaDays <= daysBefore) return 'warning';
+            }
+
+            // At port and task should have been done at sea
+            if (ship.status !== STATUS.AT_SEA && task.due === 'at_sea_window') {
+                return task.status === 'done' ? 'completed' : 'urgent';
+            }
+
+            // General urgency based on ETA
+            if (etaDays <= 1) return 'urgent';
+            if (etaDays <= 3) return 'warning';
+
+            return 'normal';
+        }
+
+        function filterTasksList(tasks, filter) {
+            switch (filter) {
+                case 'urgent':
+                    return tasks.filter(t => t.urgency === 'urgent');
+                case 'today':
+                    return tasks.filter(t => t.etaDays <= 1 && t.status !== 'done');
+                case 'pending':
+                    return tasks.filter(t => t.status === 'pending');
+                case 'in-progress':
+                    return tasks.filter(t => t.status === 'in-progress');
+                default:
+                    return tasks;
+            }
+        }
+
+        function filterOperationsTasks(filter) {
+            currentOpsFilter = filter;
+
+            document.querySelectorAll('.ops-filter-tab').forEach(tab => {
+                tab.classList.toggle('active', tab.dataset.filter === filter);
+            });
+
+            renderOperationsTasks();
+        }
+
+        function updateOpsSummaryCounts(tasks) {
+            const today = new Date().toDateString();
+
+            document.getElementById('opsUrgentCount').textContent = tasks.filter(t => t.urgency === 'urgent').length;
+            document.getElementById('opsWarningCount').textContent = tasks.filter(t => t.urgency === 'warning').length;
+            document.getElementById('opsNormalCount').textContent = tasks.filter(t => t.urgency === 'normal' && t.status !== 'done').length;
+            document.getElementById('opsCompletedCount').textContent = tasks.filter(t => t.status === 'done').length;
+        }
+
+        function formatEtaForOps(eta, days) {
+            if (!eta) return '-';
+            const date = new Date(eta);
+            const dateStr = date.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' });
+
+            if (days <= 0) return `${dateStr} (היום)`;
+            if (days <= 1) return `${dateStr} (מחר)`;
+            return `${dateStr} (${Math.round(days)} ימים)`;
+        }
+
+        function getUrgencyLabel(urgency) {
+            const labels = {
+                urgent: 'דחוף',
+                warning: 'קרוב',
+                normal: 'שוטף',
+                completed: 'הושלם'
+            };
+            return labels[urgency] || urgency;
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                pending: 'ממתין',
+                'in-progress': 'בביצוע',
+                done: 'הושלם'
+            };
+            return labels[status] || status;
+        }
+
+        async function cycleOpsTaskStatus(shipId, taskKey) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            const task = ship.tasks.find(t => t.key === taskKey);
+            if (!task) return;
+
+            // Cycle status
+            const statusOrder = ['pending', 'in-progress', 'done'];
+            const currentIndex = statusOrder.indexOf(task.status);
+            task.status = statusOrder[(currentIndex + 1) % statusOrder.length];
+
+            await saveShipToFirestore(ship);
+            renderOperationsTasks();
+            showToast(`משימה עודכנה: ${getStatusLabel(task.status)}`, 'success');
+        }
+
+        function openShipFromOps(shipId) {
+            switchToDashboardView();
+            setTimeout(() => {
+                const ship = ships.find(s => s.id === shipId);
+                if (ship) openShipDetails(ship);
+            }, 100);
+        }
+
+        // ==================== GALLERY VIEW ====================
+        let galleryImages = [];
+
+        function switchToGalleryView() {
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.nav-menu .nav-item')[7].classList.add('active');
+
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+
+            document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('referenceView').classList.remove('active');
+            document.getElementById('operationsView').classList.remove('active');
+            document.getElementById('galleryView').classList.add('active');
+
+            currentTab = 'gallery';
+            loadGalleryImages();
+        }
+
+        async function loadGalleryImages() {
+            try {
+                const snapshot = await db.collection('gallery').orderBy('uploadedAt', 'desc').get();
+                galleryImages = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderGallery();
+            } catch (error) {
+                console.error('Error loading gallery:', error);
+                galleryImages = [];
+                renderGallery();
+            }
+        }
+
+        function renderGallery() {
+            const grid = document.getElementById('galleryGrid');
+            const empty = document.getElementById('galleryEmpty');
+            const searchTerm = document.getElementById('gallerySearch')?.value?.toLowerCase() || '';
+
+            const filtered = searchTerm
+                ? galleryImages.filter(img =>
+                    (img.vesselName || '').toLowerCase().includes(searchTerm) ||
+                    (img.description || '').toLowerCase().includes(searchTerm)
+                  )
+                : galleryImages;
+
+            if (filtered.length === 0) {
+                empty.style.display = 'block';
+                grid.innerHTML = '';
+                grid.appendChild(empty);
+                return;
+            }
+
+            empty.style.display = 'none';
+            grid.innerHTML = filtered.map(img => `
+                <div class="gallery-item" onclick="openLightbox('${img.id}')">
+                    <img class="gallery-item-image" src="${img.imageUrl}" alt="${img.vesselName || 'תמונה'}" loading="lazy">
+                    <div class="gallery-item-info">
+                        <p class="gallery-item-vessel">${img.vesselName || 'אנייה לא ידועה'}</p>
+                        <div class="gallery-item-meta">
+                            <span class="gallery-item-type">${img.imageType || 'כללי'}</span>
+                            <span>${formatGalleryDate(img.uploadedAt)}</span>
+                        </div>
+                    </div>
+                    <div class="gallery-item-actions">
+                        <button onclick="event.stopPropagation(); downloadImage('${img.id}')">הורד</button>
+                        <button class="delete" onclick="event.stopPropagation(); deleteGalleryImage('${img.id}')">מחק</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterGallery() {
+            renderGallery();
+        }
+
+        function formatGalleryDate(timestamp) {
+            if (!timestamp) return '';
+            const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+            return date.toLocaleDateString('he-IL');
+        }
+
+        function openGalleryUpload() {
+            document.getElementById('modalTitle').textContent = 'העלאת תמונה';
+            document.getElementById('modalBody').innerHTML = `
+                <div style="display: grid; gap: 16px;">
+                    <div class="form-group">
+                        <label>בחר אנייה</label>
+                        <select id="uploadVesselSelect" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            <option value="">-- בחר אנייה --</option>
+                            ${ships.map(s => `<option value="${s.name}">${s.name}${s.voyage ? ' - ' + s.voyage : ''}</option>`).join('')}
+                            ${referenceData.vessels.map(v => `<option value="${v.name}">${v.name} (ממאגר)</option>`).join('')}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>או הקלד שם אנייה</label>
+                        <input type="text" id="uploadVesselName" placeholder="שם האנייה" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                    </div>
+                    <div class="form-group">
+                        <label>סוג תמונה</label>
+                        <select id="uploadImageType" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            <option value="מעמסה">מעמסה (Hold)</option>
+                            <option value="מסמך">מסמך</option>
+                            <option value="נזק">נזק/ליקוי</option>
+                            <option value="מטען">מטען</option>
+                            <option value="כללי">כללי</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>תיאור (אופציונלי)</label>
+                        <input type="text" id="uploadDescription" placeholder="תיאור התמונה" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                    </div>
+                    <div class="form-group">
+                        <label>בחר תמונה</label>
+                        <div style="border: 2px dashed var(--glass-border); border-radius: 12px; padding: 40px; text-align: center; cursor: pointer; transition: all 200ms;"
+                             onclick="document.getElementById('uploadFileInput').click()"
+                             id="uploadDropZone">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="margin-bottom: 12px; opacity: 0.5;">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                                <circle cx="8.5" cy="8.5" r="1.5"/>
+                                <polyline points="21 15 16 10 5 21"/>
+                            </svg>
+                            <p style="margin: 0; color: var(--text-secondary);">לחץ לבחירת תמונה או גרור לכאן</p>
+                            <p style="margin: 8px 0 0; font-size: 12px; color: var(--text-tertiary);">JPG, PNG, WebP עד 10MB</p>
+                        </div>
+                        <input type="file" id="uploadFileInput" accept="image/*" style="display: none;" onchange="handleImageSelect(event)">
+                        <div id="uploadPreview" style="margin-top: 12px; display: none;">
+                            <img id="uploadPreviewImg" style="max-width: 100%; max-height: 200px; border-radius: 8px;">
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                        <button onclick="closeModal()" style="padding: 12px 24px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">
+                            ביטול
+                        </button>
+                        <button onclick="uploadGalleryImage()" id="uploadBtn" style="padding: 12px 24px; border-radius: 8px; border: none; background: linear-gradient(135deg, var(--primary), var(--primary-dark)); color: white; cursor: pointer; font-weight: 600;">
+                            העלה תמונה
+                        </button>
+                    </div>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        let selectedImageFile = null;
+        let selectedImageBase64 = null;
+
+        function handleImageSelect(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (file.size > 10 * 1024 * 1024) {
+                showToast('הקובץ גדול מדי (מקסימום 10MB)', 'error');
+                return;
+            }
+
+            selectedImageFile = file;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                selectedImageBase64 = e.target.result;
+                document.getElementById('uploadPreview').style.display = 'block';
+                document.getElementById('uploadPreviewImg').src = e.target.result;
+                document.getElementById('uploadDropZone').style.borderColor = 'var(--success)';
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function uploadGalleryImage() {
+            const vesselSelect = document.getElementById('uploadVesselSelect').value;
+            const vesselInput = document.getElementById('uploadVesselName').value.trim();
+            const vesselName = vesselInput || vesselSelect;
+
+            if (!vesselName) {
+                showToast('נא לבחור או להקליד שם אנייה', 'warning');
+                return;
+            }
+
+            if (!selectedImageBase64) {
+                showToast('נא לבחור תמונה', 'warning');
+                return;
+            }
+
+            const btn = document.getElementById('uploadBtn');
+            btn.disabled = true;
+            btn.textContent = 'מעלה...';
+
+            try {
+                const imageData = {
+                    vesselName: vesselName,
+                    imageType: document.getElementById('uploadImageType').value,
+                    description: document.getElementById('uploadDescription').value.trim(),
+                    imageUrl: selectedImageBase64,
+                    uploadedAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('gallery').add(imageData);
+
+                closeModal();
+                selectedImageFile = null;
+                selectedImageBase64 = null;
+                loadGalleryImages();
+                showToast('התמונה הועלתה בהצלחה!', 'success');
+            } catch (error) {
+                console.error('Upload error:', error);
+                showToast('שגיאה בהעלאה', 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'העלה תמונה';
+            }
+        }
+
+        async function deleteGalleryImage(imageId) {
+            if (!confirm('האם למחוק את התמונה?')) return;
+
+            try {
+                await db.collection('gallery').doc(imageId).delete();
+                galleryImages = galleryImages.filter(img => img.id !== imageId);
+                renderGallery();
+                showToast('התמונה נמחקה', 'success');
+            } catch (error) {
+                console.error('Delete error:', error);
+                showToast('שגיאה במחיקה', 'error');
+            }
+        }
+
+        function openLightbox(imageId) {
+            const image = galleryImages.find(img => img.id === imageId);
+            if (!image) return;
+
+            // Create lightbox if not exists
+            let lightbox = document.getElementById('lightboxOverlay');
+            if (!lightbox) {
+                lightbox = document.createElement('div');
+                lightbox.id = 'lightboxOverlay';
+                lightbox.className = 'lightbox-overlay';
+                lightbox.onclick = function(e) {
+                    if (e.target === lightbox) closeLightbox();
+                };
+                document.body.appendChild(lightbox);
+            }
+
+            lightbox.innerHTML = `
+                <button class="lightbox-close" onclick="closeLightbox()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M18 6 6 18M6 6l12 12"/>
+                    </svg>
+                </button>
+                <div class="lightbox-content">
+                    <img src="${image.imageUrl}" alt="${image.vesselName}">
+                </div>
+                <div class="lightbox-info">
+                    <strong>${image.vesselName}</strong>
+                    ${image.imageType ? `<span style="margin-right: 12px; opacity: 0.7;">${image.imageType}</span>` : ''}
+                    ${image.description ? `<p style="margin: 8px 0 0; opacity: 0.8;">${image.description}</p>` : ''}
+                </div>
+            `;
+            lightbox.classList.add('active');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightboxOverlay');
+            if (lightbox) lightbox.classList.remove('active');
+        }
+
+        function downloadImage(imageId) {
+            const image = galleryImages.find(img => img.id === imageId);
+            if (!image) return;
+
+            const link = document.createElement('a');
+            link.href = image.imageUrl;
+            link.download = `${image.vesselName}_${image.imageType || 'image'}.jpg`;
+            link.click();
         }
 
         function switchReferenceTab(tabName) {
@@ -7685,7 +8814,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             if (referenceData.vessels.length === 0) {
                 tbody.innerHTML = `
                     <tr class="empty-row">
-                        <td colspan="6">אין אניות במאגר. הוסף אנייה חדשה או השתמש בייבוא חכם.</td>
+                        <td colspan="16">אין אניות במאגר. הוסף אנייה חדשה או השתמש בייבוא חכם.</td>
                     </tr>
                 `;
                 return;
@@ -7693,11 +8822,21 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
             tbody.innerHTML = referenceData.vessels.map((vessel, idx) => `
                 <tr>
+                    <td>${vessel.sequentialId || idx + 1}</td>
                     <td><strong>${vessel.name || '-'}</strong></td>
                     <td>${vessel.flag || '-'}</td>
+                    <td>${vessel.yearBuilt || '-'}</td>
+                    <td>${vessel.holds || '-'}</td>
+                    <td>${vessel.loa || '-'}</td>
+                    <td>${vessel.beam || '-'}</td>
+                    <td>${vessel.dwt || '-'}</td>
+                    <td>${vessel.grain || '-'}</td>
+                    <td>${vessel.bale || '-'}</td>
+                    <td>${vessel.nrt || '-'}</td>
+                    <td>${vessel.grt || '-'}</td>
                     <td>${vessel.imo || '-'}</td>
-                    <td>${vessel.type || '-'}</td>
-                    <td>${vessel.owner || '-'}</td>
+                    <td>${vessel.dagonCompatible || '-'}</td>
+                    <td>${vessel.israeliPortNumber || '-'}</td>
                     <td class="actions">
                         <button class="action-btn" onclick="editReferenceItem('vessels', ${idx})" title="עריכה">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -7853,36 +8992,77 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
             if (type === 'vessels') {
                 formHtml = `
-                    <div style="display: grid; gap: 16px;">
-                        <div class="form-group">
-                            <label>שם האנייה</label>
-                            <input type="text" id="refItemName" placeholder="לדוגמה: ELA S" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
-                        </div>
+                    <div style="display: grid; gap: 16px; max-height: 60vh; overflow-y: auto; padding-left: 8px;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>שם האנייה *</label>
+                                <input type="text" id="refItemName" placeholder="לדוגמה: ELA S" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
                             <div class="form-group">
                                 <label>דגל</label>
                                 <input type="text" id="refItemFlag" placeholder="לדוגמה: Panama" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
                             </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>שנת בנייה</label>
+                                <input type="number" id="refItemYearBuilt" placeholder="2010" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>מס' מעמסות</label>
+                                <input type="number" id="refItemHolds" placeholder="5" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
                             <div class="form-group">
                                 <label>מספר IMO</label>
-                                <input type="text" id="refItemImo" placeholder="לדוגמה: 9123456" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                                <input type="text" id="refItemImo" placeholder="9123456" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <div class="form-group">
-                                <label>סוג</label>
-                                <select id="refItemType" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
-                                    <option value="">בחר סוג</option>
-                                    <option value="Bulk Carrier">Bulk Carrier</option>
-                                    <option value="Container Ship">Container Ship</option>
-                                    <option value="General Cargo">General Cargo</option>
-                                    <option value="Tanker">Tanker</option>
-                                    <option value="RoRo">RoRo</option>
+                                <label>LOA (מ')</label>
+                                <input type="number" step="0.01" id="refItemLoa" placeholder="185.00" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>רוחב (מ')</label>
+                                <input type="number" step="0.01" id="refItemBeam" placeholder="28.50" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>DWT (טון)</label>
+                                <input type="number" id="refItemDwt" placeholder="32000" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>Grain (cbf)</label>
+                                <input type="number" id="refItemGrain" placeholder="1500000" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>Bale (cbf)</label>
+                                <input type="number" id="refItemBale" placeholder="1400000" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>NRT (טון)</label>
+                                <input type="number" id="refItemNrt" placeholder="12000" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>GRT (טון)</label>
+                                <input type="number" id="refItemGrt" placeholder="20000" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>תאימות דגון</label>
+                                <select id="refItemDagonCompatible" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                                    <option value="">לא ידוע</option>
+                                    <option value="כן">כן</option>
+                                    <option value="לא">לא</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>בעלים</label>
-                                <input type="text" id="refItemOwner" placeholder="שם הבעלים" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                                <label>מס' נמל ישראלי</label>
+                                <input type="text" id="refItemIsraeliPortNumber" placeholder="12345" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
                             </div>
                         </div>
                     </div>
@@ -8006,13 +9186,25 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             let item = {};
 
             if (type === 'vessels') {
+                // Calculate next sequential ID
+                const maxSeqId = referenceData.vessels.reduce((max, v) => Math.max(max, v.sequentialId || 0), 0);
                 item = {
                     id: Date.now().toString(),
+                    sequentialId: maxSeqId + 1,
                     name: document.getElementById('refItemName').value.trim(),
                     flag: document.getElementById('refItemFlag').value.trim(),
+                    yearBuilt: document.getElementById('refItemYearBuilt').value.trim(),
+                    holds: document.getElementById('refItemHolds').value.trim(),
                     imo: document.getElementById('refItemImo').value.trim(),
-                    type: document.getElementById('refItemType').value,
-                    owner: document.getElementById('refItemOwner').value.trim()
+                    loa: document.getElementById('refItemLoa').value.trim(),
+                    beam: document.getElementById('refItemBeam').value.trim(),
+                    dwt: document.getElementById('refItemDwt').value.trim(),
+                    grain: document.getElementById('refItemGrain').value.trim(),
+                    bale: document.getElementById('refItemBale').value.trim(),
+                    nrt: document.getElementById('refItemNrt').value.trim(),
+                    grt: document.getElementById('refItemGrt').value.trim(),
+                    dagonCompatible: document.getElementById('refItemDagonCompatible').value,
+                    israeliPortNumber: document.getElementById('refItemIsraeliPortNumber').value.trim()
                 };
             } else if (type === 'cargo') {
                 item = {
@@ -8085,6 +9277,63 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             }
         }
 
+        // Add vessel to reference database when creating new ship
+        async function addVesselToReferenceDatabase(parserData) {
+            if (!parserData || !parserData.vesselName) return;
+
+            const vesselName = parserData.vesselName.trim();
+
+            // Check if vessel already exists in reference database
+            const existingVessel = referenceData.vessels.find(v =>
+                v.name.toLowerCase() === vesselName.toLowerCase()
+            );
+
+            if (existingVessel) {
+                console.log('Vessel already exists in reference database:', vesselName);
+                return;
+            }
+
+            // Extract vessel data from parser response
+            const vesselData = parserData.vessel || {};
+
+            // Calculate next sequential ID
+            const maxSeqId = referenceData.vessels.reduce((max, v) => Math.max(max, v.sequentialId || 0), 0);
+
+            const newVessel = {
+                id: Date.now().toString(),
+                sequentialId: maxSeqId + 1,
+                name: vesselName,
+                flag: vesselData.flag || parserData.flag || '',
+                yearBuilt: vesselData.yearBuilt || '',
+                holds: vesselData.holds || '',
+                imo: vesselData.imo || parserData.imo || '',
+                loa: vesselData.loa || '',
+                beam: vesselData.beam || '',
+                dwt: vesselData.dwt || '',
+                grain: vesselData.grain || '',
+                bale: vesselData.bale || '',
+                nrt: vesselData.nrt || '',
+                grt: vesselData.grt || '',
+                dagonCompatible: vesselData.dagonCompatible || '',
+                israeliPortNumber: vesselData.israeliPortNumber || ''
+            };
+
+            // Add to local array
+            referenceData.vessels.push(newVessel);
+
+            // Save to Firestore
+            try {
+                await db.collection('referenceData').doc('vessels').set({
+                    items: referenceData.vessels,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log('Vessel added to reference database:', vesselName);
+                renderVesselsTable();
+            } catch (error) {
+                console.error('Error adding vessel to reference database:', error);
+            }
+        }
+
         function editReferenceItem(type, index) {
             const item = referenceData[type][index];
             showAddReferenceModal(type);
@@ -8094,9 +9343,18 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 if (type === 'vessels') {
                     document.getElementById('refItemName').value = item.name || '';
                     document.getElementById('refItemFlag').value = item.flag || '';
+                    document.getElementById('refItemYearBuilt').value = item.yearBuilt || '';
+                    document.getElementById('refItemHolds').value = item.holds || '';
                     document.getElementById('refItemImo').value = item.imo || '';
-                    document.getElementById('refItemType').value = item.type || '';
-                    document.getElementById('refItemOwner').value = item.owner || '';
+                    document.getElementById('refItemLoa').value = item.loa || '';
+                    document.getElementById('refItemBeam').value = item.beam || '';
+                    document.getElementById('refItemDwt').value = item.dwt || '';
+                    document.getElementById('refItemGrain').value = item.grain || '';
+                    document.getElementById('refItemBale').value = item.bale || '';
+                    document.getElementById('refItemNrt').value = item.nrt || '';
+                    document.getElementById('refItemGrt').value = item.grt || '';
+                    document.getElementById('refItemDagonCompatible').value = item.dagonCompatible || '';
+                    document.getElementById('refItemIsraeliPortNumber').value = item.israeliPortNumber || '';
                 } else if (type === 'cargo') {
                     document.getElementById('refItemName').value = item.name || '';
                     document.getElementById('refItemCategory').value = item.category || '';
@@ -11920,7 +13178,7 @@ ${signature}`;
             };
 
             const typeLabels = {
-                'NOMINATION': 'נומינציה חדשה',
+                'NOMINATION': 'מינוי חדש',
                 'ETA_UPDATE': 'עדכון ETA',
                 'ARRIVAL_NOTICE': 'הודעת הגעה',
                 'BERTHING_NOTICE': 'הודעת עגינה',
@@ -12114,6 +13372,10 @@ ${signature}`;
 
                     ships.push(newShip);
                     await saveShipToFirestore(newShip);
+
+                    // Add vessel to reference database if not exists
+                    await addVesselToReferenceDatabase(smartParserData);
+
                     showToast(`אנייה ${newShip.name} נוספה בהצלחה!`, 'success');
 
                 } else {
