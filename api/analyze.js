@@ -309,12 +309,34 @@ Return valid JSON only (no markdown, no explanation):
 ## Important Rules:
 - Parse ALL cargo types separately - do not combine different types
 - If document shows breakdown by cargo type, capture each type
-- Weights in MT (metric tons)
+- Weights in MT (metric tons) - convert kg to MT by dividing by 1000
 - Extract ALL remarks and events
 - If no shifts structure, create one "Total" entry
-- Return ONLY valid JSON`;
+- Return ONLY valid JSON
 
-            userPrompt = `Analyze this tally/discharge report and extract ALL cargo information by type:\n\n${content}`;
+## CRITICAL - Tally Report Summary Tables:
+Many tally reports have summary tables with these key values - EXTRACT THEM:
+- "Total Day" or "Today" = dailyTotals (today's discharge only)
+- "Previous" = what was discharged before today (put in cumulativeTotals)
+- "Manifest" = total declared cargo (put in cargo.totalDeclaredWeight/Quantity)
+- "Grand Total" = total discharged so far including today
+- "Remain" or "Balance" = remaining to discharge (put in cargo.remaining)
+
+IMPORTANT: The "Remain" value from the report is the ACTUAL remaining, NOT calculated. Use it directly.
+
+Example extraction from summary table:
+| Total Day | 785 | 2,072,544 |
+| Previous | 10,606 | 22,896,552 |
+| Manifest | 18,603 | 47,001,817 |
+| Remain | 7,212 | 22,032,720 |
+
+Should produce:
+- dailyTotals: { quantity: 785, weight: 2072.544 }
+- cumulativeTotals: { quantity: 10606, weight: 22896.552 }
+- cargo.totalDeclaredQuantity: 18603, cargo.totalDeclaredWeight: 47001.817
+- cargo.remaining[0].weightRemaining: 22032.720, quantityRemaining: 7212`;
+
+            userPrompt = `Analyze this tally/discharge report and extract ALL cargo information by type. Pay special attention to summary tables with Manifest, Previous, Remain values:\n\n${content}`;
         } else {
             return res.status(400).json({ error: 'Invalid parseType. Use "email", "message", or "tally"' });
         }
