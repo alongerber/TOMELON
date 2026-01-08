@@ -3602,6 +3602,50 @@
             padding: 48px;
             color: var(--text-tertiary);
         }
+
+        /* ======================== PORT STATUS GRID ======================== */
+        .port-status-grid {
+            display: grid;
+            gap: 12px;
+        }
+        .port-status-row {
+            display: grid;
+            grid-template-columns: 1fr 140px 100px;
+            gap: 12px;
+            align-items: center;
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+        }
+        .port-status-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .port-status-date, .port-status-time {
+            padding: 10px 12px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-sm);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .port-status-date:focus, .port-status-time:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .port-status-date::-webkit-calendar-picker-indicator,
+        .port-status-time::-webkit-calendar-picker-indicator {
+            filter: invert(0.8);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .port-status-row {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 
     <!-- Firebase SDK (compat version for classic script) -->
@@ -4078,7 +4122,7 @@ Captain"></textarea>
                     <div class="discharge-ship-selector" style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 200px;">
                             <label style="font-weight: 600; color: var(--text-primary);">בחר אנייה:</label>
-                            <select id="dischargeShipSelect" onchange="loadDischargeData(); loadVoyageContacts();">
+                            <select id="dischargeShipSelect" onchange="loadDischargeData(); loadVoyageContacts(); loadPortStatus();">
                                 <option value="">-- בחר אנייה --</option>
                             </select>
                         </div>
@@ -4375,6 +4419,71 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                         <p>אין נתוני פריקה עדיין</p>
                                         <span>קלוט טאלי יומי להתחלת מעקב</span>
                                     </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Port Status Section -->
+                        <div class="discharge-section" style="grid-column: 1 / -1;">
+                            <h3 class="discharge-section-title">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                                    <line x1="16" y1="2" x2="16" y2="6"/>
+                                    <line x1="8" y1="2" x2="8" y2="6"/>
+                                    <line x1="3" y1="10" x2="21" y2="10"/>
+                                </svg>
+                                Port Status (Statement of Facts)
+                                <button onclick="generateSOF()" style="margin-right: auto; padding: 6px 12px; background: var(--primary); color: white; border: none; border-radius: var(--radius-sm); font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                        <polyline points="14 2 14 8 20 8"/>
+                                        <line x1="16" y1="13" x2="8" y2="13"/>
+                                        <line x1="16" y1="17" x2="8" y2="17"/>
+                                    </svg>
+                                    יצא דוח עובדות
+                                </button>
+                            </h3>
+
+                            <div id="portStatusForm" class="port-status-grid">
+                                <div class="port-status-row">
+                                    <span class="port-status-label">1. Arrived on Roads / ETA:</span>
+                                    <input type="date" id="ps_arrivedOnRoads_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_arrivedOnRoads_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">2. Notice of Readiness Tendered:</span>
+                                    <input type="date" id="ps_norTendered_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_norTendered_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">3. Pilot on Board:</span>
+                                    <input type="date" id="ps_pilotOnBoard_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_pilotOnBoard_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">4. Vessel Berthed:</span>
+                                    <input type="date" id="ps_vesselBerthed_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_vesselBerthed_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">5. D/L Commenced:</span>
+                                    <input type="date" id="ps_dlCommenced_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_dlCommenced_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">6. D/L Completed:</span>
+                                    <input type="date" id="ps_dlCompleted_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_dlCompleted_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">7. Pilot Ordered:</span>
+                                    <input type="date" id="ps_pilotOrdered_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_pilotOrdered_time" class="port-status-time" onchange="savePortStatus()">
+                                </div>
+                                <div class="port-status-row">
+                                    <span class="port-status-label">8. Sailed:</span>
+                                    <input type="date" id="ps_sailed_date" class="port-status-date" onchange="savePortStatus()">
+                                    <input type="time" id="ps_sailed_time" class="port-status-time" onchange="savePortStatus()">
                                 </div>
                             </div>
                         </div>
@@ -4901,6 +5010,18 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     totalWeight: 0,
                     totalQuantity: 0,
                     items: [] // Array of { type, weight, quantity, unit, blNumber }
+                },
+
+                // Port Status - formal timestamps for Statement of Facts
+                portStatus: baseData.portStatus || {
+                    arrivedOnRoads: { date: null, time: null },      // 1. Arrived on roads / ETA
+                    norTendered: { date: null, time: null },         // 2. Notice of Readiness Tendered
+                    pilotOnBoard: { date: null, time: null },        // 3. Pilot on board
+                    vesselBerthed: { date: null, time: null },       // 4. Vessel Berthed
+                    dlCommenced: { date: null, time: null },         // 5. D/L commenced
+                    dlCompleted: { date: null, time: null },         // 6. D/L completed
+                    pilotOrdered: { date: null, time: null },        // 7. Pilot Ordered
+                    sailed: { date: null, time: null }               // 8. Sailed
                 },
 
                 // Timestamps
@@ -8406,6 +8527,168 @@ LUCKY SAILOR - Marshall Islands - 9876543
                 saveData();
                 loadVoyageContacts();
                 showToast(`${prevContacts.contacts.length} אנשי קשר יובאו בהצלחה`, 'success');
+            }
+        }
+
+        // ==================== Port Status Functions ====================
+        const portStatusFields = [
+            'arrivedOnRoads', 'norTendered', 'pilotOnBoard', 'vesselBerthed',
+            'dlCommenced', 'dlCompleted', 'pilotOrdered', 'sailed'
+        ];
+
+        function loadPortStatus() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                // Clear all fields
+                portStatusFields.forEach(field => {
+                    const dateEl = document.getElementById(`ps_${field}_date`);
+                    const timeEl = document.getElementById(`ps_${field}_time`);
+                    if (dateEl) dateEl.value = '';
+                    if (timeEl) timeEl.value = '';
+                });
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            // Initialize portStatus if not exists
+            ship.portStatus = ship.portStatus || {};
+
+            portStatusFields.forEach(field => {
+                const dateEl = document.getElementById(`ps_${field}_date`);
+                const timeEl = document.getElementById(`ps_${field}_time`);
+                const data = ship.portStatus[field] || {};
+
+                if (dateEl) dateEl.value = data.date || '';
+                if (timeEl) timeEl.value = data.time || '';
+            });
+        }
+
+        async function savePortStatus() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) return;
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            // Initialize portStatus if not exists
+            ship.portStatus = ship.portStatus || {};
+
+            // Collect all field values
+            portStatusFields.forEach(field => {
+                const dateEl = document.getElementById(`ps_${field}_date`);
+                const timeEl = document.getElementById(`ps_${field}_time`);
+
+                ship.portStatus[field] = {
+                    date: dateEl?.value || null,
+                    time: timeEl?.value || null
+                };
+            });
+
+            ship.updatedAt = new Date().toISOString();
+
+            // Save to Firestore
+            try {
+                await db.collection("ships").doc(ship.id).update({
+                    portStatus: ship.portStatus,
+                    updatedAt: ship.updatedAt
+                });
+            } catch (error) {
+                console.error('Error saving port status:', error);
+            }
+        }
+
+        function generateSOF() {
+            const shipId = document.getElementById('dischargeShipSelect').value;
+            if (!shipId) {
+                showToast('יש לבחור אנייה קודם', 'warning');
+                return;
+            }
+
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            const ps = ship.portStatus || {};
+            const formatDateTime = (data) => {
+                if (!data || (!data.date && !data.time)) return '____________';
+                const dateStr = data.date ? new Date(data.date).toLocaleDateString('en-GB') : '';
+                const timeStr = data.time || '';
+                return `${dateStr} ${timeStr}`.trim() || '____________';
+            };
+
+            const manifest = ship.manifest || {};
+            const cargoItems = manifest.items || [];
+            const cargoList = cargoItems.length > 0
+                ? cargoItems.map(c => `${c.type}: ${c.weight?.toLocaleString() || 0} ${c.unit || 'MT'}`).join('\n        ')
+                : ship.cargo || 'N/A';
+
+            const sofContent = `
+═══════════════════════════════════════════════════════════════════
+                    STATEMENT OF FACTS
+═══════════════════════════════════════════════════════════════════
+
+VESSEL:         ${ship.name || 'N/A'}
+VOYAGE:         ${ship.voyage || 'N/A'}
+PORT:           ${ship.port || 'ASHDOD'}
+BERTH:          ${ship.berth || 'N/A'}
+
+CARGO:
+        ${cargoList}
+
+TOTAL:          ${manifest.totalWeight?.toLocaleString() || '0'} MT / ${manifest.totalQuantity?.toLocaleString() || '0'} PCS
+
+───────────────────────────────────────────────────────────────────
+                    PORT STATUS TIMES
+───────────────────────────────────────────────────────────────────
+
+1. Arrived on Roads / ETA:         ${formatDateTime(ps.arrivedOnRoads)}
+2. Notice of Readiness Tendered:   ${formatDateTime(ps.norTendered)}
+3. Pilot on Board:                 ${formatDateTime(ps.pilotOnBoard)}
+4. Vessel Berthed:                 ${formatDateTime(ps.vesselBerthed)}
+5. D/L Commenced:                  ${formatDateTime(ps.dlCommenced)}
+6. D/L Completed:                  ${formatDateTime(ps.dlCompleted)}
+7. Pilot Ordered:                  ${formatDateTime(ps.pilotOrdered)}
+8. Sailed:                         ${formatDateTime(ps.sailed)}
+
+───────────────────────────────────────────────────────────────────
+
+REMARKS:
+${ship.notes || 'N/A'}
+
+───────────────────────────────────────────────────────────────────
+Generated: ${new Date().toLocaleString('en-GB')}
+═══════════════════════════════════════════════════════════════════
+`.trim();
+
+            // Show in modal
+            document.getElementById('modalTitle').textContent = 'Statement of Facts';
+            document.getElementById('modalBody').innerHTML = `
+                <div style="background: #1a1a2e; padding: 16px; border-radius: 8px; overflow: auto; max-height: 60vh;">
+                    <pre style="font-family: 'Courier New', monospace; font-size: 12px; color: #e0e0e0; white-space: pre-wrap; margin: 0; direction: ltr; text-align: left;">${sofContent}</pre>
+                </div>
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 16px;">
+                    <button onclick="closeModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); cursor: pointer;">
+                        סגור
+                    </button>
+                    <button onclick="copySOFToClipboard()" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--primary); color: white; cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                        </svg>
+                        העתק
+                    </button>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        function copySOFToClipboard() {
+            const sofPre = document.querySelector('#modalBody pre');
+            if (sofPre) {
+                navigator.clipboard.writeText(sofPre.textContent)
+                    .then(() => showToast('הדוח הועתק ללוח', 'success'))
+                    .catch(() => showToast('שגיאה בהעתקה', 'error'));
             }
         }
 
