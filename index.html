@@ -4525,11 +4525,21 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                 <table class="reference-table" id="refVesselsTable">
                                     <thead>
                                         <tr>
+                                            <th>מס'</th>
                                             <th>שם אנייה</th>
                                             <th>דגל</th>
+                                            <th>שנת בנייה</th>
+                                            <th>מעמסות</th>
+                                            <th>LOA</th>
+                                            <th>רוחב</th>
+                                            <th>DWT</th>
+                                            <th>Grain</th>
+                                            <th>Bale</th>
+                                            <th>NRT</th>
+                                            <th>GRT</th>
                                             <th>IMO</th>
-                                            <th>סוג</th>
-                                            <th>בעלים</th>
+                                            <th>תאימות דגון</th>
+                                            <th>מס' נמל ישראלי</th>
                                             <th>פעולות</th>
                                         </tr>
                                     </thead>
@@ -7685,7 +7695,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             if (referenceData.vessels.length === 0) {
                 tbody.innerHTML = `
                     <tr class="empty-row">
-                        <td colspan="6">אין אניות במאגר. הוסף אנייה חדשה או השתמש בייבוא חכם.</td>
+                        <td colspan="16">אין אניות במאגר. הוסף אנייה חדשה או השתמש בייבוא חכם.</td>
                     </tr>
                 `;
                 return;
@@ -7693,11 +7703,21 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
             tbody.innerHTML = referenceData.vessels.map((vessel, idx) => `
                 <tr>
+                    <td>${idx + 1}</td>
                     <td><strong>${vessel.name || '-'}</strong></td>
                     <td>${vessel.flag || '-'}</td>
+                    <td>${vessel.yearBuilt || '-'}</td>
+                    <td>${vessel.holds || '-'}</td>
+                    <td>${vessel.loa || '-'}</td>
+                    <td>${vessel.beam || '-'}</td>
+                    <td>${vessel.dwt || '-'}</td>
+                    <td>${vessel.grain || '-'}</td>
+                    <td>${vessel.bale || '-'}</td>
+                    <td>${vessel.nrt || '-'}</td>
+                    <td>${vessel.grt || '-'}</td>
                     <td>${vessel.imo || '-'}</td>
-                    <td>${vessel.type || '-'}</td>
-                    <td>${vessel.owner || '-'}</td>
+                    <td>${vessel.dagonCompatible || '-'}</td>
+                    <td>${vessel.israeliPortNumber || '-'}</td>
                     <td class="actions">
                         <button class="action-btn" onclick="editReferenceItem('vessels', ${idx})" title="עריכה">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -7853,36 +7873,77 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
             if (type === 'vessels') {
                 formHtml = `
-                    <div style="display: grid; gap: 16px;">
-                        <div class="form-group">
-                            <label>שם האנייה</label>
-                            <input type="text" id="refItemName" placeholder="לדוגמה: ELA S" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
-                        </div>
+                    <div style="display: grid; gap: 16px; max-height: 60vh; overflow-y: auto; padding-left: 8px;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>שם האנייה *</label>
+                                <input type="text" id="refItemName" placeholder="לדוגמה: ELA S" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
                             <div class="form-group">
                                 <label>דגל</label>
                                 <input type="text" id="refItemFlag" placeholder="לדוגמה: Panama" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
                             </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>שנת בנייה</label>
+                                <input type="number" id="refItemYearBuilt" placeholder="2010" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>מס' מעמסות</label>
+                                <input type="number" id="refItemHolds" placeholder="5" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
                             <div class="form-group">
                                 <label>מספר IMO</label>
-                                <input type="text" id="refItemImo" placeholder="לדוגמה: 9123456" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                                <input type="text" id="refItemImo" placeholder="9123456" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
                             </div>
                         </div>
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
                             <div class="form-group">
-                                <label>סוג</label>
-                                <select id="refItemType" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
-                                    <option value="">בחר סוג</option>
-                                    <option value="Bulk Carrier">Bulk Carrier</option>
-                                    <option value="Container Ship">Container Ship</option>
-                                    <option value="General Cargo">General Cargo</option>
-                                    <option value="Tanker">Tanker</option>
-                                    <option value="RoRo">RoRo</option>
+                                <label>LOA (מ')</label>
+                                <input type="number" step="0.01" id="refItemLoa" placeholder="185.00" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>רוחב (מ')</label>
+                                <input type="number" step="0.01" id="refItemBeam" placeholder="28.50" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>DWT (טון)</label>
+                                <input type="number" id="refItemDwt" placeholder="32000" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>Grain (cbf)</label>
+                                <input type="number" id="refItemGrain" placeholder="1500000" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>Bale (cbf)</label>
+                                <input type="number" id="refItemBale" placeholder="1400000" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>NRT (טון)</label>
+                                <input type="number" id="refItemNrt" placeholder="12000" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                            <div class="form-group">
+                                <label>GRT (טון)</label>
+                                <input type="number" id="refItemGrt" placeholder="20000" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                            </div>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+                            <div class="form-group">
+                                <label>תאימות דגון</label>
+                                <select id="refItemDagonCompatible" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                                    <option value="">לא ידוע</option>
+                                    <option value="כן">כן</option>
+                                    <option value="לא">לא</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label>בעלים</label>
-                                <input type="text" id="refItemOwner" placeholder="שם הבעלים" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
+                                <label>מס' נמל ישראלי</label>
+                                <input type="text" id="refItemIsraeliPortNumber" placeholder="12345" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary);">
                             </div>
                         </div>
                     </div>
@@ -8010,9 +8071,18 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     id: Date.now().toString(),
                     name: document.getElementById('refItemName').value.trim(),
                     flag: document.getElementById('refItemFlag').value.trim(),
+                    yearBuilt: document.getElementById('refItemYearBuilt').value.trim(),
+                    holds: document.getElementById('refItemHolds').value.trim(),
                     imo: document.getElementById('refItemImo').value.trim(),
-                    type: document.getElementById('refItemType').value,
-                    owner: document.getElementById('refItemOwner').value.trim()
+                    loa: document.getElementById('refItemLoa').value.trim(),
+                    beam: document.getElementById('refItemBeam').value.trim(),
+                    dwt: document.getElementById('refItemDwt').value.trim(),
+                    grain: document.getElementById('refItemGrain').value.trim(),
+                    bale: document.getElementById('refItemBale').value.trim(),
+                    nrt: document.getElementById('refItemNrt').value.trim(),
+                    grt: document.getElementById('refItemGrt').value.trim(),
+                    dagonCompatible: document.getElementById('refItemDagonCompatible').value,
+                    israeliPortNumber: document.getElementById('refItemIsraeliPortNumber').value.trim()
                 };
             } else if (type === 'cargo') {
                 item = {
@@ -8085,6 +8155,59 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             }
         }
 
+        // Add vessel to reference database when creating new ship
+        async function addVesselToReferenceDatabase(parserData) {
+            if (!parserData || !parserData.vesselName) return;
+
+            const vesselName = parserData.vesselName.trim();
+
+            // Check if vessel already exists in reference database
+            const existingVessel = referenceData.vessels.find(v =>
+                v.name.toLowerCase() === vesselName.toLowerCase()
+            );
+
+            if (existingVessel) {
+                console.log('Vessel already exists in reference database:', vesselName);
+                return;
+            }
+
+            // Extract vessel data from parser response
+            const vesselData = parserData.vessel || {};
+
+            const newVessel = {
+                id: Date.now().toString(),
+                name: vesselName,
+                flag: vesselData.flag || parserData.flag || '',
+                yearBuilt: vesselData.yearBuilt || '',
+                holds: vesselData.holds || '',
+                imo: vesselData.imo || parserData.imo || '',
+                loa: vesselData.loa || '',
+                beam: vesselData.beam || '',
+                dwt: vesselData.dwt || '',
+                grain: vesselData.grain || '',
+                bale: vesselData.bale || '',
+                nrt: vesselData.nrt || '',
+                grt: vesselData.grt || '',
+                dagonCompatible: vesselData.dagonCompatible || '',
+                israeliPortNumber: vesselData.israeliPortNumber || ''
+            };
+
+            // Add to local array
+            referenceData.vessels.push(newVessel);
+
+            // Save to Firestore
+            try {
+                await db.collection('referenceData').doc('vessels').set({
+                    items: referenceData.vessels,
+                    lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                console.log('Vessel added to reference database:', vesselName);
+                renderVesselsTable();
+            } catch (error) {
+                console.error('Error adding vessel to reference database:', error);
+            }
+        }
+
         function editReferenceItem(type, index) {
             const item = referenceData[type][index];
             showAddReferenceModal(type);
@@ -8094,9 +8217,18 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 if (type === 'vessels') {
                     document.getElementById('refItemName').value = item.name || '';
                     document.getElementById('refItemFlag').value = item.flag || '';
+                    document.getElementById('refItemYearBuilt').value = item.yearBuilt || '';
+                    document.getElementById('refItemHolds').value = item.holds || '';
                     document.getElementById('refItemImo').value = item.imo || '';
-                    document.getElementById('refItemType').value = item.type || '';
-                    document.getElementById('refItemOwner').value = item.owner || '';
+                    document.getElementById('refItemLoa').value = item.loa || '';
+                    document.getElementById('refItemBeam').value = item.beam || '';
+                    document.getElementById('refItemDwt').value = item.dwt || '';
+                    document.getElementById('refItemGrain').value = item.grain || '';
+                    document.getElementById('refItemBale').value = item.bale || '';
+                    document.getElementById('refItemNrt').value = item.nrt || '';
+                    document.getElementById('refItemGrt').value = item.grt || '';
+                    document.getElementById('refItemDagonCompatible').value = item.dagonCompatible || '';
+                    document.getElementById('refItemIsraeliPortNumber').value = item.israeliPortNumber || '';
                 } else if (type === 'cargo') {
                     document.getElementById('refItemName').value = item.name || '';
                     document.getElementById('refItemCategory').value = item.category || '';
@@ -11920,7 +12052,7 @@ ${signature}`;
             };
 
             const typeLabels = {
-                'NOMINATION': 'נומינציה חדשה',
+                'NOMINATION': 'מינוי חדש',
                 'ETA_UPDATE': 'עדכון ETA',
                 'ARRIVAL_NOTICE': 'הודעת הגעה',
                 'BERTHING_NOTICE': 'הודעת עגינה',
@@ -12114,6 +12246,10 @@ ${signature}`;
 
                     ships.push(newShip);
                     await saveShipToFirestore(newShip);
+
+                    // Add vessel to reference database if not exists
+                    await addVesselToReferenceDatabase(smartParserData);
+
                     showToast(`אנייה ${newShip.name} נוספה בהצלחה!`, 'success');
 
                 } else {
