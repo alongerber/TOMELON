@@ -21713,106 +21713,156 @@ ${signature}`;
         function renderCmdBarResults(query) {
             const resultsDiv = document.getElementById('cmdBarResults');
             let html = '';
-
-            // Parse command from query
-            const parts = query.split(' ');
-            const cmdPart = parts[0];
-            const restPart = parts.slice(1).join(' ');
+            const q = query.toLowerCase().trim();
 
             // Find matching commands and ships
-            const matchingCommands = CMD_BAR_COMMANDS.filter(cmd =>
-                cmd.keywords.some(kw => kw.includes(cmdPart)) ||
-                cmd.name.includes(cmdPart)
-            );
+            const matchingCommands = q ? CMD_BAR_COMMANDS.filter(cmd =>
+                cmd.keywords.some(kw => kw.includes(q)) ||
+                cmd.name.toLowerCase().includes(q)
+            ) : [];
 
-            const matchingShips = ships.filter(ship =>
-                ship.name.toLowerCase().includes(query.toLowerCase()) ||
-                (ship.voyage && ship.voyage.toLowerCase().includes(query.toLowerCase()))
-            ).slice(0, 5);
+            const matchingShips = q ? ships.filter(ship =>
+                ship.name.toLowerCase().includes(q) ||
+                (ship.voyage && ship.voyage.toLowerCase().includes(q))
+            ).slice(0, 5) : [];
 
-            if (query === '') {
-                // === DEFAULT VIEW: Quick Actions + Active Ships ===
-
-                // Section 1: Ships under operation (most relevant)
-                const activeShips = ships.filter(s =>
-                    s.status === STATUS.UNDER_OPERATION || s.status === STATUS.AT_PORT
-                ).slice(0, 3);
-
-                if (activeShips.length > 0) {
-                    html += `
-                        <div class="cmd-bar-section">
-                            <div class="cmd-bar-section-title">🚢 אניות בפריקה - פעולות מהירות</div>
-                            ${activeShips.map(ship => `
-                                <div class="cmd-bar-ship-actions">
-                                    <div class="cmd-bar-ship-header">
-                                        <span class="cmd-bar-ship-name">${ship.name}</span>
-                                        <span class="cmd-bar-ship-status">${ship.berth ? 'רציף ' + ship.berth : ''}</span>
-                                    </div>
-                                    <div class="cmd-bar-quick-actions">
-                                        <button onclick="quickAction('tally', '${ship.id}')" class="cmd-quick-btn primary">
-                                            <span>📊</span> משמרת
-                                        </button>
-                                        <button onclick="quickAction('export', '${ship.id}')" class="cmd-quick-btn">
-                                            <span>📋</span> דוח
-                                        </button>
-                                        <button onclick="quickAction('docs', '${ship.id}')" class="cmd-quick-btn">
-                                            <span>📁</span> מסמכים
-                                        </button>
-                                        <button onclick="quickAction('stoppage', '${ship.id}')" class="cmd-quick-btn warning">
-                                            <span>⛔</span> עצירה
-                                        </button>
-                                    </div>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }
-
-                // Section 2: Common Quick Actions
-                html += `
+            if (q === '') {
+                // === DEFAULT VIEW: ALL system actions organized by category ===
+                html = `
                     <div class="cmd-bar-section">
-                        <div class="cmd-bar-section-title">⚡ פעולות נפוצות</div>
+                        <div class="cmd-bar-section-title">⚡ מרכז פקודות - הקלד או בחר פעולה</div>
+                    </div>
+
+                    <div class="cmd-bar-section">
+                        <div class="cmd-bar-section-title">🔄 עדכוני סטטוס אנייה</div>
                         <div class="cmd-bar-action-grid">
-                            <button onclick="quickAction('tally')" class="cmd-action-btn">
+                            <button onclick="cmdOpenForm('eta')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">🕐</span>
+                                <span>עדכון ETA</span>
+                            </button>
+                            <button onclick="cmdOpenForm('etb')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">⏰</span>
+                                <span>עדכון ETB</span>
+                            </button>
+                            <button onclick="cmdOpenForm('anchor')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">⚓</span>
+                                <span>הגעה לעוגן</span>
+                            </button>
+                            <button onclick="cmdOpenForm('berthed')" class="cmd-action-btn berthed">
+                                <span class="cmd-action-icon">🔗</span>
+                                <span>קשירה לרציף</span>
+                            </button>
+                            <button onclick="cmdOpenForm('discharge')" class="cmd-action-btn success">
+                                <span class="cmd-action-icon">⚙️</span>
+                                <span>התחלת פריקה</span>
+                            </button>
+                            <button onclick="cmdOpenForm('completed')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">✅</span>
+                                <span>סיום פריקה</span>
+                            </button>
+                            <button onclick="cmdOpenForm('sailed')" class="cmd-action-btn sailed">
+                                <span class="cmd-action-icon">🚢</span>
+                                <span>הפלגה</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cmd-bar-section">
+                        <div class="cmd-bar-section-title">📊 פריקה ומשמרות</div>
+                        <div class="cmd-bar-action-grid">
+                            <button onclick="cmdOpenForm('tally')" class="cmd-action-btn">
                                 <span class="cmd-action-icon">📊</span>
                                 <span>הזנת משמרת</span>
                             </button>
-                            <button onclick="quickAction('export')" class="cmd-action-btn">
-                                <span class="cmd-action-icon">📋</span>
-                                <span>ייצוא דוח</span>
+                            <button onclick="cmdOpenForm('stoppage')" class="cmd-action-btn warning">
+                                <span class="cmd-action-icon">⛔</span>
+                                <span>עצירת עבודה</span>
+                            </button>
+                            <button onclick="cmdOpenForm('resumed')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">▶️</span>
+                                <span>חידוש עבודה</span>
                             </button>
                             <button onclick="quickAction('exportAll')" class="cmd-action-btn">
-                                <span class="cmd-action-icon">📊</span>
+                                <span class="cmd-action-icon">📋</span>
                                 <span>סטטוס כל האניות</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cmd-bar-section">
+                        <div class="cmd-bar-section-title">🛠️ שירותים ובקשות</div>
+                        <div class="cmd-bar-action-grid">
+                            <button onclick="cmdOpenForm('water')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">💧</span>
+                                <span>הזמנת מים</span>
+                            </button>
+                            <button onclick="cmdOpenForm('provisions')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📦</span>
+                                <span>הזמנת אספקה</span>
+                            </button>
+                            <button onclick="cmdOpenForm('bunkers')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">⛽</span>
+                                <span>תדלוק</span>
+                            </button>
+                            <button onclick="cmdOpenForm('repairs')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">🔧</span>
+                                <span>תיקונים</span>
+                            </button>
+                            <button onclick="cmdOpenForm('pilot')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">👨‍✈️</span>
+                                <span>הזמנת נווט</span>
+                            </button>
+                            <button onclick="cmdOpenForm('tugs')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">🚤</span>
+                                <span>הזמנת גוררות</span>
+                            </button>
+                            <button onclick="cmdOpenForm('crew')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">👥</span>
+                                <span>החלפת צוות</span>
+                            </button>
+                            <button onclick="cmdOpenForm('agent')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">🧑‍💼</span>
+                                <span>שיבוץ סוכן</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cmd-bar-section">
+                        <div class="cmd-bar-section-title">📝 מסמכים והערות</div>
+                        <div class="cmd-bar-action-grid">
+                            <button onclick="cmdOpenForm('note')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📝</span>
+                                <span>הוספת הערה</span>
+                            </button>
+                            <button onclick="cmdOpenForm('nor')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📋</span>
+                                <span>NOR הוגש</span>
                             </button>
                             <button onclick="quickAction('docs')" class="cmd-action-btn">
                                 <span class="cmd-action-icon">📁</span>
                                 <span>מאגר מסמכים</span>
                             </button>
+                            <button onclick="cmdOpenForm('cargo')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📦</span>
+                                <span>עדכון מטען</span>
+                            </button>
                         </div>
                     </div>
-                `;
 
-                // Section 3: Status updates
-                html += `
                     <div class="cmd-bar-section">
-                        <div class="cmd-bar-section-title">🔄 עדכוני סטטוס</div>
+                        <div class="cmd-bar-section-title">🚢 ניהול אניות</div>
                         <div class="cmd-bar-action-grid">
-                            <button onclick="quickAction('sailed')" class="cmd-action-btn sailed">
-                                <span class="cmd-action-icon">🚢</span>
-                                <span>הפלגה</span>
+                            <button onclick="cmdOpenForm('newShip')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">➕</span>
+                                <span>אנייה חדשה</span>
                             </button>
-                            <button onclick="quickAction('berthed')" class="cmd-action-btn berthed">
-                                <span class="cmd-action-icon">⚓</span>
-                                <span>קשירה לרציף</span>
+                            <button onclick="showShipQuickSelector('view')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">🔍</span>
+                                <span>חפש אנייה</span>
                             </button>
-                            <button onclick="quickAction('anchor')" class="cmd-action-btn">
-                                <span class="cmd-action-icon">⚓</span>
-                                <span>הגעה לעוגן</span>
-                            </button>
-                            <button onclick="quickAction('discharge')" class="cmd-action-btn success">
-                                <span class="cmd-action-icon">⚙️</span>
-                                <span>התחלת פריקה</span>
+                            <button onclick="quickAction('export')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📤</span>
+                                <span>ייצוא דוח אנייה</span>
                             </button>
                         </div>
                     </div>
@@ -21826,13 +21876,14 @@ ${signature}`;
             // === SEARCH MODE ===
             let results = [];
 
-            // If found ships - show them with quick actions
+            // If found ships - show them with status-relevant quick actions
             if (matchingShips.length > 0) {
                 html += `<div class="cmd-bar-section">
-                    <div class="cmd-bar-section-title">🚢 אניות שנמצאו</div>
+                    <div class="cmd-bar-section-title">🚢 אניות</div>
                 `;
 
                 matchingShips.forEach(ship => {
+                    const actions = getRelevantActionsForShip(ship);
                     html += `
                         <div class="cmd-bar-ship-actions">
                             <div class="cmd-bar-ship-header">
@@ -21840,22 +21891,14 @@ ${signature}`;
                                 <span class="cmd-bar-ship-status">${getStatusText(ship.status)}${ship.berth ? ' • ' + ship.berth : ''}</span>
                             </div>
                             <div class="cmd-bar-quick-actions">
-                                <button onclick="quickAction('openShip', '${ship.id}')" class="cmd-quick-btn">
-                                    <span>👁️</span> צפייה
-                                </button>
-                                <button onclick="quickAction('tally', '${ship.id}')" class="cmd-quick-btn primary">
-                                    <span>📊</span> משמרת
-                                </button>
-                                <button onclick="quickAction('export', '${ship.id}')" class="cmd-quick-btn">
-                                    <span>📋</span> דוח
-                                </button>
-                                <button onclick="quickAction('docs', '${ship.id}')" class="cmd-quick-btn">
-                                    <span>📁</span> מסמכים
-                                </button>
+                                ${actions.map(a => `
+                                    <button onclick="cmdShipAction('${a.action}', '${ship.id}')" class="cmd-quick-btn ${a.cls || ''}">
+                                        <span>${a.icon}</span> ${a.label}
+                                    </button>
+                                `).join('')}
                             </div>
                         </div>
                     `;
-
                     results.push({ type: 'ship', ship: ship });
                 });
 
@@ -21863,13 +21906,13 @@ ${signature}`;
             }
 
             // If found commands - show them
-            if (matchingCommands.length > 0 && matchingCommands.length < 10) {
+            if (matchingCommands.length > 0) {
                 html += `
                     <div class="cmd-bar-section">
-                        <div class="cmd-bar-section-title">⚡ פקודות</div>
-                        ${matchingCommands.map((cmd, i) => `
-                            <div class="cmd-bar-item ${i === 0 ? 'selected' : ''}"
-                                 onclick="selectCmdBarItem({type: 'command', command: CMD_BAR_COMMANDS.find(c => c.id === '${cmd.id}')})"
+                        <div class="cmd-bar-section-title">⚡ פעולות</div>
+                        ${matchingCommands.slice(0, 8).map((cmd, i) => `
+                            <div class="cmd-bar-item ${i === 0 && matchingShips.length === 0 ? 'selected' : ''}"
+                                 onclick="cmdOpenForm('${cmd.id}')"
                                  data-index="${i}">
                                 <div class="cmd-bar-item-icon ${cmd.iconClass || ''}">${cmd.icon || '⚡'}</div>
                                 <div class="cmd-bar-item-content">
@@ -21881,8 +21924,7 @@ ${signature}`;
                         `).join('')}
                     </div>
                 `;
-
-                matchingCommands.forEach(cmd => {
+                matchingCommands.slice(0, 8).forEach(cmd => {
                     results.push({ type: 'command', command: cmd });
                 });
             }
@@ -21893,6 +21935,7 @@ ${signature}`;
                         <div style="padding: 30px; text-align: center; color: var(--text-muted);">
                             <div style="font-size: 32px; margin-bottom: 10px;">🔍</div>
                             <div>לא נמצאו תוצאות עבור "${query}"</div>
+                            <div style="font-size: 12px; margin-top: 8px;">נסה: eta, משמרת, מים, הערה, נווט, קשירה...</div>
                         </div>
                     </div>
                 `;
@@ -21902,56 +21945,117 @@ ${signature}`;
             resultsDiv.innerHTML = html;
         }
 
+        // Get relevant quick actions based on ship status
+        function getRelevantActionsForShip(ship) {
+            const actions = [{ action: 'view', icon: '👁️', label: 'צפייה' }];
+
+            switch(ship.status) {
+                case STATUS.EXPECTED:
+                case STATUS.AT_SEA:
+                    actions.push({ action: 'eta', icon: '🕐', label: 'ETA' });
+                    actions.push({ action: 'anchor', icon: '⚓', label: 'הגיע לעוגן' });
+                    break;
+                case STATUS.AT_ANCHOR:
+                    actions.push({ action: 'etb', icon: '⏰', label: 'ETB' });
+                    actions.push({ action: 'berthed', icon: '🔗', label: 'קשירה', cls: 'primary' });
+                    break;
+                case STATUS.AT_PORT:
+                    actions.push({ action: 'discharge', icon: '⚙️', label: 'התחלת פריקה', cls: 'success' });
+                    actions.push({ action: 'sailed', icon: '🚢', label: 'הפלגה' });
+                    break;
+                case STATUS.UNDER_OPERATION:
+                    actions.push({ action: 'tally', icon: '📊', label: 'משמרת', cls: 'primary' });
+                    actions.push({ action: 'stoppage', icon: '⛔', label: 'עצירה', cls: 'warning' });
+                    actions.push({ action: 'completed', icon: '✅', label: 'סיום' });
+                    break;
+                case STATUS.OPERATION_COMPLETED:
+                    actions.push({ action: 'sailed', icon: '🚢', label: 'הפלגה', cls: 'primary' });
+                    break;
+            }
+
+            actions.push({ action: 'note', icon: '📝', label: 'הערה' });
+            actions.push({ action: 'docs', icon: '📁', label: 'מסמכים' });
+            return actions;
+        }
+
+        // Open form for a command
+        function cmdOpenForm(commandId) {
+            closeCmdBar();
+            const cmd = CMD_BAR_COMMANDS.find(c => c.id === commandId);
+            if (cmd) {
+                if (cmd.action) {
+                    executeDirectAction(cmd);
+                } else {
+                    showCmdBarForm(cmd);
+                }
+            } else if (commandId === 'newShip') {
+                openNewShipModal();
+            } else {
+                // Create ad-hoc command for services not in main list
+                const serviceCommands = {
+                    water: { name: 'הזמנת מים', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'quantity', type: 'number', label: 'כמות (טון)' }, { id: 'date', type: 'date', label: 'תאריך', default: 'today' }] },
+                    provisions: { name: 'הזמנת אספקה', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'text', type: 'textarea', label: 'פירוט' }] },
+                    bunkers: { name: 'הזמנת תדלוק', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'quantity', type: 'number', label: 'כמות (טון)' }, { id: 'fuelType', type: 'text', label: 'סוג דלק' }] },
+                    repairs: { name: 'בקשת תיקון', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'text', type: 'textarea', label: 'תיאור התקלה' }] },
+                    pilot: { name: 'הזמנת נווט', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'datetime', type: 'datetime-local', label: 'תאריך ושעה' }] },
+                    tugs: { name: 'הזמנת גוררות', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'quantity', type: 'number', label: 'מספר גוררות' }, { id: 'datetime', type: 'datetime-local', label: 'תאריך ושעה' }] },
+                    crew: { name: 'החלפת צוות', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'text', type: 'textarea', label: 'פרטים' }] },
+                    agent: { name: 'שיבוץ סוכן', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'agentName', type: 'text', label: 'שם הסוכן' }] },
+                    cargo: { name: 'עדכון מטען', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'text', type: 'textarea', label: 'פירוט מטען' }] },
+                    nor: { name: 'NOR הוגש', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'datetime', type: 'datetime-local', label: 'תאריך ושעה' }] },
+                    resumed: { name: 'חידוש עבודה', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'datetime', type: 'datetime-local', label: 'תאריך ושעה' }] },
+                    etb: { name: 'עדכון ETB', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'etb', type: 'datetime-local', label: 'ETB' }] },
+                    completed: { name: 'סיום פריקה', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'datetime', type: 'datetime-local', label: 'תאריך ושעה סיום' }] }
+                };
+                if (serviceCommands[commandId]) {
+                    showCmdBarForm({ id: commandId, ...serviceCommands[commandId] });
+                }
+            }
+        }
+
+        // Ship-specific action from command bar
+        function cmdShipAction(action, shipId) {
+            closeCmdBar();
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            if (action === 'view') {
+                openShipModal(shipId);
+            } else if (action === 'tally') {
+                openTallyModal(shipId);
+            } else if (action === 'docs') {
+                openDocVault(shipId);
+            } else if (action === 'export') {
+                exportDischargeReport(shipId);
+            } else {
+                cmdOpenForm(action);
+                // Pre-select ship if form opens
+                setTimeout(() => {
+                    const shipSelect = document.querySelector('.cmd-bar-form select');
+                    if (shipSelect) shipSelect.value = shipId;
+                }, 100);
+            }
+        }
+
         // Quick action handler
         function quickAction(action, shipId = null) {
             closeCmdBar();
 
             switch(action) {
                 case 'tally':
-                    if (shipId) {
-                        openTallyModal(shipId);
-                    } else {
-                        const dischargeShips = ships.filter(s => s.status === STATUS.AT_PORT || s.status === STATUS.UNDER_OPERATION);
-                        if (dischargeShips.length === 1) {
-                            openTallyModal(dischargeShips[0].id);
-                        } else if (dischargeShips.length > 1) {
-                            showShipQuickSelector('tally');
-                        } else {
-                            showToast('אין אניות בפריקה', 'warning');
-                        }
-                    }
+                    if (shipId) openTallyModal(shipId);
+                    else showShipQuickSelector('tally');
                     break;
                 case 'export':
-                    if (shipId) {
-                        exportDischargeReport(shipId);
-                    } else {
-                        selectedDischargeShipId ? exportDischargeReport() : showShipQuickSelector('export');
-                    }
+                    if (shipId) exportDischargeReport(shipId);
+                    else showShipQuickSelector('export');
                     break;
                 case 'exportAll':
                     exportAllShipsStatus();
                     break;
                 case 'docs':
-                    if (shipId) {
-                        openDocVault(shipId);
-                    } else {
-                        selectedDischargeShipId ? openDocVault() : showShipQuickSelector('docs');
-                    }
-                    break;
-                case 'openShip':
-                    if (shipId) openShipModal(shipId);
-                    break;
-                case 'stoppage':
-                    if (shipId) {
-                        showCmdBarForm(CMD_BAR_COMMANDS.find(c => c.id === 'stoppage'), ships.find(s => s.id === shipId));
-                    }
-                    break;
-                case 'sailed':
-                case 'berthed':
-                case 'anchor':
-                case 'discharge':
-                    const cmd = CMD_BAR_COMMANDS.find(c => c.id === action);
-                    if (cmd) showCmdBarForm(cmd);
+                    if (shipId) openDocVault(shipId);
+                    else showShipQuickSelector('docs');
                     break;
             }
         }
@@ -21960,18 +22064,26 @@ ${signature}`;
         function showShipQuickSelector(nextAction) {
             const overlay = document.getElementById('cmdBarOverlay');
             overlay.classList.add('active');
+            document.getElementById('cmdBarInput').value = '';
+            document.getElementById('cmdBarInput').placeholder = 'חפש אנייה...';
+            document.getElementById('cmdBarInput').focus();
 
-            const relevantShips = ships.filter(s =>
+            // Show ALL ships for 'view', or relevant ships for other actions
+            const relevantShips = nextAction === 'view' ? ships : ships.filter(s =>
                 s.status === STATUS.AT_PORT ||
                 s.status === STATUS.UNDER_OPERATION ||
-                s.status === STATUS.AT_ANCHOR
+                s.status === STATUS.AT_ANCHOR ||
+                s.status === STATUS.EXPECTED ||
+                s.status === STATUS.AT_SEA
             );
+
+            const actionHandler = nextAction === 'view' ? 'cmdShipAction' : 'quickAction';
 
             document.getElementById('cmdBarResults').innerHTML = `
                 <div class="cmd-bar-section">
-                    <div class="cmd-bar-section-title">בחר אנייה</div>
+                    <div class="cmd-bar-section-title">בחר אנייה (${relevantShips.length})</div>
                     ${relevantShips.map(ship => `
-                        <div class="cmd-bar-item" onclick="quickAction('${nextAction}', '${ship.id}')">
+                        <div class="cmd-bar-item" onclick="${actionHandler}('${nextAction}', '${ship.id}')">
                             <div class="cmd-bar-item-icon">🚢</div>
                             <div class="cmd-bar-item-content">
                                 <div class="cmd-bar-item-title">${ship.name}</div>
