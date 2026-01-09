@@ -3066,6 +3066,91 @@
             padding: var(--spacing-md) 0;
         }
 
+        .logo {
+            position: relative;
+        }
+
+        .logo-image {
+            position: relative;
+            z-index: 1;
+            animation: elegantFloat 6s infinite ease-in-out, glowPulse 4s infinite ease-in-out;
+        }
+
+        /* Sparkle container */
+        .logo::before,
+        .logo::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 2;
+        }
+
+        /* Shimmer sweep effect */
+        .logo::before {
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0) 40%,
+                rgba(255, 255, 255, 0.4) 50%,
+                rgba(255, 255, 255, 0) 60%,
+                transparent 100%
+            );
+            animation: shimmerSweep 3s infinite ease-in-out;
+            opacity: 0.7;
+        }
+
+        /* Sparkle dots */
+        .logo-sparkles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            overflow: visible;
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 0 6px 2px rgba(255, 255, 255, 0.8), 0 0 12px 4px var(--primary);
+            animation: sparkleAnim 2s infinite ease-in-out;
+        }
+
+        .sparkle:nth-child(1) { top: 10%; left: 15%; animation-delay: 0s; }
+        .sparkle:nth-child(2) { top: 20%; right: 10%; animation-delay: 0.4s; }
+        .sparkle:nth-child(3) { top: 60%; left: 5%; animation-delay: 0.8s; }
+        .sparkle:nth-child(4) { bottom: 20%; right: 15%; animation-delay: 1.2s; }
+        .sparkle:nth-child(5) { top: 40%; right: 5%; animation-delay: 1.6s; }
+        .sparkle:nth-child(6) { bottom: 10%; left: 30%; animation-delay: 0.2s; }
+
+        @keyframes sparkleAnim {
+            0%, 100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+            50% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        @keyframes shimmerSweep {
+            0% {
+                transform: translateX(-100%) skewX(-15deg);
+            }
+            100% {
+                transform: translateX(200%) skewX(-15deg);
+            }
+        }
+
         .animated-logo {
             max-width: 180px;
             height: auto;
@@ -3096,6 +3181,33 @@
             }
             50% {
                 filter: drop-shadow(0 0 16px var(--primary));
+            }
+        }
+
+        /* Ambient glow ring */
+        .logo-glow-ring {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 120%;
+            height: 120%;
+            border-radius: 50%;
+            background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+            animation: glowRingPulse 4s infinite ease-in-out;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes glowRingPulse {
+            0%, 100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0.3;
+            }
+            50% {
+                transform: translate(-50%, -50%) scale(1.1);
+                opacity: 0.6;
             }
         }
 
@@ -5866,7 +5978,16 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
+                    <div class="logo-glow-ring"></div>
                     <img src="logo.png" alt="TOMELON" class="logo-image">
+                    <div class="logo-sparkles">
+                        <span class="sparkle"></span>
+                        <span class="sparkle"></span>
+                        <span class="sparkle"></span>
+                        <span class="sparkle"></span>
+                        <span class="sparkle"></span>
+                        <span class="sparkle"></span>
+                    </div>
                 </div>
             </div>
             
