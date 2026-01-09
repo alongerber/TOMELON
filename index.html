@@ -7219,6 +7219,62 @@
             font-size: 11px;
             color: var(--text-muted);
         }
+
+        /* ======================== FLOATING ACTION BUTTON (Command Bar) ======================== */
+        .cmd-fab {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cmd-fab:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .cmd-fab:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .cmd-fab svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .cmd-fab-kbd {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: monospace;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .cmd-fab {
+                bottom: 16px;
+                left: 16px;
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+            .cmd-fab-kbd {
+                display: none;
+            }
+        }
     </style>
 
     <!-- Firebase SDK (compat version for classic script) -->
@@ -7487,17 +7543,6 @@ BUNDLES STEEL BARS 14M - TASSA - 33 pcs - 80,596 kg
                         <span class="sparkle"></span>
                     </div>
                 </div>
-                <!-- Command Bar Button -->
-                <button onclick="openCmdBar()" class="cmd-bar-trigger" style="width: 100%; margin-top: 12px; padding: 10px 16px; background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: 8px; color: var(--text-secondary); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: all 200ms ease;">
-                    <span style="display: flex; align-items: center; gap: 8px;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="m21 21-4.35-4.35"/>
-                        </svg>
-                        חיפוש מהיר...
-                    </span>
-                    <span style="background: var(--bg-card); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-family: monospace;">⌘K</span>
-                </button>
             </div>
 
             <nav class="nav-menu">
@@ -7672,11 +7717,11 @@ BUNDLES STEEL BARS 14M - TASSA - 33 pcs - 80,596 kg
                             </svg>
                             נקה נתונים
                         </button>
-                        <button class="btn btn-success" onclick="addShipManually()" title="הוסף אנייה חדשה ידנית">
+                        <button class="btn btn-success" onclick="addShipManually()" title="הוסף הפלגה חדשה">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 5v14m-7-7h14"/>
                             </svg>
-                            הוסף אנייה
+                            הוסף הפלגה
                         </button>
                         <button class="btn btn-primary" onclick="importExcel()" title="ייבוא דוח Excel">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -9438,7 +9483,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             const title = document.getElementById('modalTitle');
             const body = document.getElementById('modalBody');
 
-            title.textContent = 'הוספת אנייה חדשה';
+            title.textContent = 'הוספת הפלגה חדשה';
             body.innerHTML = `
                 <form id="addShipForm" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
                     <div class="form-group"><label>שם אנייה:</label><input type="text" name="name" required></div>
@@ -9450,7 +9495,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
                     <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
                         <button type="button" class="btn btn-secondary" onclick="closeModal()">ביטול</button>
-                        <button type="submit" class="btn btn-primary">שמור אנייה</button>
+                        <button type="submit" class="btn btn-primary">שמור</button>
                     </div>
                 </form>
             `;
@@ -9483,10 +9528,10 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 ships.push(finalShip);
                 db.collection("ships").doc(finalShip.id).set(finalShip)
                     .then(() => {
-                        showToast('אנייה חדשה נוספה בהצלחה', 'success');
-                        addActivity('הוספת אנייה', `נוספה אנייה חדשה: ${finalShip.name}`);
+                        showToast('הפלגה חדשה נוספה בהצלחה', 'success');
+                        addActivity('הוספת הפלגה', `נוספה הפלגה חדשה: ${finalShip.name}`);
                     })
-                    .catch(e => showToast('שגיאה בהוספת אנייה', 'error'));
+                    .catch(e => showToast('שגיאה בהוספת הפלגה', 'error'));
 
                 // עדכן ממשק
                 if (currentTab !== 'quick') renderShips(); // אין לרנדר אם במבט מהיר
@@ -13360,8 +13405,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             saveData();
             renderShips();
 
-            showToast(shipId === 'new' ? 'אנייה חדשה נוספה בהצלחה!' : 'כל העדכונים הוחלו בהצלחה!', 'success');
-            addActivity(shipId === 'new' ? 'אנייה חדשה' : 'עדכון מניתוח', `${ship.name} עודכנה מניתוח הודעה`);
+            showToast(shipId === 'new' ? 'הפלגה חדשה נוספה בהצלחה!' : 'כל העדכונים הוחלו בהצלחה!', 'success');
+            addActivity(shipId === 'new' ? 'הפלגה חדשה' : 'עדכון מניתוח', `${ship.name} עודכנה מניתוח הודעה`);
 
             // Clear the form and show success
             document.getElementById('emailInput').value = '';
@@ -17804,19 +17849,109 @@ Generated: ${new Date().toLocaleString('en-GB')}
         }
 
 
-        function clearAllData() {
-            if (confirm('האם אתה בטוח שברצונך למחוק את כל הנתונים ולהתחיל מחדש?')) {
+        async function clearAllData() {
+            if (!confirm('האם אתה בטוח שברצונך למחוק את כל הנתונים ולהתחיל מחדש?\n\nפעולה זו תמחק לצמיתות:\n• כל האניות\n• כל המסמכים\n• כל הפעילויות\n• כל אנשי הקשר\n• כל הנתונים האחרים')) {
+                return;
+            }
+
+            if (!confirm('אישור סופי: כל הנתונים יימחקו לצמיתות ולא ניתן יהיה לשחזר אותם. להמשיך?')) {
+                return;
+            }
+
+            showToast('מוחק את כל הנתונים...', 'info');
+
+            try {
+                // Delete all ships and their subcollections
+                const shipsSnapshot = await db.collection('ships').get();
+                for (const shipDoc of shipsSnapshot.docs) {
+                    // Delete subcollections
+                    const subcollections = ['documents', 'shiftLog', 'notes', 'tallyRecords', 'stoppages'];
+                    for (const subcol of subcollections) {
+                        const subSnapshot = await db.collection('ships').doc(shipDoc.id).collection(subcol).get();
+                        for (const subDoc of subSnapshot.docs) {
+                            await subDoc.ref.delete();
+                        }
+                    }
+                    await shipDoc.ref.delete();
+                }
+
+                // Delete archived ships
+                const archivedSnapshot = await db.collection('archived').get();
+                for (const doc of archivedSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete activities
+                const activitiesSnapshot = await db.collection('activities').get();
+                for (const doc of activitiesSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete gallery
+                const gallerySnapshot = await db.collection('gallery').get();
+                for (const doc of gallerySnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete service requests
+                const serviceSnapshot = await db.collection('serviceRequests').get();
+                for (const doc of serviceSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete contacts
+                const contactsSnapshot = await db.collection('contacts').get();
+                for (const doc of contactsSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete email groups
+                const emailGroupsSnapshot = await db.collection('emailGroups').get();
+                for (const doc of emailGroupsSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete field agent docs
+                const fieldAgentSnapshot = await db.collection('fieldAgentDocs').get();
+                for (const doc of fieldAgentSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete shift summaries
+                const shiftSummariesSnapshot = await db.collection('shiftSummaries').get();
+                for (const doc of shiftSummariesSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete shift handovers
+                const shiftHandoversSnapshot = await db.collection('shiftHandovers').get();
+                for (const doc of shiftHandoversSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Clear local storage and session storage
                 localStorage.clear();
                 sessionStorage.clear();
+
+                // Reset local variables
                 ships = [];
                 activities = [];
                 archived = [];
+                contacts = [];
+                emailGroups = [];
+                fieldAgentShipData = {};
                 fileHandle = null;
+
+                // Refresh UI
                 renderShips();
                 updateStats();
                 updateActivities();
-                showToast('כל הנתונים נמחקו', 'success');
-                addActivity('מחיקת נתונים', 'כל הנתונים נמחקו מהמערכת');
+
+                showToast('כל הנתונים נמחקו בהצלחה!', 'success');
+
+            } catch (error) {
+                console.error('Error clearing data:', error);
+                showToast('שגיאה במחיקת הנתונים: ' + error.message, 'error');
             }
         }
 
@@ -21935,11 +22070,11 @@ ${signature}`;
                     </div>
 
                     <div class="cmd-bar-section">
-                        <div class="cmd-bar-section-title">🚢 ניהול אניות</div>
+                        <div class="cmd-bar-section-title">🚢 ניהול הפלגות</div>
                         <div class="cmd-bar-action-grid">
                             <button onclick="cmdOpenForm('newShip')" class="cmd-action-btn">
                                 <span class="cmd-action-icon">➕</span>
-                                <span>אנייה חדשה</span>
+                                <span>הפלגה חדשה</span>
                             </button>
                             <button onclick="showShipQuickSelector('view')" class="cmd-action-btn">
                                 <span class="cmd-action-icon">🔍</span>
@@ -21947,7 +22082,7 @@ ${signature}`;
                             </button>
                             <button onclick="quickAction('export')" class="cmd-action-btn">
                                 <span class="cmd-action-icon">📤</span>
-                                <span>ייצוא דוח אנייה</span>
+                                <span>ייצוא דוח</span>
                             </button>
                         </div>
                     </div>
@@ -22771,5 +22906,15 @@ ${signature}`;
         // ==================== Initialize App ====================
         document.addEventListener('DOMContentLoaded', init);
     </script>
+
+    <!-- Floating Command Bar Button -->
+    <button onclick="openCmdBar()" class="cmd-fab" title="מרכז פקודות (Ctrl+K)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <span>מרכז פקודות</span>
+        <span class="cmd-fab-kbd">⌘K</span>
+    </button>
 </body>
 </html>
