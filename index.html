@@ -6202,18 +6202,9 @@
             display: block;
         }
 
-        /* Mobile-first header */
+        /* Mobile-first header - HIDDEN for now, will be used with user roles later */
         .fa-header {
-            background: var(--bg-card);
-            border-bottom: 1px solid var(--glass-border);
-            color: var(--text-primary);
-            padding: 10px 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            display: none; /* Hidden until user role management is implemented */
         }
         .fa-header-title {
             font-size: 14px;
@@ -7326,19 +7317,19 @@
                 <!-- Shift Info -->
                 <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                     <div>
-                        <label style="font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 4px;">תאריך</label>
+                        <label style="font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Date</label>
                         <input type="date" id="tallyDate" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
                     </div>
                     <div>
-                        <label style="font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 4px;">משמרת</label>
+                        <label style="font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Shift</label>
                         <select id="tallyShiftNum" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
-                            <option value="1">משמרת 1 (06:30-14:30)</option>
-                            <option value="2">משמרת 2 (14:30-22:30)</option>
-                            <option value="3">משמרת 3 (22:30-06:30)</option>
+                            <option value="1">Shift 1 (06:30-14:30)</option>
+                            <option value="2">Shift 2 (14:30-22:30)</option>
+                            <option value="3">Shift 3 (22:30-06:30)</option>
                         </select>
                     </div>
                     <div>
-                        <label style="font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 4px;">גנגים</label>
+                        <label style="font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Gangs</label>
                         <input type="number" id="tallyGangs" value="1" min="1" max="5" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary);">
                     </div>
                 </div>
@@ -7371,15 +7362,15 @@ BUNDLES STEEL BARS 14M - TASSA - 33 pcs - 80,596 kg
                         <!-- Cargo types from ship will be rendered here -->
                     </div>
                     <div style="margin-top: 16px;">
-                        <label style="font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 4px;">הערות</label>
+                        <label style="font-size: 12px; color: var(--text-secondary); display: block; margin-bottom: 4px;">Remarks</label>
                         <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px;">
-                            <button type="button" class="tally-remark-btn" onclick="addTallyRemark('רוח חזקה')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; cursor: pointer;">רוח</button>
-                            <button type="button" class="tally-remark-btn" onclick="addTallyRemark('גשם')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; cursor: pointer;">גשם</button>
-                            <button type="button" class="tally-remark-btn" onclick="addTallyRemark('תקלה במנוף')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; cursor: pointer;">תקלה</button>
-                            <button type="button" class="tally-remark-btn" onclick="addTallyRemark('המתנה למשאיות')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; cursor: pointer;">המתנה</button>
-                            <button type="button" class="tally-remark-btn" onclick="addTallyRemark('עומס בנמל')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; cursor: pointer;">עומס</button>
+                            <button type="button" class="tally-remark-btn" onclick="addTallyRemark('Strong Wind')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; cursor: pointer;">Wind</button>
+                            <button type="button" class="tally-remark-btn" onclick="addTallyRemark('Rain')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; cursor: pointer;">Rain</button>
+                            <button type="button" class="tally-remark-btn" onclick="addTallyRemark('Crane Breakdown')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; cursor: pointer;">Breakdown</button>
+                            <button type="button" class="tally-remark-btn" onclick="addTallyRemark('Waiting for Trucks')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; cursor: pointer;">Waiting</button>
+                            <button type="button" class="tally-remark-btn" onclick="addTallyRemark('Port Congestion')" style="padding: 6px 12px; border-radius: 6px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-secondary); font-size: 12px; cursor: pointer;">Congestion</button>
                         </div>
-                        <textarea id="tallyRemarks" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary); min-height: 60px; resize: vertical;" placeholder="הערות נוספות..."></textarea>
+                        <textarea id="tallyRemarks" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary); min-height: 60px; resize: vertical;" placeholder="Additional remarks..."></textarea>
                     </div>
                 </div>
             </div>
@@ -7639,15 +7630,15 @@ BUNDLES STEEL BARS 14M - TASSA - 33 pcs - 80,596 kg
                 </div>
                     <div class="stat-card">
                         <div class="stat-value" id="atSeaCount">0</div>
-                        <div class="stat-label">בדרך</div>
+                        <div class="stat-label">At Sea</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="atPortCount">0</div>
-                        <div class="stat-label">על עוגן</div>
+                        <div class="stat-label">At Anchor</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="underOperationCount">0</div>
-                        <div class="stat-label">בפריקה</div>
+                        <div class="stat-label">Under Discharge</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" id="urgentTasks">0</div>
@@ -7760,19 +7751,19 @@ BUNDLES STEEL BARS 14M - TASSA - 33 pcs - 80,596 kg
                     </button>
                     <button class="tab" onclick="switchTab('under-operation', this)">
                         <span class="tab-badge" id="underOperationBadge">0</span>
-                        בפריקה
+                        Under Discharge
                     </button>
                     <button class="tab" onclick="switchTab('at-port', this)">
                         <span class="tab-badge" id="atPortBadge">0</span>
-                        על עוגן
+                        At Anchor
                     </button>
                     <button class="tab" onclick="switchTab('at-sea', this)">
                         <span class="tab-badge" id="atSeaBadge">0</span>
-                        בדרך
+                        At Sea
                     </button>
                     <button class="tab" onclick="switchTab('sailed', this)">
                         <span class="tab-badge" id="sailedBadge">0</span>
-                        הפליגו
+                        Sailed
                     </button>
                     <button class="tab" onclick="switchTab('quick', this)">
                         <span class="tab-badge" id="quickBadge">0</span>
@@ -8062,7 +8053,7 @@ Captain"></textarea>
                     <div class="discharge-quick-ships" id="dischargeQuickShips">
                         <!-- Ship cards will be rendered here by JS -->
                         <div style="padding: 20px; text-align: center; color: var(--text-muted); width: 100%;">
-                            <span>אין אניות בפריקה כרגע</span>
+                            <span>No vessels under discharge</span>
                         </div>
                     </div>
 
@@ -10590,14 +10581,14 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
         function translateStatus(status) {
             const statusMap = {
-                'nominated': 'נומינציה',
-                'loading': 'בטעינה',
-                'en-route': 'בדרך',
-                'at-anchor': 'בעוגן',
-                'berthed': 'ברציף',
-                'working': 'בפריקה',
-                'sailed': 'הפליגה',
-                'completed': 'הושלם'
+                'nominated': 'Nominated',
+                'loading': 'Loading',
+                'en-route': 'At Sea',
+                'at-anchor': 'At Anchor',
+                'berthed': 'Berthed',
+                'working': 'Under Discharge',
+                'sailed': 'Sailed',
+                'completed': 'Completed'
             };
             return statusMap[status] || status || '-';
         }
@@ -11304,7 +11295,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // --- Table for Under Operation Ships ---
             if (underOperationShips.length > 0) {
                 finalHtml += `
-                    <h4 class="quick-view-title">אניות בפריקה</h4>
+                    <h4 class="quick-view-title">Vessels Under Discharge</h4>
                     <div class="quick-view-table">
                     <div class="quick-view-header">
                             <div class="ship-details-header">אנייה</div>
@@ -11345,7 +11336,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // --- Table for At Port Ships ---
             if (atPortShips.length > 0) {
                 finalHtml += `
-                    <h4 class="quick-view-title" style="margin-top: var(--spacing-xl);">אניות על עוגן</h4>
+                    <h4 class="quick-view-title" style="margin-top: var(--spacing-xl);">Vessels At Anchor</h4>
                     <div class="quick-view-table">
                         <div class="quick-view-header">
                             <div class="ship-details-header">אנייה</div>
@@ -11385,7 +11376,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             // --- Table for At Sea Ships ---
             if (atSeaShips.length > 0) {
                 finalHtml += `
-                    <h4 class="quick-view-title" style="margin-top: var(--spacing-xl);">אניות בדרך</h4>
+                    <h4 class="quick-view-title" style="margin-top: var(--spacing-xl);">Vessels At Sea</h4>
                     <div class="quick-view-table">
                         <div class="quick-view-header">
                             <div class="ship-details-header">אנייה</div>
@@ -11427,7 +11418,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             if (sailedShips.length > 0) {
                 const sailedTasks = POST_SAILED.map(task => task.title);
                 finalHtml += `
-                    <h4 class="quick-view-title" style="margin-top: var(--spacing-xl);">אניות שהפליגו</h4>
+                    <h4 class="quick-view-title" style="margin-top: var(--spacing-xl);">Sailed Vessels</h4>
                     <div class="quick-view-table">
                         <div class="quick-view-header">
                             <div class="ship-details-header">אנייה</div>
@@ -11815,10 +11806,10 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
         function getStatusText(status) {
             const map = {
-                'At Sea': 'בדרך',
-                'At Port': 'על עוגן',
-                'Under Operation': 'בפריקה',
-                'Sailed': 'הפליגה'
+                'At Sea': 'At Sea',
+                'At Port': 'At Anchor',
+                'Under Operation': 'Under Discharge',
+                'Sailed': 'Sailed'
             };
             return map[status] || status;
         }
@@ -12102,15 +12093,15 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             'OTHER': '📝 אחר'
         };
 
-        // Status labels in Hebrew
+        // Status labels in English
         const STATUS_LABELS = {
-            'NOMINATED': 'מינוי',
-            'LOADING': 'בטעינה',
-            'EN_ROUTE': 'בדרך',
-            'AT_ANCHOR': 'על עוגן',
-            'BERTHED': 'ברציף',
-            'WORKING': 'עובדת',
-            'SAILED': 'הפליגה'
+            'NOMINATED': 'Nominated',
+            'LOADING': 'Loading',
+            'EN_ROUTE': 'At Sea',
+            'AT_ANCHOR': 'At Anchor',
+            'BERTHED': 'Berthed',
+            'WORKING': 'Under Discharge',
+            'SAILED': 'Sailed'
         };
 
         function convertClaudeResponseToShipData(claudeData) {
@@ -13922,7 +13913,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             if (dischargeShips.length === 0) {
                 container.innerHTML = `
                     <div style="padding: 20px; text-align: center; color: var(--text-muted); width: 100%;">
-                        <span>אין אניות בפריקה כרגע</span>
+                        <span>No vessels under discharge</span>
                     </div>
                 `;
                 return;
@@ -20892,10 +20883,10 @@ ${signature}`;
 
         function getStatusText(status) {
             const texts = {
-                [STATUS.AT_SEA]: 'בים',
-                [STATUS.AT_PORT]: 'בנמל',
-                [STATUS.UNDER_OPERATION]: 'בפעילות',
-                [STATUS.SAILED]: 'הפליגה'
+                [STATUS.AT_SEA]: 'At Sea',
+                [STATUS.AT_PORT]: 'At Anchor',
+                [STATUS.UNDER_OPERATION]: 'Under Discharge',
+                [STATUS.SAILED]: 'Sailed'
             };
             return texts[status] || status;
         }
@@ -21169,13 +21160,13 @@ ${signature}`;
         }
 
         function generateDischargeReportText(ship) {
-            const date = new Date().toLocaleDateString('he-IL', {
+            const date = new Date().toLocaleDateString('en-GB', {
                 weekday: 'long',
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric'
             });
-            const time = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+            const time = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
             const manifest = calculateManifestTotal(ship);
             const discharged = ship.dischargeData?.totalDischarged || 0;
@@ -21193,25 +21184,25 @@ ${signature}`;
                 [STATUS.UNDER_OPERATION]: '⚙️',
                 [STATUS.OPERATION_COMPLETED]: '✅'
             };
-            text += `${statusEmoji[ship.status] || '📍'} *סטטוס:* ${getStatusLabel(ship.status)}\n`;
-            if (ship.berth) text += `🔗 *רציף:* ${ship.berth}\n`;
+            text += `${statusEmoji[ship.status] || '📍'} *Status:* ${getStatusLabel(ship.status)}\n`;
+            if (ship.berth) text += `🔗 *Berth:* ${ship.berth}\n`;
             text += `\n`;
 
             // Progress
             const progressBar = generateProgressBar(progress);
-            text += `📊 *התקדמות פריקה:*\n`;
+            text += `📊 *Discharge Progress:*\n`;
             text += `${progressBar} ${progress}%\n\n`;
 
             // Quantities
-            text += `📦 *מניפסט:* ${manifest.toLocaleString()} MT\n`;
-            text += `✅ *נפרק:* ${discharged.toLocaleString()} MT\n`;
-            text += `⏳ *נותר:* ${remain.toLocaleString()} MT\n`;
-            if (etc) text += `📅 *צפי סיום:* ${etc}\n`;
+            text += `📦 *Manifest:* ${manifest.toLocaleString()} MT\n`;
+            text += `✅ *Discharged:* ${discharged.toLocaleString()} MT\n`;
+            text += `⏳ *Remaining:* ${remain.toLocaleString()} MT\n`;
+            if (etc) text += `📅 *ETC:* ${etc}\n`;
             text += `\n`;
 
             // Cargo breakdown if available
             if (ship.cargoBreakdown && ship.cargoBreakdown.length > 0) {
-                text += `📋 *פירוט מטען:*\n`;
+                text += `📋 *Cargo Breakdown:*\n`;
                 ship.cargoBreakdown.forEach(cargo => {
                     text += `• ${cargo.type || cargo.name}: ${(cargo.quantity || 0).toLocaleString()} MT`;
                     if (cargo.receiver) text += ` → ${cargo.receiver}`;
@@ -21224,10 +21215,10 @@ ${signature}`;
             const shifts = ship.dischargeData?.shifts || [];
             if (shifts.length > 0) {
                 const lastShifts = shifts.slice(0, 3);
-                text += `📈 *משמרות אחרונות:*\n`;
+                text += `📈 *Recent Shifts:*\n`;
                 lastShifts.forEach(shift => {
-                    const dateStr = new Date(shift.date).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' });
-                    text += `• ${dateStr} משמרת ${shift.shiftNumber}: ${(shift.shiftTotalWeight || 0).toLocaleString()} MT\n`;
+                    const dateStr = new Date(shift.date).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit' });
+                    text += `• ${dateStr} Shift ${shift.shiftNumber}: ${(shift.shiftTotalWeight || 0).toLocaleString()} MT\n`;
                 });
                 text += `\n`;
             }
@@ -21246,15 +21237,15 @@ ${signature}`;
 
         function getStatusLabel(status) {
             const labels = {
-                [STATUS.EXPECTED]: 'צפויה',
-                [STATUS.AT_SEA]: 'בדרך',
-                [STATUS.AT_ANCHOR]: 'על עוגן',
-                [STATUS.AT_PORT]: 'בנמל',
-                [STATUS.UNDER_OPERATION]: 'בפריקה',
-                [STATUS.OPERATION_COMPLETED]: 'סיימה פריקה',
-                [STATUS.SAILED]: 'הפליגה'
+                [STATUS.EXPECTED]: 'Expected',
+                [STATUS.AT_SEA]: 'At Sea',
+                [STATUS.AT_ANCHOR]: 'At Anchor',
+                [STATUS.AT_PORT]: 'At Anchor',
+                [STATUS.UNDER_OPERATION]: 'Under Discharge',
+                [STATUS.OPERATION_COMPLETED]: 'Discharge Completed',
+                [STATUS.SAILED]: 'Sailed'
             };
-            return labels[status] || status || 'לא ידוע';
+            return labels[status] || status || 'Unknown';
         }
 
         // Export all ships status
