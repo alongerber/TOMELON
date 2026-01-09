@@ -5538,9 +5538,10 @@
 
         /* Mobile-first header */
         .fa-header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            color: white;
-            padding: 16px 20px;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 10px 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -5549,17 +5550,24 @@
             z-index: 100;
         }
         .fa-header-title {
-            font-size: 18px;
-            font-weight: 700;
+            font-size: 14px;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            color: var(--text-secondary);
+        }
+        .fa-header-title svg {
+            width: 18px;
+            height: 18px;
+            opacity: 0.7;
         }
         .fa-header-shift {
-            background: rgba(255,255,255,0.2);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
+            background: var(--primary-glow);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
             font-weight: 600;
         }
 
@@ -6288,8 +6296,19 @@
                         <span class="sparkle"></span>
                     </div>
                 </div>
+                <!-- Command Bar Button -->
+                <button onclick="openCmdBar()" class="cmd-bar-trigger" style="width: 100%; margin-top: 12px; padding: 10px 16px; background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: 8px; color: var(--text-secondary); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: all 200ms ease;">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="m21 21-4.35-4.35"/>
+                        </svg>
+                        חיפוש מהיר...
+                    </span>
+                    <span style="background: var(--bg-card); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-family: monospace;">⌘K</span>
+                </button>
             </div>
-            
+
             <nav class="nav-menu">
                 <div class="nav-item active" onclick="switchToDashboardView()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -6336,7 +6355,7 @@
                         <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
                         <line x1="12" y1="22.08" x2="12" y2="12"/>
                     </svg>
-                    <span>מעקב פריקה</span>
+                    <span>דיווחים</span>
                 </div>
                 <div class="nav-item" onclick="switchToReferenceView()">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -6738,16 +6757,17 @@ Captain"></textarea>
                     </div>
                 </div>
 
-                <!-- Discharge Tracking View -->
+                <!-- Reports View (formerly Discharge Tracking) -->
                 <div class="discharge-view" id="dischargeView">
                     <div class="discharge-header">
                         <h2 class="discharge-title">
                             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
-                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
-                                <line x1="12" y1="22.08" x2="12" y2="12"/>
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
                             </svg>
-                            מעקב פריקה - Discharge Tracking
+                            דיווחים
                         </h2>
                         <div class="discharge-actions">
                             <button class="btn btn-secondary" onclick="clearTallyData()">
@@ -6767,13 +6787,52 @@ Captain"></textarea>
                         </div>
                     </div>
 
-                    <!-- Ship Selection and Voyage Contacts -->
+                    <!-- Report Type Tabs -->
+                    <div class="report-type-tabs" style="display: flex; gap: 8px; padding: 16px 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--glass-border); flex-wrap: wrap;">
+                        <button class="report-type-tab active" onclick="switchReportType('discharge')" id="reportTabDischarge" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--primary); color: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                                <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+                            </svg>
+                            דיווחי פריקה
+                            <span id="reportCountDischarge" class="report-count" style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 12px;">0</span>
+                        </button>
+                        <button class="report-type-tab" onclick="switchReportType('eta')" id="reportTabEta" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-primary); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <polyline points="12 6 12 12 16 14"/>
+                            </svg>
+                            דיווחי ETA
+                            <span id="reportCountEta" class="report-count" style="background: var(--bg-secondary); padding: 2px 8px; border-radius: 10px; font-size: 12px;">0</span>
+                        </button>
+                        <button class="report-type-tab" onclick="switchReportType('berthing')" id="reportTabBerthing" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-primary); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+                                <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+                                <line x1="6" y1="1" x2="6" y2="4"/>
+                                <line x1="10" y1="1" x2="10" y2="4"/>
+                                <line x1="14" y1="1" x2="14" y2="4"/>
+                            </svg>
+                            צפי קשירה
+                            <span id="reportCountBerthing" class="report-count" style="background: var(--bg-secondary); padding: 2px 8px; border-radius: 10px; font-size: 12px;">0</span>
+                        </button>
+                        <button class="report-type-tab" onclick="switchReportType('general')" id="reportTabGeneral" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-primary); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 20h9"/>
+                                <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+                            </svg>
+                            דיווחים כלליים
+                        </button>
+                    </div>
+
+                    <!-- Ship Selection - Smart based on report type -->
                     <div class="discharge-ship-selector" style="display: flex; gap: 16px; align-items: flex-start; flex-wrap: wrap;">
                         <div style="flex: 1; min-width: 200px;">
-                            <label style="font-weight: 600; color: var(--text-primary);">בחר אנייה:</label>
+                            <label style="font-weight: 600; color: var(--text-primary);" id="shipSelectorLabel">בחר אנייה:</label>
                             <select id="dischargeShipSelect" onchange="loadDischargeData(); loadVoyageContacts(); loadPortStatus();">
                                 <option value="">-- בחר אנייה --</option>
                             </select>
+                            <div id="suggestedShipsHint" style="margin-top: 8px; font-size: 12px; color: var(--text-secondary);"></div>
                         </div>
 
                         <!-- Voyage Contacts Section -->
@@ -7475,14 +7534,14 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
             <!-- Field Agent View -->
             <div class="field-agent-view" id="fieldAgentView">
-                <!-- Header -->
+                <!-- Header - Minimal -->
                 <div class="fa-header">
                     <div class="fa-header-title">
-                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
                             <line x1="12" y1="18" x2="12" y2="18"/>
                         </svg>
-                        TOMELON Field
+                        סוכן שטח
                     </div>
                     <div class="fa-header-shift" id="faCurrentShift">משמרת א'</div>
                 </div>
@@ -12090,10 +12149,72 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             populateShipSelector();
         }
 
-        // ==================== Discharge Tracking View ====================
+        // ==================== Reports / Discharge Tracking View ====================
         let currentTallyData = null;
         let currentImageData = null;
         let currentPdfData = null;
+        let currentReportType = 'discharge'; // discharge, eta, berthing, general
+
+        function switchReportType(type) {
+            currentReportType = type;
+
+            // Update tab styling
+            document.querySelectorAll('.report-type-tab').forEach(tab => {
+                tab.style.background = 'var(--bg-card)';
+                tab.style.color = 'var(--text-primary)';
+            });
+            const activeTab = document.getElementById('reportTab' + type.charAt(0).toUpperCase() + type.slice(1));
+            if (activeTab) {
+                activeTab.style.background = 'var(--primary)';
+                activeTab.style.color = 'white';
+            }
+
+            // Update ship selector based on report type
+            populateDischargeShipSelector();
+
+            // Update label and hint
+            const labelEl = document.getElementById('shipSelectorLabel');
+            const hintEl = document.getElementById('suggestedShipsHint');
+
+            switch (type) {
+                case 'discharge':
+                    labelEl.textContent = 'בחר אנייה לדיווח פריקה:';
+                    hintEl.innerHTML = '<span style="color: var(--success);">מציג אניות בנמל או בפריקה</span>';
+                    break;
+                case 'eta':
+                    labelEl.textContent = 'בחר אנייה לדיווח ETA:';
+                    hintEl.innerHTML = '<span style="color: var(--info);">מציג אניות שעוד לא הגיעו</span>';
+                    break;
+                case 'berthing':
+                    labelEl.textContent = 'בחר אנייה לצפי קשירה:';
+                    hintEl.innerHTML = '<span style="color: var(--warning);">מציג אניות על עוגן ובדרך</span>';
+                    break;
+                case 'general':
+                    labelEl.textContent = 'בחר אנייה (או השאר ריק לדיווח כללי):';
+                    hintEl.innerHTML = '<span style="color: var(--text-muted);">ניתן לבחור אנייה או לכתוב דיווח כללי ללקוחות</span>';
+                    break;
+            }
+        }
+
+        function updateReportCounts() {
+            const atPortOrDischarge = ships.filter(s =>
+                s.status === STATUS.AT_PORT || s.status === STATUS.UNDER_OPERATION
+            ).length;
+            const enRoute = ships.filter(s =>
+                s.status === STATUS.AT_SEA || s.status === STATUS.EXPECTED
+            ).length;
+            const atAnchorOrEnRoute = ships.filter(s =>
+                s.status === STATUS.AT_ANCHOR || s.status === STATUS.AT_SEA || s.status === STATUS.EXPECTED
+            ).length;
+
+            const dischargeCount = document.getElementById('reportCountDischarge');
+            const etaCount = document.getElementById('reportCountEta');
+            const berthingCount = document.getElementById('reportCountBerthing');
+
+            if (dischargeCount) dischargeCount.textContent = atPortOrDischarge;
+            if (etaCount) etaCount.textContent = enRoute;
+            if (berthingCount) berthingCount.textContent = atAnchorOrEnRoute;
+        }
 
         function switchToDischargeView() {
             // Remove 'active' from all nav items
@@ -13458,34 +13579,88 @@ LUCKY SAILOR - Marshall Islands - 9876543
             const select = document.getElementById('dischargeShipSelect');
             select.innerHTML = '<option value="">-- בחר אנייה --</option>';
 
-            // Filter ships that are at port or under operation
-            const relevantShips = ships.filter(s =>
-                s.status === 'At Port' || s.status === 'Under Operation'
-            );
+            // Update report counts
+            updateReportCounts();
 
+            // Filter ships based on current report type
+            let relevantShips = [];
+            let otherShips = [];
+            let separatorText = '── אניות אחרות ──';
+
+            switch (currentReportType) {
+                case 'discharge':
+                    // Ships at port or under operation (for discharge reports)
+                    relevantShips = ships.filter(s =>
+                        s.status === STATUS.AT_PORT || s.status === STATUS.UNDER_OPERATION ||
+                        s.status === 'At Port' || s.status === 'Under Operation'
+                    );
+                    otherShips = ships.filter(s =>
+                        s.status !== STATUS.AT_PORT && s.status !== STATUS.UNDER_OPERATION &&
+                        s.status !== 'At Port' && s.status !== 'Under Operation' && s.status !== STATUS.SAILED
+                    );
+                    separatorText = '── אניות שאינן בפריקה ──';
+                    break;
+
+                case 'eta':
+                    // Ships en route / expected (for ETA reports)
+                    relevantShips = ships.filter(s =>
+                        s.status === STATUS.AT_SEA || s.status === STATUS.EXPECTED ||
+                        s.status === 'Expected' || s.status === 'At Sea'
+                    );
+                    otherShips = ships.filter(s =>
+                        s.status !== STATUS.AT_SEA && s.status !== STATUS.EXPECTED &&
+                        s.status !== 'Expected' && s.status !== 'At Sea' && s.status !== STATUS.SAILED
+                    );
+                    separatorText = '── אניות שכבר הגיעו ──';
+                    break;
+
+                case 'berthing':
+                    // Ships at anchor first, then en route (for berthing forecast)
+                    const atAnchor = ships.filter(s =>
+                        s.status === STATUS.AT_ANCHOR || s.status === 'At Anchor'
+                    );
+                    const enRoute = ships.filter(s =>
+                        s.status === STATUS.AT_SEA || s.status === STATUS.EXPECTED ||
+                        s.status === 'Expected' || s.status === 'At Sea'
+                    );
+                    relevantShips = [...atAnchor, ...enRoute];
+                    otherShips = ships.filter(s =>
+                        s.status !== STATUS.AT_ANCHOR && s.status !== 'At Anchor' &&
+                        s.status !== STATUS.AT_SEA && s.status !== STATUS.EXPECTED &&
+                        s.status !== 'Expected' && s.status !== 'At Sea' && s.status !== STATUS.SAILED
+                    );
+                    separatorText = '── אניות בנמל ──';
+                    break;
+
+                case 'general':
+                default:
+                    // All active ships for general reports
+                    relevantShips = ships.filter(s => s.status !== STATUS.SAILED);
+                    otherShips = [];
+                    break;
+            }
+
+            // Add relevant ships with highlighting
             relevantShips.forEach(ship => {
                 const option = document.createElement('option');
                 option.value = ship.id;
-                option.textContent = ship.name;
+                option.textContent = `${ship.name} - ${getStatusText(ship.status)}${ship.port ? ' (' + ship.port + ')' : ''}`;
+                option.style.fontWeight = '600';
                 select.appendChild(option);
             });
 
-            // Also add all other ships
-            const otherShips = ships.filter(s =>
-                s.status !== 'At Port' && s.status !== 'Under Operation'
-            );
-
+            // Add separator and other ships
             if (otherShips.length > 0 && relevantShips.length > 0) {
                 const separator = document.createElement('option');
                 separator.disabled = true;
-                separator.textContent = '── אניות אחרות ──';
+                separator.textContent = separatorText;
                 select.appendChild(separator);
             }
 
             otherShips.forEach(ship => {
                 const option = document.createElement('option');
                 option.value = ship.id;
-                option.textContent = ship.name;
+                option.textContent = `${ship.name} - ${getStatusText(ship.status)}`;
                 select.appendChild(option);
             });
         }
@@ -17438,6 +17613,122 @@ ${signature}`;
         function performLocalSearch(query) {
             const queryLower = query.toLowerCase();
             let results = [];
+
+            // ========== GENERAL SYSTEM QUESTIONS ==========
+            // Handle questions about ship counts and system overview
+            if (queryLower.includes('כמה אניות') || queryLower.includes('כמה ספינות') ||
+                queryLower.includes('מספר אניות') || queryLower.includes('סך הכל אניות') ||
+                queryLower.includes('how many ships')) {
+
+                const activeShips = ships.filter(s => s.status !== STATUS.SAILED);
+                const atSea = ships.filter(s => s.status === STATUS.AT_SEA || s.status === STATUS.EXPECTED);
+                const atAnchor = ships.filter(s => s.status === STATUS.AT_ANCHOR);
+                const atPort = ships.filter(s => s.status === STATUS.AT_PORT);
+                const underOp = ships.filter(s => s.status === STATUS.UNDER_OPERATION);
+                const sailed = ships.filter(s => s.status === STATUS.SAILED);
+
+                results.push(`<div style="margin-bottom: 12px;"><strong>📊 סיכום אניות במערכת</strong></div>`);
+                results.push(`<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: 16px;">
+                    <span>סה"כ אניות פעילות:</span>
+                    <span style="font-weight: 700; color: var(--primary);">${activeShips.length}</span>
+                </div>`);
+                results.push(`<div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                    <span style="color: var(--text-secondary);">🚢 בדרך / צפויות:</span>
+                    <span>${atSea.length}</span>
+                </div>`);
+                results.push(`<div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                    <span style="color: var(--text-secondary);">⚓ על עוגן:</span>
+                    <span>${atAnchor.length}</span>
+                </div>`);
+                results.push(`<div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                    <span style="color: var(--text-secondary);">🏭 בנמל:</span>
+                    <span>${atPort.length}</span>
+                </div>`);
+                results.push(`<div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                    <span style="color: var(--text-secondary);">⏳ בפריקה:</span>
+                    <span>${underOp.length}</span>
+                </div>`);
+                results.push(`<div style="display: flex; justify-content: space-between; padding: 6px 0; color: var(--text-muted);">
+                    <span>✅ הפליגו:</span>
+                    <span>${sailed.length}</span>
+                </div>`);
+
+                if (activeShips.length > 0) {
+                    results.push(`<div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--glass-border);"><strong>רשימת אניות פעילות:</strong></div>`);
+                    activeShips.forEach(s => {
+                        results.push(`<div style="padding: 4px 0; font-size: 13px;">• ${s.name} - ${getStatusText(s.status)}${s.port ? ' - ' + s.port : ''}</div>`);
+                    });
+                }
+
+                return results.join('');
+            }
+
+            // Handle questions about ports
+            if ((queryLower.includes('אניות ב') || queryLower.includes('ספינות ב')) &&
+                (queryLower.includes('נמל') || queryLower.includes('אשדוד') || queryLower.includes('חיפה') || queryLower.includes('אילת'))) {
+                const portMatch = queryLower.includes('אשדוד') ? 'אשדוד' :
+                                  queryLower.includes('חיפה') ? 'חיפה' :
+                                  queryLower.includes('אילת') ? 'אילת' : null;
+                if (portMatch) {
+                    const portShips = ships.filter(s => s.port && s.port.includes(portMatch) && s.status !== STATUS.SAILED);
+                    results.push(`<strong>אניות בנמל ${portMatch}: ${portShips.length}</strong>`);
+                    portShips.forEach(s => {
+                        results.push(`<div style="padding: 4px 0;">• ${s.name} - ${getStatusText(s.status)}</div>`);
+                    });
+                    return results.join('');
+                }
+            }
+
+            // Handle questions about cargo types
+            if (queryLower.includes('מטען') || queryLower.includes('סחורה') || queryLower.includes('cargo')) {
+                if (!ships.some(s => queryLower.includes(s.name.toLowerCase()))) {
+                    // General cargo question
+                    const cargoTypes = {};
+                    ships.filter(s => s.status !== STATUS.SAILED).forEach(s => {
+                        if (s.cargo) {
+                            cargoTypes[s.cargo] = cargoTypes[s.cargo] || [];
+                            cargoTypes[s.cargo].push(s.name);
+                        }
+                    });
+                    if (Object.keys(cargoTypes).length > 0) {
+                        results.push(`<strong>📦 סיכום מטענים:</strong>`);
+                        Object.entries(cargoTypes).forEach(([cargo, shipNames]) => {
+                            results.push(`<div style="padding: 6px 0; border-bottom: 1px solid var(--glass-border);">
+                                <div style="font-weight: 500;">${cargo}</div>
+                                <div style="font-size: 12px; color: var(--text-secondary);">${shipNames.join(', ')}</div>
+                            </div>`);
+                        });
+                        return results.join('');
+                    }
+                }
+            }
+
+            // Handle questions about receivers
+            if ((queryLower.includes('מקבל') || queryLower.includes('receiver')) &&
+                !ships.some(s => queryLower.includes(s.name.toLowerCase()))) {
+                const receivers = {};
+                ships.filter(s => s.status !== STATUS.SAILED).forEach(s => {
+                    if (s.receivers) {
+                        const recList = s.receivers.split(/[,;،]/).map(r => r.trim());
+                        recList.forEach(r => {
+                            if (r) {
+                                receivers[r] = receivers[r] || [];
+                                receivers[r].push(s.name);
+                            }
+                        });
+                    }
+                });
+                if (Object.keys(receivers).length > 0) {
+                    results.push(`<strong>👥 מקבלים פעילים:</strong>`);
+                    Object.entries(receivers).forEach(([rec, shipNames]) => {
+                        results.push(`<div style="padding: 6px 0; border-bottom: 1px solid var(--glass-border);">
+                            <div style="font-weight: 500;">${rec}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">אניות: ${shipNames.join(', ')}</div>
+                        </div>`);
+                    });
+                    return results.join('');
+                }
+            }
 
             // Find ship name in query
             const shipMatch = ships.find(s =>
