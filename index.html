@@ -1459,6 +1459,277 @@
             box-shadow: 0 15px 50px rgba(79, 70, 229, 0.5);
         }
 
+        /* ==================== Command Bar (Ctrl+K) ==================== */
+        .cmd-bar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 15vh;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 200ms ease;
+        }
+        .cmd-bar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .cmd-bar {
+            width: 100%;
+            max-width: 600px;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 25px 100px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transform: translateY(-20px) scale(0.95);
+            transition: transform 200ms ease;
+        }
+        .cmd-bar-overlay.active .cmd-bar {
+            transform: translateY(0) scale(1);
+        }
+        .cmd-bar-input-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--glass-border);
+            gap: 12px;
+        }
+        .cmd-bar-icon {
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        .cmd-bar-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            color: var(--text-primary);
+            outline: none;
+        }
+        .cmd-bar-input::placeholder {
+            color: var(--text-tertiary);
+        }
+        .cmd-bar-shortcut {
+            font-size: 11px;
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            color: var(--text-tertiary);
+            font-family: monospace;
+        }
+        .cmd-bar-results {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .cmd-bar-section {
+            padding: 8px 0;
+        }
+        .cmd-bar-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-tertiary);
+            padding: 8px 20px;
+        }
+        .cmd-bar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 150ms;
+        }
+        .cmd-bar-item:hover,
+        .cmd-bar-item.selected {
+            background: var(--bg-hover);
+        }
+        .cmd-bar-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+        .cmd-bar-item-icon.sailed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .cmd-bar-item-icon.berthed { background: rgba(79, 70, 229, 0.2); color: var(--primary); }
+        .cmd-bar-item-icon.service { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .cmd-bar-item-icon.note { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .cmd-bar-item-icon.docs { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+        .cmd-bar-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .cmd-bar-item-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .cmd-bar-item-desc {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+        .cmd-bar-item-shortcut {
+            font-size: 11px;
+            padding: 3px 6px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            color: var(--text-tertiary);
+            font-family: monospace;
+        }
+
+        /* Command Bar Form */
+        .cmd-bar-form {
+            padding: 20px;
+            border-top: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+        }
+        .cmd-bar-form-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .cmd-bar-form-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+        }
+        .cmd-bar-form-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .cmd-bar-form-subtitle {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .cmd-bar-form-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .cmd-bar-field {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .cmd-bar-field-label {
+            width: 100px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+        .cmd-bar-field-input {
+            flex: 1;
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 200ms;
+        }
+        .cmd-bar-field-input:focus {
+            border-color: var(--primary);
+        }
+        .cmd-bar-field-hint {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            padding: 2px 8px;
+            background: var(--bg-hover);
+            border-radius: 4px;
+        }
+        .cmd-bar-field-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .cmd-bar-option {
+            padding: 8px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 150ms;
+        }
+        .cmd-bar-option:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+        .cmd-bar-option.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .cmd-bar-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .cmd-bar-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 150ms;
+            border: none;
+        }
+        .cmd-bar-btn.secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+        .cmd-bar-btn.secondary:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .cmd-bar-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+        .cmd-bar-btn.primary:hover {
+            filter: brightness(1.1);
+        }
+        .cmd-bar-hint {
+            text-align: center;
+            padding: 12px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            border-top: 1px solid var(--glass-border);
+        }
+        .cmd-bar-hint kbd {
+            padding: 2px 6px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 0 2px;
+        }
+
         /* Ship Card */
         .ship-card {
             background: var(--bg-card);
@@ -5971,6 +6242,34 @@
     <!-- Background -->
     <div class="bg-pattern"></div>
     <div class="grid-overlay"></div>
+
+    <!-- Command Bar (Ctrl+K) -->
+    <div class="cmd-bar-overlay" id="cmdBarOverlay" onclick="closeCmdBarOnOverlay(event)">
+        <div class="cmd-bar" onclick="event.stopPropagation()">
+            <div class="cmd-bar-input-wrapper">
+                <div class="cmd-bar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                </div>
+                <input type="text" class="cmd-bar-input" id="cmdBarInput"
+                       placeholder="הקלד פקודה או חפש אנייה..."
+                       oninput="handleCmdBarInput(event)"
+                       onkeydown="handleCmdBarKeydown(event)">
+                <span class="cmd-bar-shortcut">ESC</span>
+            </div>
+            <div class="cmd-bar-results" id="cmdBarResults">
+                <!-- Results will be rendered here -->
+            </div>
+            <div class="cmd-bar-form" id="cmdBarForm" style="display: none;">
+                <!-- Form will be rendered here -->
+            </div>
+            <div class="cmd-bar-hint">
+                <kbd>↑↓</kbd> ניווט <kbd>Enter</kbd> בחירה <kbd>Tab</kbd> מעבר שדה <kbd>Esc</kbd> סגירה
+            </div>
+        </div>
+    </div>
 
     <!-- App Container -->
     <div class="app-container">
@@ -18144,6 +18443,609 @@ ${signature}`;
             } catch (error) {
                 console.error('Error saving note:', error);
                 showToast('שגיאה בשמירת ההערה', 'error');
+            }
+        }
+
+        // ==================== Command Bar (Ctrl+K) ====================
+        let cmdBarSelectedIndex = 0;
+        let cmdBarCurrentResults = [];
+        let cmdBarCurrentCommand = null;
+        let cmdBarFormData = {};
+
+        // Command definitions
+        const CMD_BAR_COMMANDS = [
+            {
+                id: 'sailed',
+                name: 'הפלגה',
+                desc: 'סמן אנייה כהפליגה',
+                icon: '🚢',
+                iconClass: 'sailed',
+                keywords: ['sailed', 'הפליג', 'הפלגה', 'יצא'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' },
+                    { id: 'pilotOrdered', type: 'boolean', label: 'פיילוט הוזמן', default: true }
+                ]
+            },
+            {
+                id: 'berthed',
+                name: 'קישור לרציף',
+                desc: 'עדכן אנייה כקשורה לרציף',
+                icon: '⚓',
+                iconClass: 'berthed',
+                keywords: ['berthed', 'etb', 'קישור', 'רציף', 'עגינה'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' },
+                    { id: 'berth', type: 'text', label: 'רציף', placeholder: 'מספר רציף' }
+                ]
+            },
+            {
+                id: 'water',
+                name: 'הזמנת מים',
+                desc: 'הוסף בקשת שירות למים',
+                icon: '💧',
+                iconClass: 'service',
+                keywords: ['water', 'מים', 'שירות'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'quantity', type: 'number', label: 'כמות (טון)', placeholder: '50' },
+                    { id: 'payer', type: 'options', label: 'מי משלם', options: [
+                        { id: 'owners', label: 'בעלים' },
+                        { id: 'receivers', label: 'מקבלים' },
+                        { id: 'charterers', label: 'שוכרים' }
+                    ]},
+                    { id: 'date', type: 'date', label: 'תאריך נדרש', default: 'tomorrow' },
+                    { id: 'notes', type: 'text', label: 'הערות', placeholder: 'הערות נוספות' }
+                ]
+            },
+            {
+                id: 'provisions',
+                name: 'הזמנת אספקה',
+                desc: 'הוסף בקשת שירות לאספקה',
+                icon: '📦',
+                iconClass: 'service',
+                keywords: ['provisions', 'אספקה', 'מזון', 'חבילות'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'type', type: 'text', label: 'סוג אספקה', placeholder: 'מזון, חלקים...' },
+                    { id: 'payer', type: 'options', label: 'מי משלם', options: [
+                        { id: 'owners', label: 'בעלים' },
+                        { id: 'receivers', label: 'מקבלים' },
+                        { id: 'charterers', label: 'שוכרים' }
+                    ]},
+                    { id: 'notes', type: 'text', label: 'הערות', placeholder: 'פירוט הבקשה' }
+                ]
+            },
+            {
+                id: 'note',
+                name: 'הוספת הערה',
+                desc: 'הוסף הערה לאנייה',
+                icon: '📝',
+                iconClass: 'note',
+                keywords: ['note', 'הערה', 'תיעוד'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'text', type: 'textarea', label: 'הערה', placeholder: 'תוכן ההערה', required: true }
+                ]
+            },
+            {
+                id: 'eta',
+                name: 'עדכון ETA',
+                desc: 'עדכן זמן הגעה משוער',
+                icon: '🕐',
+                iconClass: 'berthed',
+                keywords: ['eta', 'הגעה', 'arrival'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', required: true },
+                    { id: 'time', type: 'time', label: 'שעה', required: true }
+                ]
+            },
+            {
+                id: 'docs',
+                name: 'מסמכי אנייה',
+                desc: 'פתח את מסמכי האנייה',
+                icon: '📄',
+                iconClass: 'docs',
+                keywords: ['docs', 'documents', 'מסמכים', 'קבצים'],
+                action: 'openDocs'
+            },
+            {
+                id: 'discharge',
+                name: 'התחלת פריקה',
+                desc: 'סמן תחילת פריקה',
+                icon: '⚙️',
+                iconClass: 'berthed',
+                keywords: ['discharge', 'פריקה', 'התחיל'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' }
+                ]
+            }
+        ];
+
+        // Open Command Bar with Ctrl+K
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                openCmdBar();
+            }
+            if (e.key === 'Escape') {
+                closeCmdBar();
+            }
+        });
+
+        function openCmdBar() {
+            const overlay = document.getElementById('cmdBarOverlay');
+            const input = document.getElementById('cmdBarInput');
+            overlay.classList.add('active');
+            input.value = '';
+            input.focus();
+            cmdBarSelectedIndex = 0;
+            cmdBarCurrentCommand = null;
+            cmdBarFormData = {};
+            document.getElementById('cmdBarForm').style.display = 'none';
+            renderCmdBarResults('');
+        }
+
+        function closeCmdBar() {
+            document.getElementById('cmdBarOverlay').classList.remove('active');
+            cmdBarCurrentCommand = null;
+            cmdBarFormData = {};
+        }
+
+        function closeCmdBarOnOverlay(e) {
+            if (e.target.id === 'cmdBarOverlay') {
+                closeCmdBar();
+            }
+        }
+
+        function handleCmdBarInput(e) {
+            const query = e.target.value.trim().toLowerCase();
+            cmdBarSelectedIndex = 0;
+            renderCmdBarResults(query);
+        }
+
+        function handleCmdBarKeydown(e) {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                cmdBarSelectedIndex = Math.min(cmdBarSelectedIndex + 1, cmdBarCurrentResults.length - 1);
+                updateCmdBarSelection();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                cmdBarSelectedIndex = Math.max(cmdBarSelectedIndex - 1, 0);
+                updateCmdBarSelection();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (cmdBarCurrentResults[cmdBarSelectedIndex]) {
+                    selectCmdBarItem(cmdBarCurrentResults[cmdBarSelectedIndex]);
+                }
+            }
+        }
+
+        function renderCmdBarResults(query) {
+            const resultsDiv = document.getElementById('cmdBarResults');
+            let results = [];
+
+            // Parse command from query (e.g., "sailed ela s" -> command: sailed, ship: ela s)
+            const parts = query.split(' ');
+            const cmdPart = parts[0];
+            const restPart = parts.slice(1).join(' ');
+
+            // Find matching commands
+            const matchingCommands = CMD_BAR_COMMANDS.filter(cmd =>
+                cmd.keywords.some(kw => kw.includes(cmdPart)) ||
+                cmd.name.includes(cmdPart)
+            );
+
+            // Find matching ships
+            const matchingShips = ships.filter(ship =>
+                ship.name.toLowerCase().includes(query) ||
+                (ship.voyage && ship.voyage.toLowerCase().includes(query))
+            ).slice(0, 5);
+
+            // Build results
+            if (query === '') {
+                // Show default commands
+                results = CMD_BAR_COMMANDS.map(cmd => ({
+                    type: 'command',
+                    command: cmd,
+                    title: cmd.name,
+                    desc: cmd.desc
+                }));
+            } else if (matchingCommands.length > 0 && restPart) {
+                // Command + ship search
+                const cmd = matchingCommands[0];
+                const shipMatches = ships.filter(ship =>
+                    ship.name.toLowerCase().includes(restPart.toLowerCase())
+                );
+                results = shipMatches.map(ship => ({
+                    type: 'command_with_ship',
+                    command: cmd,
+                    ship: ship,
+                    title: `${cmd.name} - ${ship.name}`,
+                    desc: `${cmd.desc} (${ship.voyage || ''})`
+                }));
+            } else {
+                // Mixed results
+                results = [
+                    ...matchingCommands.map(cmd => ({
+                        type: 'command',
+                        command: cmd,
+                        title: cmd.name,
+                        desc: cmd.desc
+                    })),
+                    ...matchingShips.map(ship => ({
+                        type: 'ship',
+                        ship: ship,
+                        title: ship.name,
+                        desc: `${ship.voyage || ''} - ${getStatusText(ship.status)}`
+                    }))
+                ];
+            }
+
+            cmdBarCurrentResults = results;
+
+            if (results.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="cmd-bar-section">
+                        <div style="padding: 20px; text-align: center; color: var(--text-tertiary);">
+                            לא נמצאו תוצאות
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            resultsDiv.innerHTML = `
+                <div class="cmd-bar-section">
+                    ${results.map((item, i) => `
+                        <div class="cmd-bar-item ${i === cmdBarSelectedIndex ? 'selected' : ''}"
+                             onclick="selectCmdBarItem(cmdBarCurrentResults[${i}])"
+                             data-index="${i}">
+                            <div class="cmd-bar-item-icon ${item.command?.iconClass || ''}">
+                                ${item.type === 'ship' ?
+                                    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                                        <path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/>
+                                        <path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/>
+                                        <path d="M12 10v4"/>
+                                    </svg>` :
+                                    item.command?.icon || '⚡'}
+                            </div>
+                            <div class="cmd-bar-item-content">
+                                <div class="cmd-bar-item-title">${item.title}</div>
+                                <div class="cmd-bar-item-desc">${item.desc}</div>
+                            </div>
+                            ${item.type === 'command' ? `<span class="cmd-bar-item-shortcut">${item.command.keywords[0]}</span>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function updateCmdBarSelection() {
+            const items = document.querySelectorAll('.cmd-bar-item');
+            items.forEach((item, i) => {
+                item.classList.toggle('selected', i === cmdBarSelectedIndex);
+            });
+        }
+
+        function selectCmdBarItem(item) {
+            if (item.type === 'ship') {
+                // Open ship card
+                closeCmdBar();
+                openShipModal(item.ship.id);
+            } else if (item.type === 'command') {
+                // Show command form
+                if (item.command.action) {
+                    // Direct action
+                    executeDirectAction(item.command);
+                } else {
+                    // Show form
+                    showCmdBarForm(item.command);
+                }
+            } else if (item.type === 'command_with_ship') {
+                // Show form pre-filled with ship
+                showCmdBarForm(item.command, item.ship);
+            }
+        }
+
+        function showCmdBarForm(command, preSelectedShip = null) {
+            cmdBarCurrentCommand = command;
+            cmdBarFormData = {};
+
+            // Pre-fill defaults
+            command.fields?.forEach(field => {
+                if (field.default === 'today') {
+                    cmdBarFormData[field.id] = new Date().toISOString().split('T')[0];
+                } else if (field.default === 'tomorrow') {
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    cmdBarFormData[field.id] = tomorrow.toISOString().split('T')[0];
+                } else if (field.default === 'now') {
+                    cmdBarFormData[field.id] = new Date().toTimeString().slice(0, 5);
+                } else if (field.default !== undefined) {
+                    cmdBarFormData[field.id] = field.default;
+                }
+            });
+
+            if (preSelectedShip) {
+                cmdBarFormData.ship = preSelectedShip.id;
+            }
+
+            const formDiv = document.getElementById('cmdBarForm');
+            formDiv.style.display = 'block';
+            document.getElementById('cmdBarResults').style.display = 'none';
+
+            formDiv.innerHTML = `
+                <div class="cmd-bar-form-header">
+                    <div class="cmd-bar-form-icon">${command.icon}</div>
+                    <div>
+                        <div class="cmd-bar-form-title">${command.name}</div>
+                        <div class="cmd-bar-form-subtitle">${command.desc}</div>
+                    </div>
+                </div>
+                <div class="cmd-bar-form-fields">
+                    ${command.fields?.map(field => renderCmdBarField(field, preSelectedShip)).join('') || ''}
+                </div>
+                <div class="cmd-bar-form-actions">
+                    <button class="cmd-bar-btn secondary" onclick="cancelCmdBarForm()">ביטול</button>
+                    <button class="cmd-bar-btn primary" onclick="submitCmdBarForm()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 6px;">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        אישור
+                    </button>
+                </div>
+            `;
+
+            // Focus first input
+            setTimeout(() => {
+                const firstInput = formDiv.querySelector('input, select, textarea');
+                if (firstInput) firstInput.focus();
+            }, 100);
+        }
+
+        function renderCmdBarField(field, preSelectedShip) {
+            const value = cmdBarFormData[field.id] || '';
+
+            switch (field.type) {
+                case 'ship':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <select class="cmd-bar-field-input" id="cmdField_${field.id}" onchange="cmdBarFormData['${field.id}'] = this.value">
+                                <option value="">בחר אנייה</option>
+                                ${ships.map(s => `
+                                    <option value="${s.id}" ${preSelectedShip?.id === s.id ? 'selected' : ''}>
+                                        ${s.name} ${s.voyage ? `(${s.voyage})` : ''}
+                                    </option>
+                                `).join('')}
+                            </select>
+                        </div>
+                    `;
+
+                case 'date':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <input type="date" class="cmd-bar-field-input" id="cmdField_${field.id}"
+                                   value="${value}"
+                                   onchange="cmdBarFormData['${field.id}'] = this.value">
+                            ${field.default === 'today' ? '<span class="cmd-bar-field-hint">היום</span>' : ''}
+                            ${field.default === 'tomorrow' ? '<span class="cmd-bar-field-hint">מחר</span>' : ''}
+                        </div>
+                    `;
+
+                case 'time':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <input type="time" class="cmd-bar-field-input" id="cmdField_${field.id}"
+                                   value="${value}"
+                                   onchange="cmdBarFormData['${field.id}'] = this.value">
+                            ${field.default === 'now' ? '<span class="cmd-bar-field-hint">עכשיו</span>' : ''}
+                        </div>
+                    `;
+
+                case 'number':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <input type="number" class="cmd-bar-field-input" id="cmdField_${field.id}"
+                                   placeholder="${field.placeholder || ''}"
+                                   value="${value}"
+                                   onchange="cmdBarFormData['${field.id}'] = this.value">
+                        </div>
+                    `;
+
+                case 'text':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <input type="text" class="cmd-bar-field-input" id="cmdField_${field.id}"
+                                   placeholder="${field.placeholder || ''}"
+                                   value="${value}"
+                                   onchange="cmdBarFormData['${field.id}'] = this.value">
+                        </div>
+                    `;
+
+                case 'textarea':
+                    return `
+                        <div class="cmd-bar-field" style="align-items: flex-start;">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <textarea class="cmd-bar-field-input" id="cmdField_${field.id}"
+                                      placeholder="${field.placeholder || ''}"
+                                      rows="3"
+                                      onchange="cmdBarFormData['${field.id}'] = this.value">${value}</textarea>
+                        </div>
+                    `;
+
+                case 'options':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <div class="cmd-bar-field-options">
+                                ${field.options.map(opt => `
+                                    <div class="cmd-bar-option ${cmdBarFormData[field.id] === opt.id ? 'selected' : ''}"
+                                         onclick="selectCmdBarOption('${field.id}', '${opt.id}', this)">
+                                        ${opt.label}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+
+                case 'boolean':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <div class="cmd-bar-field-options">
+                                <div class="cmd-bar-option ${cmdBarFormData[field.id] === true ? 'selected' : ''}"
+                                     onclick="selectCmdBarOption('${field.id}', true, this)">
+                                    כן
+                                </div>
+                                <div class="cmd-bar-option ${cmdBarFormData[field.id] === false ? 'selected' : ''}"
+                                     onclick="selectCmdBarOption('${field.id}', false, this)">
+                                    לא
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                default:
+                    return '';
+            }
+        }
+
+        function selectCmdBarOption(fieldId, value, element) {
+            cmdBarFormData[fieldId] = value;
+            // Update UI
+            element.parentElement.querySelectorAll('.cmd-bar-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function cancelCmdBarForm() {
+            cmdBarCurrentCommand = null;
+            cmdBarFormData = {};
+            document.getElementById('cmdBarForm').style.display = 'none';
+            document.getElementById('cmdBarResults').style.display = 'block';
+            document.getElementById('cmdBarInput').focus();
+            renderCmdBarResults('');
+        }
+
+        async function submitCmdBarForm() {
+            if (!cmdBarCurrentCommand) return;
+
+            // Validate required fields
+            const missingFields = cmdBarCurrentCommand.fields?.filter(f =>
+                f.required && !cmdBarFormData[f.id]
+            );
+
+            if (missingFields?.length > 0) {
+                showToast(`נא למלא: ${missingFields.map(f => f.label).join(', ')}`, 'error');
+                return;
+            }
+
+            try {
+                // Execute command
+                await executeCmdBarCommand(cmdBarCurrentCommand.id, cmdBarFormData);
+                closeCmdBar();
+            } catch (error) {
+                console.error('Command execution error:', error);
+                showToast('שגיאה בביצוע הפקודה', 'error');
+            }
+        }
+
+        async function executeCmdBarCommand(commandId, data) {
+            const ship = ships.find(s => s.id === data.ship);
+            if (!ship && commandId !== 'docs') {
+                throw new Error('Ship not found');
+            }
+
+            switch (commandId) {
+                case 'sailed':
+                    ship.status = STATUS.SAILED;
+                    if (data.date && data.time) {
+                        ship.actualDeparture = `${data.date}T${data.time}:00`;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`${ship.name} סומנה כהפליגה`, 'success');
+                    break;
+
+                case 'berthed':
+                    ship.status = STATUS.AT_PORT;
+                    if (data.date && data.time) {
+                        ship.etb = `${data.date}T${data.time}:00`;
+                    }
+                    if (data.berth) {
+                        ship.berth = data.berth;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`${ship.name} קשורה לרציף ${data.berth || ''}`, 'success');
+                    break;
+
+                case 'discharge':
+                    ship.status = STATUS.UNDER_OPERATION;
+                    if (data.date && data.time) {
+                        ship.dischargeStarted = `${data.date}T${data.time}:00`;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`${ship.name} התחילה פריקה`, 'success');
+                    break;
+
+                case 'eta':
+                    if (data.date && data.time) {
+                        ship.eta = `${data.date}T${data.time}:00`;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`ETA של ${ship.name} עודכן`, 'success');
+                    break;
+
+                case 'water':
+                case 'provisions':
+                    // Create service request
+                    await db.collection('serviceRequests').add({
+                        shipId: ship.id,
+                        shipName: ship.name,
+                        type: commandId,
+                        quantity: data.quantity || null,
+                        payer: data.payer || null,
+                        requestedDate: data.date || null,
+                        notes: data.notes || '',
+                        status: 'pending',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    showToast(`בקשת ${commandId === 'water' ? 'מים' : 'אספקה'} נוצרה ל-${ship.name}`, 'success');
+                    break;
+
+                case 'note':
+                    await db.collection('ships').doc(ship.id).collection('notes').add({
+                        text: data.text,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        source: 'commandBar'
+                    });
+                    showToast(`הערה נוספה ל-${ship.name}`, 'success');
+                    break;
+            }
+
+            renderShips();
+        }
+
+        function executeDirectAction(command) {
+            if (command.action === 'openDocs') {
+                // Show ship selector then open docs
+                showCmdBarForm({
+                    ...command,
+                    fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }]
+                });
             }
         }
 
