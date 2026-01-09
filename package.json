@@ -1,5 +1,12 @@
 {
   "name": "tomelon",
   "version": "1.0.0",
-  "private": true
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "dev": "echo 'Development: Edit index.html directly, then run npm run build before deploy'"
+  },
+  "devDependencies": {
+    "html-minifier-terser": "^7.2.0"
+  }
 }
