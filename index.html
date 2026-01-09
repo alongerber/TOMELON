@@ -16874,12 +16874,26 @@ ${signature}`;
                 context += `  - סטטוס: ${getStatusText(ship.status)}\n`;
                 context += `  - נמל: ${ship.port || 'לא ידוע'}\n`;
                 context += `  - ETA: ${ship.eta ? new Date(ship.eta).toLocaleString('he-IL') : 'לא ידוע'}\n`;
+                context += `  - ETB: ${ship.etb ? new Date(ship.etb).toLocaleString('he-IL') : 'לא ידוע'}\n`;
+                context += `  - רציף: ${ship.berth || 'לא ידוע'}\n`;
                 context += `  - מטען: ${ship.cargo || 'לא ידוע'}\n`;
                 context += `  - בעלים: ${ship.owner || 'לא ידוע'}\n`;
                 context += `  - מקבלים: ${ship.receivers || 'לא ידוע'}\n`;
                 context += `  - ספק: ${ship.supplier || 'לא ידוע'}\n`;
                 if (ship.manifest && ship.manifest.items && ship.manifest.items.length > 0) {
                     context += `  - מניפסט: ${ship.manifest.items.map(i => `${i.type} (${i.weight} טון)`).join(', ')}\n`;
+                }
+
+                // Add document status from field agent data
+                const shipDocs = fieldAgentShipData[ship.id];
+                if (shipDocs) {
+                    context += `  - מסמכים:\n`;
+                    REQUIRED_DOCUMENTS.forEach(doc => {
+                        const status = shipDocs[doc.id]?.uploaded ? '✓ הועלה' : '✗ חסר';
+                        context += `    * ${doc.name}: ${status}\n`;
+                    });
+                } else {
+                    context += `  - מסמכים: טרם הוזנו\n`;
                 }
                 context += '\n';
             });
@@ -16891,6 +16905,21 @@ ${signature}`;
                     context += `${v.name}: LOA=${v.loa || '?'}מ, רוחב=${v.beam || '?'}מ, DWT=${v.dwt || '?'}, IMO=${v.imo || '?'}\n`;
                 });
             }
+
+            // Add summary of document status
+            context += '\n\nסיכום מסמכים:\n';
+            const activeShips = ships.filter(s => s.status !== STATUS.SAILED);
+            activeShips.forEach(ship => {
+                const shipDocs = fieldAgentShipData[ship.id] || {};
+                const completedDocs = REQUIRED_DOCUMENTS.filter(doc => shipDocs[doc.id]?.uploaded);
+                const missingDocs = REQUIRED_DOCUMENTS.filter(doc => !shipDocs[doc.id]?.uploaded);
+
+                context += `${ship.name}: ${completedDocs.length}/${REQUIRED_DOCUMENTS.length} מסמכים`;
+                if (missingDocs.length > 0) {
+                    context += ` (חסרים: ${missingDocs.map(d => d.name).join(', ')})`;
+                }
+                context += '\n';
+            });
 
             return context;
         }
