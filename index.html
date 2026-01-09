@@ -7808,6 +7808,14 @@ Captain"></textarea>
                                 <span id="statusBarShipName">ASL ELSA</span>
                             </h3>
                             <div style="display: flex; gap: 8px;">
+                                <button onclick="exportDischargeReport()" style="padding: 10px 16px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--glass-border); border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;" title="ייצוא לוואטסאפ">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+                                        <polyline points="16 6 12 2 8 6"/>
+                                        <line x1="12" y1="2" x2="12" y2="15"/>
+                                    </svg>
+                                    ייצוא
+                                </button>
                                 <button onclick="openDocVault()" style="padding: 10px 16px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--glass-border); border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
                                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
@@ -20754,6 +20762,191 @@ ${signature}`;
             return text;
         }
 
+        // ==================== Enhanced Export Report ====================
+        function exportDischargeReport(shipId) {
+            shipId = shipId || selectedDischargeShipId;
+            if (!shipId) {
+                showToast('יש לבחור אנייה קודם', 'warning');
+                return;
+            }
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            const report = generateDischargeReportText(ship);
+
+            // Copy to clipboard
+            navigator.clipboard.writeText(report).then(() => {
+                showToast('הדוח הועתק ללוח - ניתן להדביק בוואטסאפ', 'success');
+            }).catch(() => {
+                // Fallback for older browsers
+                const textarea = document.createElement('textarea');
+                textarea.value = report;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                showToast('הדוח הועתק ללוח', 'success');
+            });
+        }
+
+        function generateDischargeReportText(ship) {
+            const date = new Date().toLocaleDateString('he-IL', {
+                weekday: 'long',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            const time = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+            const manifest = calculateManifestTotal(ship);
+            const discharged = ship.dischargeData?.totalDischarged || 0;
+            const remain = manifest - discharged;
+            const progress = manifest > 0 ? Math.round((discharged / manifest) * 100) : 0;
+            const etc = calculateETC(ship);
+
+            let text = `🚢 *${ship.name}*\n`;
+            text += `📅 ${date} | ${time}\n`;
+            text += `━━━━━━━━━━━━━━━━\n\n`;
+
+            // Status
+            const statusEmoji = {
+                [STATUS.AT_PORT]: '⚓',
+                [STATUS.UNDER_OPERATION]: '⚙️',
+                [STATUS.OPERATION_COMPLETED]: '✅'
+            };
+            text += `${statusEmoji[ship.status] || '📍'} *סטטוס:* ${getStatusLabel(ship.status)}\n`;
+            if (ship.berth) text += `🔗 *רציף:* ${ship.berth}\n`;
+            text += `\n`;
+
+            // Progress
+            const progressBar = generateProgressBar(progress);
+            text += `📊 *התקדמות פריקה:*\n`;
+            text += `${progressBar} ${progress}%\n\n`;
+
+            // Quantities
+            text += `📦 *מניפסט:* ${manifest.toLocaleString()} MT\n`;
+            text += `✅ *נפרק:* ${discharged.toLocaleString()} MT\n`;
+            text += `⏳ *נותר:* ${remain.toLocaleString()} MT\n`;
+            if (etc) text += `📅 *צפי סיום:* ${etc}\n`;
+            text += `\n`;
+
+            // Cargo breakdown if available
+            if (ship.cargoBreakdown && ship.cargoBreakdown.length > 0) {
+                text += `📋 *פירוט מטען:*\n`;
+                ship.cargoBreakdown.forEach(cargo => {
+                    text += `• ${cargo.type || cargo.name}: ${(cargo.quantity || 0).toLocaleString()} MT`;
+                    if (cargo.receiver) text += ` → ${cargo.receiver}`;
+                    text += `\n`;
+                });
+                text += `\n`;
+            }
+
+            // Last shifts summary
+            const shifts = ship.dischargeData?.shifts || [];
+            if (shifts.length > 0) {
+                const lastShifts = shifts.slice(0, 3);
+                text += `📈 *משמרות אחרונות:*\n`;
+                lastShifts.forEach(shift => {
+                    const dateStr = new Date(shift.date).toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' });
+                    text += `• ${dateStr} משמרת ${shift.shiftNumber}: ${(shift.shiftTotalWeight || 0).toLocaleString()} MT\n`;
+                });
+                text += `\n`;
+            }
+
+            text += `━━━━━━━━━━━━━━━━\n`;
+            text += `🏢 Almog Sea Services`;
+
+            return text;
+        }
+
+        function generateProgressBar(percent) {
+            const filled = Math.round(percent / 10);
+            const empty = 10 - filled;
+            return '▓'.repeat(filled) + '░'.repeat(empty);
+        }
+
+        function getStatusLabel(status) {
+            const labels = {
+                [STATUS.EXPECTED]: 'צפויה',
+                [STATUS.AT_SEA]: 'בדרך',
+                [STATUS.AT_ANCHOR]: 'על עוגן',
+                [STATUS.AT_PORT]: 'בנמל',
+                [STATUS.UNDER_OPERATION]: 'בפריקה',
+                [STATUS.OPERATION_COMPLETED]: 'סיימה פריקה',
+                [STATUS.SAILED]: 'הפליגה'
+            };
+            return labels[status] || status || 'לא ידוע';
+        }
+
+        // Export all ships status
+        function exportAllShipsStatus() {
+            const date = new Date().toLocaleDateString('he-IL', {
+                weekday: 'long',
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
+            const time = new Date().toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+
+            let text = `🚢 *סטטוס אניות - ${date}*\n`;
+            text += `⏰ עדכון: ${time}\n`;
+            text += `━━━━━━━━━━━━━━━━\n\n`;
+
+            // Group by status
+            const atPort = ships.filter(s => s.status === STATUS.AT_PORT || s.status === STATUS.UNDER_OPERATION);
+            const atAnchor = ships.filter(s => s.status === STATUS.AT_ANCHOR);
+            const enRoute = ships.filter(s => s.status === STATUS.AT_SEA || s.status === STATUS.EXPECTED);
+
+            if (atPort.length > 0) {
+                text += `⚓ *בנמל:*\n`;
+                atPort.forEach(ship => {
+                    const discharged = ship.dischargeData?.totalDischarged || 0;
+                    const manifest = calculateManifestTotal(ship);
+                    const progress = manifest > 0 ? Math.round((discharged / manifest) * 100) : 0;
+                    text += `• ${ship.name}`;
+                    if (ship.berth) text += ` (${ship.berth})`;
+                    if (ship.status === STATUS.UNDER_OPERATION) text += ` - ${progress}%`;
+                    text += `\n`;
+                });
+                text += `\n`;
+            }
+
+            if (atAnchor.length > 0) {
+                text += `⏳ *על עוגן:*\n`;
+                atAnchor.forEach(ship => {
+                    text += `• ${ship.name}`;
+                    if (ship.etb) {
+                        const etb = new Date(ship.etb);
+                        text += ` (ETB: ${etb.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' })})`;
+                    }
+                    text += `\n`;
+                });
+                text += `\n`;
+            }
+
+            if (enRoute.length > 0) {
+                text += `🌊 *בדרך:*\n`;
+                enRoute.forEach(ship => {
+                    text += `• ${ship.name}`;
+                    if (ship.eta) {
+                        const eta = new Date(ship.eta);
+                        text += ` (ETA: ${eta.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' })})`;
+                    }
+                    text += `\n`;
+                });
+                text += `\n`;
+            }
+
+            text += `━━━━━━━━━━━━━━━━\n`;
+            text += `🏢 Almog Sea Services`;
+
+            navigator.clipboard.writeText(text).then(() => {
+                showToast('סטטוס כל האניות הועתק ללוח', 'success');
+            }).catch(() => {
+                showToast('שגיאה בהעתקה', 'error');
+            });
+        }
+
         // Shift Handover Modal
         function openShiftHandover() {
             renderHandoverForm();
@@ -21236,6 +21429,26 @@ ${signature}`;
                 iconClass: 'docs',
                 keywords: ['upload', 'העלאה', 'מסמך', 'קובץ', 'סריקה'],
                 action: 'openDocVault'
+            },
+
+            // ========== EXPORT & REPORTS ==========
+            {
+                id: 'export',
+                name: 'ייצוא דוח פריקה',
+                desc: 'העתק דוח פריקה לוואטסאפ',
+                icon: '📋',
+                iconClass: 'docs',
+                keywords: ['export', 'ייצוא', 'דוח', 'report', 'whatsapp', 'וואטסאפ', 'העתק', 'copy'],
+                action: 'exportReport'
+            },
+            {
+                id: 'exportAll',
+                name: 'סטטוס כל האניות',
+                desc: 'העתק סטטוס כל האניות',
+                icon: '📊',
+                iconClass: 'docs',
+                keywords: ['all', 'כל', 'סטטוס', 'status', 'אניות', 'ships', 'ייצוא'],
+                action: 'exportAllShips'
             },
 
             // ========== NAVIGATION ==========
@@ -21890,6 +22103,13 @@ ${signature}`;
                         openDocVault(ship.id);
                     }
                     return; // Don't render ships or call closeCmdBar again
+
+                // ===== EXPORT =====
+                case 'selectShipForExport':
+                    if (ship) {
+                        exportDischargeReport(ship.id);
+                    }
+                    return; // Don't render ships or call closeCmdBar again
             }
 
             renderShips();
@@ -21927,6 +22147,26 @@ ${signature}`;
                             fields: [{ id: 'ship', type: 'ship', label: 'בחר אנייה', required: true }]
                         });
                     }
+                    break;
+
+                case 'exportReport':
+                    closeCmdBar();
+                    if (selectedDischargeShipId) {
+                        exportDischargeReport(selectedDischargeShipId);
+                    } else {
+                        // Show ship selector
+                        showCmdBarForm({
+                            ...command,
+                            id: 'selectShipForExport',
+                            name: 'ייצוא דוח',
+                            fields: [{ id: 'ship', type: 'ship', label: 'בחר אנייה', required: true }]
+                        });
+                    }
+                    break;
+
+                case 'exportAllShips':
+                    closeCmdBar();
+                    exportAllShipsStatus();
                     break;
 
                 case 'gotoFieldAgent':
