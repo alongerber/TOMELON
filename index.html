@@ -1459,6 +1459,277 @@
             box-shadow: 0 15px 50px rgba(79, 70, 229, 0.5);
         }
 
+        /* ==================== Command Bar (Ctrl+K) ==================== */
+        .cmd-bar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 15vh;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 200ms ease;
+        }
+        .cmd-bar-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .cmd-bar {
+            width: 100%;
+            max-width: 600px;
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
+            box-shadow: 0 25px 100px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            transform: translateY(-20px) scale(0.95);
+            transition: transform 200ms ease;
+        }
+        .cmd-bar-overlay.active .cmd-bar {
+            transform: translateY(0) scale(1);
+        }
+        .cmd-bar-input-wrapper {
+            display: flex;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--glass-border);
+            gap: 12px;
+        }
+        .cmd-bar-icon {
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        .cmd-bar-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            font-size: 18px;
+            color: var(--text-primary);
+            outline: none;
+        }
+        .cmd-bar-input::placeholder {
+            color: var(--text-tertiary);
+        }
+        .cmd-bar-shortcut {
+            font-size: 11px;
+            padding: 4px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            color: var(--text-tertiary);
+            font-family: monospace;
+        }
+        .cmd-bar-results {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .cmd-bar-section {
+            padding: 8px 0;
+        }
+        .cmd-bar-section-title {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-tertiary);
+            padding: 8px 20px;
+        }
+        .cmd-bar-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            gap: 12px;
+            cursor: pointer;
+            transition: background 150ms;
+        }
+        .cmd-bar-item:hover,
+        .cmd-bar-item.selected {
+            background: var(--bg-hover);
+        }
+        .cmd-bar-item-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+        .cmd-bar-item-icon.sailed { background: rgba(16, 185, 129, 0.2); color: var(--success); }
+        .cmd-bar-item-icon.berthed { background: rgba(79, 70, 229, 0.2); color: var(--primary); }
+        .cmd-bar-item-icon.service { background: rgba(59, 130, 246, 0.2); color: #3b82f6; }
+        .cmd-bar-item-icon.note { background: rgba(245, 158, 11, 0.2); color: var(--warning); }
+        .cmd-bar-item-icon.docs { background: rgba(139, 92, 246, 0.2); color: #8b5cf6; }
+        .cmd-bar-item-content {
+            flex: 1;
+            min-width: 0;
+        }
+        .cmd-bar-item-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .cmd-bar-item-desc {
+            font-size: 12px;
+            color: var(--text-tertiary);
+            margin-top: 2px;
+        }
+        .cmd-bar-item-shortcut {
+            font-size: 11px;
+            padding: 3px 6px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            color: var(--text-tertiary);
+            font-family: monospace;
+        }
+
+        /* Command Bar Form */
+        .cmd-bar-form {
+            padding: 20px;
+            border-top: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+        }
+        .cmd-bar-form-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .cmd-bar-form-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--primary);
+            color: white;
+        }
+        .cmd-bar-form-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .cmd-bar-form-subtitle {
+            font-size: 12px;
+            color: var(--text-tertiary);
+        }
+        .cmd-bar-form-fields {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .cmd-bar-field {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .cmd-bar-field-label {
+            width: 100px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            flex-shrink: 0;
+        }
+        .cmd-bar-field-input {
+            flex: 1;
+            padding: 10px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            outline: none;
+            transition: border-color 200ms;
+        }
+        .cmd-bar-field-input:focus {
+            border-color: var(--primary);
+        }
+        .cmd-bar-field-hint {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            padding: 2px 8px;
+            background: var(--bg-hover);
+            border-radius: 4px;
+        }
+        .cmd-bar-field-options {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .cmd-bar-option {
+            padding: 8px 14px;
+            background: var(--bg-tertiary);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 150ms;
+        }
+        .cmd-bar-option:hover {
+            border-color: var(--primary);
+            color: var(--text-primary);
+        }
+        .cmd-bar-option.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .cmd-bar-form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid var(--glass-border);
+        }
+        .cmd-bar-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 150ms;
+            border: none;
+        }
+        .cmd-bar-btn.secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+        }
+        .cmd-bar-btn.secondary:hover {
+            background: var(--bg-hover);
+            color: var(--text-primary);
+        }
+        .cmd-bar-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+        .cmd-bar-btn.primary:hover {
+            filter: brightness(1.1);
+        }
+        .cmd-bar-hint {
+            text-align: center;
+            padding: 12px;
+            font-size: 12px;
+            color: var(--text-tertiary);
+            border-top: 1px solid var(--glass-border);
+        }
+        .cmd-bar-hint kbd {
+            padding: 2px 6px;
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+            font-family: monospace;
+            margin: 0 2px;
+        }
+
         /* Ship Card */
         .ship-card {
             background: var(--bg-card);
@@ -5971,6 +6242,34 @@
     <!-- Background -->
     <div class="bg-pattern"></div>
     <div class="grid-overlay"></div>
+
+    <!-- Command Bar (Ctrl+K) -->
+    <div class="cmd-bar-overlay" id="cmdBarOverlay" onclick="closeCmdBarOnOverlay(event)">
+        <div class="cmd-bar" onclick="event.stopPropagation()">
+            <div class="cmd-bar-input-wrapper">
+                <div class="cmd-bar-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="m21 21-4.35-4.35"/>
+                    </svg>
+                </div>
+                <input type="text" class="cmd-bar-input" id="cmdBarInput"
+                       placeholder="הקלד פקודה או חפש אנייה..."
+                       oninput="handleCmdBarInput(event)"
+                       onkeydown="handleCmdBarKeydown(event)">
+                <span class="cmd-bar-shortcut">ESC</span>
+            </div>
+            <div class="cmd-bar-results" id="cmdBarResults">
+                <!-- Results will be rendered here -->
+            </div>
+            <div class="cmd-bar-form" id="cmdBarForm" style="display: none;">
+                <!-- Form will be rendered here -->
+            </div>
+            <div class="cmd-bar-hint">
+                <kbd>↑↓</kbd> ניווט <kbd>Enter</kbd> בחירה <kbd>Tab</kbd> מעבר שדה <kbd>Esc</kbd> סגירה
+            </div>
+        </div>
+    </div>
 
     <!-- App Container -->
     <div class="app-container">
@@ -16865,31 +17164,272 @@ ${signature}`;
         }
 
         function buildSearchContext() {
-            // Build a comprehensive context string for AI
-            let context = 'מידע על אניות במערכת:\n\n';
+            // Build an extremely comprehensive context string for AI
+            let context = '';
 
-            ships.forEach(ship => {
-                context += `אנייה: ${ship.name}\n`;
-                context += `  - מסע: ${ship.voyage || 'לא ידוע'}\n`;
-                context += `  - סטטוס: ${getStatusText(ship.status)}\n`;
-                context += `  - נמל: ${ship.port || 'לא ידוע'}\n`;
-                context += `  - ETA: ${ship.eta ? new Date(ship.eta).toLocaleString('he-IL') : 'לא ידוע'}\n`;
-                context += `  - מטען: ${ship.cargo || 'לא ידוע'}\n`;
-                context += `  - בעלים: ${ship.owner || 'לא ידוע'}\n`;
-                context += `  - מקבלים: ${ship.receivers || 'לא ידוע'}\n`;
-                context += `  - ספק: ${ship.supplier || 'לא ידוע'}\n`;
-                if (ship.manifest && ship.manifest.items && ship.manifest.items.length > 0) {
-                    context += `  - מניפסט: ${ship.manifest.items.map(i => `${i.type} (${i.weight} טון)`).join(', ')}\n`;
+            // ========== SYSTEM OVERVIEW ==========
+            const atSea = ships.filter(s => s.status === STATUS.AT_SEA);
+            const atPort = ships.filter(s => s.status === STATUS.AT_PORT);
+            const underOp = ships.filter(s => s.status === STATUS.UNDER_OPERATION);
+            const sailed = ships.filter(s => s.status === STATUS.SAILED);
+            const activeShips = ships.filter(s => s.status !== STATUS.SAILED);
+
+            context += `=== סיכום מערכת ===\n`;
+            context += `סה"כ אניות פעילות: ${activeShips.length}\n`;
+            context += `  - בים/על עוגן: ${atSea.length}\n`;
+            context += `  - בנמל: ${atPort.length}\n`;
+            context += `  - בפריקה: ${underOp.length}\n`;
+            context += `  - הפליגו: ${sailed.length}\n\n`;
+
+            // ========== CARGO AGGREGATIONS ==========
+            context += `=== סיכום מטענים ===\n`;
+
+            // Calculate total cargo by type across all active ships
+            const cargoByType = {};
+            const cargoByStatus = { atSea: 0, atPort: 0, underOp: 0 };
+
+            activeShips.forEach(ship => {
+                if (ship.manifest?.items) {
+                    ship.manifest.items.forEach(item => {
+                        const type = item.type || 'לא מוגדר';
+                        const weight = parseFloat(item.weight) || 0;
+                        cargoByType[type] = (cargoByType[type] || 0) + weight;
+
+                        if (ship.status === STATUS.AT_SEA) cargoByStatus.atSea += weight;
+                        else if (ship.status === STATUS.AT_PORT) cargoByStatus.atPort += weight;
+                        else if (ship.status === STATUS.UNDER_OPERATION) cargoByStatus.underOp += weight;
+                    });
+                } else if (ship.cargoQuantity) {
+                    const weight = parseFloat(ship.cargoQuantity) || 0;
+                    const type = ship.cargo || 'לא מוגדר';
+                    cargoByType[type] = (cargoByType[type] || 0) + weight;
+
+                    if (ship.status === STATUS.AT_SEA) cargoByStatus.atSea += weight;
+                    else if (ship.status === STATUS.AT_PORT) cargoByStatus.atPort += weight;
+                    else if (ship.status === STATUS.UNDER_OPERATION) cargoByStatus.underOp += weight;
                 }
+            });
+
+            const totalCargo = Object.values(cargoByType).reduce((a, b) => a + b, 0);
+            context += `סה"כ מטען בכל האניות הפעילות: ${totalCargo.toFixed(2)} MT\n`;
+            context += `  - מטען על עוגן: ${cargoByStatus.atSea.toFixed(2)} MT\n`;
+            context += `  - מטען בנמל: ${cargoByStatus.atPort.toFixed(2)} MT\n`;
+            context += `  - מטען בפריקה: ${cargoByStatus.underOp.toFixed(2)} MT\n\n`;
+
+            context += `פירוט לפי סוג מטען:\n`;
+            Object.entries(cargoByType).sort((a, b) => b[1] - a[1]).forEach(([type, weight]) => {
+                context += `  - ${type}: ${weight.toFixed(2)} MT\n`;
+            });
+            context += '\n';
+
+            // ========== RECEIVERS AGGREGATION ==========
+            context += `=== מקבלים ===\n`;
+            const receiversMap = {};
+            activeShips.forEach(ship => {
+                if (ship.receivers) {
+                    const receivers = ship.receivers.split(/[,;]/);
+                    receivers.forEach(r => {
+                        const name = r.trim();
+                        if (name) {
+                            if (!receiversMap[name]) receiversMap[name] = [];
+                            receiversMap[name].push({
+                                ship: ship.name,
+                                cargo: ship.cargo,
+                                status: getStatusText(ship.status)
+                            });
+                        }
+                    });
+                }
+            });
+            Object.entries(receiversMap).forEach(([receiver, ships]) => {
+                context += `${receiver}:\n`;
+                ships.forEach(s => {
+                    context += `  - ${s.ship} (${s.cargo}) - ${s.status}\n`;
+                });
+            });
+            context += '\n';
+
+            // ========== ETA/ETB SCHEDULE ==========
+            context += `=== לוח זמנים צפוי ===\n`;
+            const upcomingArrivals = atSea.filter(s => s.eta).sort((a, b) => new Date(a.eta) - new Date(b.eta));
+            if (upcomingArrivals.length > 0) {
+                context += `אניות צפויות להגיע:\n`;
+                upcomingArrivals.forEach(ship => {
+                    const eta = new Date(ship.eta);
+                    const daysUntil = Math.ceil((eta - new Date()) / (1000 * 60 * 60 * 24));
+                    context += `  - ${ship.name}: ${eta.toLocaleDateString('he-IL')} ${eta.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}`;
+                    context += ` (בעוד ${daysUntil} ימים)\n`;
+                });
+            }
+
+            const pendingBerthing = atPort.filter(s => !s.berth);
+            if (pendingBerthing.length > 0) {
+                context += `אניות ממתינות לקישור:\n`;
+                pendingBerthing.forEach(ship => {
+                    context += `  - ${ship.name}\n`;
+                });
+            }
+            context += '\n';
+
+            // ========== DISCHARGE PROGRESS & ETC ==========
+            context += `=== התקדמות פריקה ===\n`;
+            underOp.forEach(ship => {
+                context += `${ship.name}:\n`;
+                const totalCargo = ship.manifest?.items?.reduce((sum, i) => sum + (parseFloat(i.weight) || 0), 0) || parseFloat(ship.cargoQuantity) || 0;
+                const discharged = parseFloat(ship.dischargedQuantity) || 0;
+                const remaining = totalCargo - discharged;
+                const progress = totalCargo > 0 ? ((discharged / totalCargo) * 100).toFixed(1) : 0;
+
+                context += `  - סה"כ מטען: ${totalCargo.toFixed(2)} MT\n`;
+                context += `  - נפרק: ${discharged.toFixed(2)} MT (${progress}%)\n`;
+                context += `  - נותר: ${remaining.toFixed(2)} MT\n`;
+
+                // Calculate ETC based on discharge rate
+                if (ship.dischargeRate && remaining > 0) {
+                    const hoursRemaining = remaining / ship.dischargeRate;
+                    const etc = new Date(Date.now() + hoursRemaining * 60 * 60 * 1000);
+                    context += `  - קצב פריקה: ${ship.dischargeRate} MT/שעה\n`;
+                    context += `  - ETC (זמן סיום משוער): ${etc.toLocaleDateString('he-IL')} ${etc.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' })}\n`;
+                }
+                if (ship.berth) context += `  - רציף: ${ship.berth}\n`;
                 context += '\n';
             });
 
-            // Add reference vessel data
-            if (referenceData.vessels && referenceData.vessels.length > 0) {
-                context += '\nמידע טכני על אניות:\n';
+            // ========== DETAILED SHIP INFO ==========
+            context += `=== פירוט אניות ===\n\n`;
+            ships.forEach(ship => {
+                context += `[${ship.name}]\n`;
+                context += `  מסע: ${ship.voyage || '-'}\n`;
+                context += `  סטטוס: ${getStatusText(ship.status)}\n`;
+                context += `  נמל: ${ship.port || '-'}\n`;
+                context += `  רציף: ${ship.berth || '-'}\n`;
+
+                // Dates
+                if (ship.eta) context += `  ETA: ${new Date(ship.eta).toLocaleString('he-IL')}\n`;
+                if (ship.etb) context += `  ETB: ${new Date(ship.etb).toLocaleString('he-IL')}\n`;
+                if (ship.etd) context += `  ETD: ${new Date(ship.etd).toLocaleString('he-IL')}\n`;
+                if (ship.nor) context += `  NOR: ${new Date(ship.nor).toLocaleString('he-IL')}\n`;
+                if (ship.dischargeStarted) context += `  תחילת פריקה: ${new Date(ship.dischargeStarted).toLocaleString('he-IL')}\n`;
+                if (ship.dischargeCompleted) context += `  סיום פריקה: ${new Date(ship.dischargeCompleted).toLocaleString('he-IL')}\n`;
+
+                // Parties
+                context += `  בעלים: ${ship.owner || '-'}\n`;
+                context += `  ספק: ${ship.supplier || '-'}\n`;
+                context += `  מקבלים: ${ship.receivers || '-'}\n`;
+                context += `  סוכן: ${ship.agent || '-'}\n`;
+
+                // Cargo
+                context += `  מטען: ${ship.cargo || '-'}\n`;
+                if (ship.manifest?.items?.length > 0) {
+                    context += `  מניפסט:\n`;
+                    ship.manifest.items.forEach(item => {
+                        context += `    - ${item.type}: ${item.weight} MT`;
+                        if (item.packages) context += ` (${item.packages} יחידות)`;
+                        context += '\n';
+                    });
+                }
+
+                // Discharge progress
+                if (ship.dischargedQuantity) {
+                    context += `  נפרק עד כה: ${ship.dischargedQuantity} MT\n`;
+                }
+                if (ship.remainingQuantity) {
+                    context += `  נותר לפריקה: ${ship.remainingQuantity} MT\n`;
+                }
+
+                // Documents
+                const shipDocs = fieldAgentShipData[ship.id];
+                if (shipDocs) {
+                    const uploaded = REQUIRED_DOCUMENTS.filter(d => shipDocs[d.id]?.uploaded);
+                    const missing = REQUIRED_DOCUMENTS.filter(d => !shipDocs[d.id]?.uploaded);
+                    context += `  מסמכים: ${uploaded.length}/${REQUIRED_DOCUMENTS.length}\n`;
+                    if (uploaded.length > 0) context += `    הועלו: ${uploaded.map(d => d.name).join(', ')}\n`;
+                    if (missing.length > 0) context += `    חסרים: ${missing.map(d => d.name).join(', ')}\n`;
+                }
+
+                // Notes
+                if (ship.notes) {
+                    context += `  הערות: ${ship.notes}\n`;
+                }
+
+                context += '\n';
+            });
+
+            // ========== VESSEL TECHNICAL DATA ==========
+            if (referenceData.vessels?.length > 0) {
+                context += `=== מידע טכני על אניות ===\n`;
                 referenceData.vessels.forEach(v => {
-                    context += `${v.name}: LOA=${v.loa || '?'}מ, רוחב=${v.beam || '?'}מ, DWT=${v.dwt || '?'}, IMO=${v.imo || '?'}\n`;
+                    context += `${v.name}:\n`;
+                    if (v.imo) context += `  IMO: ${v.imo}\n`;
+                    if (v.loa) context += `  אורך (LOA): ${v.loa} מ'\n`;
+                    if (v.beam) context += `  רוחב: ${v.beam} מ'\n`;
+                    if (v.draft) context += `  שוקע: ${v.draft} מ'\n`;
+                    if (v.dwt) context += `  DWT: ${v.dwt}\n`;
+                    if (v.grt) context += `  GRT: ${v.grt}\n`;
+                    if (v.nrt) context += `  NRT: ${v.nrt}\n`;
+                    if (v.flag) context += `  דגל: ${v.flag}\n`;
+                    if (v.yearBuilt) context += `  שנת בנייה: ${v.yearBuilt}\n`;
+                    if (v.holds) context += `  מחסנים: ${v.holds}\n`;
+                    if (v.hatches) context += `  פתחים: ${v.hatches}\n`;
+                    if (v.cranes) context += `  מנופים: ${v.cranes}\n`;
                 });
+                context += '\n';
+            }
+
+            // ========== CONTACTS ==========
+            if (referenceData.contacts?.length > 0) {
+                context += `=== אנשי קשר ===\n`;
+                referenceData.contacts.forEach(c => {
+                    context += `${c.name}`;
+                    if (c.company) context += ` (${c.company})`;
+                    if (c.role) context += ` - ${c.role}`;
+                    context += '\n';
+                    if (c.phone) context += `  טלפון: ${c.phone}\n`;
+                    if (c.email) context += `  אימייל: ${c.email}\n`;
+                });
+                context += '\n';
+            }
+
+            // ========== DOCUMENTS SUMMARY ==========
+            context += `=== סיכום מסמכים ===\n`;
+            let shipsWithAllDocs = 0;
+            let shipsMissingDocs = 0;
+
+            activeShips.forEach(ship => {
+                const shipDocs = fieldAgentShipData[ship.id] || {};
+                const completedDocs = REQUIRED_DOCUMENTS.filter(doc => shipDocs[doc.id]?.uploaded);
+                if (completedDocs.length === REQUIRED_DOCUMENTS.length) {
+                    shipsWithAllDocs++;
+                } else {
+                    shipsMissingDocs++;
+                }
+            });
+
+            context += `אניות עם כל המסמכים: ${shipsWithAllDocs}\n`;
+            context += `אניות עם מסמכים חסרים: ${shipsMissingDocs}\n\n`;
+
+            // List ships missing specific documents
+            REQUIRED_DOCUMENTS.forEach(doc => {
+                const shipsMissing = activeShips.filter(ship => {
+                    const shipDocs = fieldAgentShipData[ship.id] || {};
+                    return !shipDocs[doc.id]?.uploaded;
+                });
+                if (shipsMissing.length > 0) {
+                    context += `חסר ${doc.name}: ${shipsMissing.map(s => s.name).join(', ')}\n`;
+                }
+            });
+
+            // ========== IMPORTANT CALCULATIONS ==========
+            context += `\n=== חישובים חשובים ===\n`;
+            context += `התאריך היום: ${new Date().toLocaleDateString('he-IL')}\n`;
+            context += `השעה: ${new Date().toLocaleTimeString('he-IL')}\n`;
+
+            // Ships arriving this week
+            const oneWeek = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+            const arrivingThisWeek = atSea.filter(s => s.eta && new Date(s.eta) <= oneWeek);
+            context += `אניות צפויות השבוע: ${arrivingThisWeek.length}\n`;
+            if (arrivingThisWeek.length > 0) {
+                context += `  (${arrivingThisWeek.map(s => s.name).join(', ')})\n`;
             }
 
             return context;
@@ -18115,6 +18655,1052 @@ ${signature}`;
             } catch (error) {
                 console.error('Error saving note:', error);
                 showToast('שגיאה בשמירת ההערה', 'error');
+            }
+        }
+
+        // ==================== Command Bar (Ctrl+K) ====================
+        let cmdBarSelectedIndex = 0;
+        let cmdBarCurrentResults = [];
+        let cmdBarCurrentCommand = null;
+        let cmdBarFormData = {};
+
+        // Command definitions
+        const CMD_BAR_COMMANDS = [
+            // ========== STATUS UPDATES ==========
+            {
+                id: 'sailed',
+                name: 'הפלגה',
+                desc: 'סמן אנייה כהפליגה',
+                icon: '🚢',
+                iconClass: 'sailed',
+                keywords: ['sailed', 'הפליג', 'הפלגה', 'יצא', 'departure'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' },
+                    { id: 'pilotOrdered', type: 'boolean', label: 'פיילוט הוזמן', default: true }
+                ]
+            },
+            {
+                id: 'berthed',
+                name: 'קישור לרציף',
+                desc: 'אנייה קשורה לרציף',
+                icon: '⚓',
+                iconClass: 'berthed',
+                keywords: ['berthed', 'קישור', 'רציף', 'עגינה', 'alongside'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' },
+                    { id: 'berth', type: 'text', label: 'רציף', placeholder: 'מספר רציף' }
+                ]
+            },
+            {
+                id: 'anchor',
+                name: 'הגעה לעוגן',
+                desc: 'אנייה הגיעה לעוגן',
+                icon: '⚓',
+                iconClass: 'berthed',
+                keywords: ['anchor', 'עוגן', 'arrived', 'הגיע', 'roads'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' }
+                ]
+            },
+            {
+                id: 'discharge',
+                name: 'התחלת פריקה',
+                desc: 'סמן תחילת פריקה',
+                icon: '⚙️',
+                iconClass: 'berthed',
+                keywords: ['discharge', 'פריקה', 'התחיל', 'commenced', 'started'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' }
+                ]
+            },
+            {
+                id: 'completed',
+                name: 'סיום פריקה',
+                desc: 'סמן סיום פריקה',
+                icon: '✅',
+                iconClass: 'sailed',
+                keywords: ['completed', 'סיום', 'finished', 'סיים', 'done'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' }
+                ]
+            },
+
+            // ========== TIME UPDATES ==========
+            {
+                id: 'eta',
+                name: 'עדכון ETA',
+                desc: 'זמן הגעה משוער',
+                icon: '🕐',
+                iconClass: 'berthed',
+                keywords: ['eta', 'הגעה', 'arrival', 'expected'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', required: true },
+                    { id: 'time', type: 'time', label: 'שעה', required: true }
+                ]
+            },
+            {
+                id: 'etb',
+                name: 'עדכון ETB',
+                desc: 'זמן קישור משוער',
+                icon: '🕐',
+                iconClass: 'berthed',
+                keywords: ['etb', 'קישור', 'berthing', 'expected'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', required: true },
+                    { id: 'time', type: 'time', label: 'שעה', required: true },
+                    { id: 'berth', type: 'text', label: 'רציף', placeholder: 'מספר רציף' }
+                ]
+            },
+            {
+                id: 'etd',
+                name: 'עדכון ETD',
+                desc: 'זמן הפלגה משוער',
+                icon: '🕐',
+                iconClass: 'sailed',
+                keywords: ['etd', 'הפלגה', 'departure', 'expected', 'sailing'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', required: true },
+                    { id: 'time', type: 'time', label: 'שעה', required: true }
+                ]
+            },
+            {
+                id: 'nor',
+                name: 'NOR הוגש',
+                desc: 'Notice of Readiness',
+                icon: '📋',
+                iconClass: 'docs',
+                keywords: ['nor', 'notice', 'readiness', 'מוכנות'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' },
+                    { id: 'accepted', type: 'boolean', label: 'NOR התקבל', default: false }
+                ]
+            },
+            {
+                id: 'pilot',
+                name: 'הזמנת פיילוט',
+                desc: 'הזמנת נווט',
+                icon: '👨‍✈️',
+                iconClass: 'service',
+                keywords: ['pilot', 'פיילוט', 'נווט', 'הזמנה'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', required: true },
+                    { id: 'time', type: 'time', label: 'שעה', required: true },
+                    { id: 'type', type: 'options', label: 'סוג', options: [
+                        { id: 'in', label: 'כניסה' },
+                        { id: 'out', label: 'יציאה' },
+                        { id: 'shift', label: 'העברה' }
+                    ]}
+                ]
+            },
+
+            // ========== SERVICE REQUESTS ==========
+            {
+                id: 'water',
+                name: 'הזמנת מים',
+                desc: 'בקשת אספקת מים',
+                icon: '💧',
+                iconClass: 'service',
+                keywords: ['water', 'מים', 'שירות', 'fresh'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'quantity', type: 'number', label: 'כמות (טון)', placeholder: '50' },
+                    { id: 'payer', type: 'options', label: 'מי משלם', options: [
+                        { id: 'owners', label: 'בעלים' },
+                        { id: 'receivers', label: 'מקבלים' },
+                        { id: 'charterers', label: 'שוכרים' }
+                    ]},
+                    { id: 'date', type: 'date', label: 'תאריך נדרש', default: 'tomorrow' },
+                    { id: 'notes', type: 'text', label: 'הערות', placeholder: 'הערות נוספות' }
+                ]
+            },
+            {
+                id: 'provisions',
+                name: 'הזמנת אספקה',
+                desc: 'מזון וציוד לצוות',
+                icon: '📦',
+                iconClass: 'service',
+                keywords: ['provisions', 'אספקה', 'מזון', 'חבילות', 'stores'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'type', type: 'text', label: 'סוג אספקה', placeholder: 'מזון, חלקים...' },
+                    { id: 'payer', type: 'options', label: 'מי משלם', options: [
+                        { id: 'owners', label: 'בעלים' },
+                        { id: 'receivers', label: 'מקבלים' },
+                        { id: 'charterers', label: 'שוכרים' }
+                    ]},
+                    { id: 'notes', type: 'text', label: 'הערות', placeholder: 'פירוט הבקשה' }
+                ]
+            },
+            {
+                id: 'bunkers',
+                name: 'תדלוק',
+                desc: 'בקשת דלק לאנייה',
+                icon: '⛽',
+                iconClass: 'service',
+                keywords: ['bunkers', 'fuel', 'דלק', 'תדלוק', 'סולר'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'quantity', type: 'number', label: 'כמות (טון)', placeholder: '100' },
+                    { id: 'fuelType', type: 'options', label: 'סוג דלק', options: [
+                        { id: 'mgo', label: 'MGO' },
+                        { id: 'ifo', label: 'IFO' },
+                        { id: 'vlsfo', label: 'VLSFO' }
+                    ]},
+                    { id: 'payer', type: 'options', label: 'מי משלם', options: [
+                        { id: 'owners', label: 'בעלים' },
+                        { id: 'charterers', label: 'שוכרים' }
+                    ]},
+                    { id: 'date', type: 'date', label: 'תאריך נדרש' }
+                ]
+            },
+            {
+                id: 'repairs',
+                name: 'תיקונים',
+                desc: 'בקשת תיקונים לאנייה',
+                icon: '🔧',
+                iconClass: 'service',
+                keywords: ['repairs', 'תיקונים', 'תקלה', 'fix', 'maintenance'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'description', type: 'textarea', label: 'תיאור התקלה', placeholder: 'פרט את התקלה', required: true },
+                    { id: 'urgent', type: 'boolean', label: 'דחוף', default: false },
+                    { id: 'payer', type: 'options', label: 'מי משלם', options: [
+                        { id: 'owners', label: 'בעלים' },
+                        { id: 'charterers', label: 'שוכרים' },
+                        { id: 'insurance', label: 'ביטוח' }
+                    ]}
+                ]
+            },
+            {
+                id: 'crew',
+                name: 'החלפת צוות',
+                desc: 'Crew Change בקשה',
+                icon: '👥',
+                iconClass: 'service',
+                keywords: ['crew', 'צוות', 'החלפה', 'change', 'sign'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'signOn', type: 'number', label: 'עולים', placeholder: '0' },
+                    { id: 'signOff', type: 'number', label: 'יורדים', placeholder: '0' },
+                    { id: 'date', type: 'date', label: 'תאריך', required: true },
+                    { id: 'notes', type: 'text', label: 'הערות', placeholder: 'שמות, טיסות...' }
+                ]
+            },
+
+            // ========== CARGO & DISCHARGE ==========
+            {
+                id: 'tally',
+                name: 'עדכון טאלי',
+                desc: 'עדכון כמות נפרקה',
+                icon: '📊',
+                iconClass: 'note',
+                keywords: ['tally', 'טאלי', 'נפרק', 'discharged', 'quantity'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'quantity', type: 'number', label: 'כמות שנפרקה (MT)', required: true },
+                    { id: 'shift', type: 'options', label: 'משמרת', options: [
+                        { id: 'a', label: "משמרת א'" },
+                        { id: 'b', label: "משמרת ב'" },
+                        { id: 'c', label: "משמרת ג'" }
+                    ]},
+                    { id: 'hold', type: 'text', label: 'מחסן', placeholder: '1, 2, 3...' }
+                ]
+            },
+            {
+                id: 'stoppage',
+                name: 'עצירת עבודה',
+                desc: 'דיווח עצירת פריקה',
+                icon: '⛔',
+                iconClass: 'note',
+                keywords: ['stoppage', 'עצירה', 'rain', 'גשם', 'stop', 'delay'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'reason', type: 'options', label: 'סיבה', options: [
+                        { id: 'rain', label: 'גשם' },
+                        { id: 'technical', label: 'תקלה טכנית' },
+                        { id: 'crane', label: 'תקלת עגורן' },
+                        { id: 'gang', label: 'חוסר פועלים' },
+                        { id: 'receiver', label: 'המתנה למקבל' },
+                        { id: 'other', label: 'אחר' }
+                    ]},
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' },
+                    { id: 'notes', type: 'text', label: 'פירוט' }
+                ]
+            },
+            {
+                id: 'resumed',
+                name: 'חידוש עבודה',
+                desc: 'פריקה חודשה',
+                icon: '▶️',
+                iconClass: 'sailed',
+                keywords: ['resumed', 'חידוש', 'המשך', 'continue', 'restart'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'date', type: 'date', label: 'תאריך', default: 'today' },
+                    { id: 'time', type: 'time', label: 'שעה', default: 'now' }
+                ]
+            },
+
+            // ========== NOTES & DOCS ==========
+            {
+                id: 'note',
+                name: 'הוספת הערה',
+                desc: 'הערה חופשית לאנייה',
+                icon: '📝',
+                iconClass: 'note',
+                keywords: ['note', 'הערה', 'תיעוד', 'memo', 'remark'],
+                fields: [
+                    { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                    { id: 'text', type: 'textarea', label: 'הערה', placeholder: 'תוכן ההערה', required: true }
+                ]
+            },
+            {
+                id: 'docs',
+                name: 'מסמכי אנייה',
+                desc: 'פתח מסמכים',
+                icon: '📄',
+                iconClass: 'docs',
+                keywords: ['docs', 'documents', 'מסמכים', 'קבצים', 'files'],
+                action: 'openDocs'
+            },
+            {
+                id: 'upload',
+                name: 'העלאת מסמך',
+                desc: 'העלה מסמך לאנייה',
+                icon: '📤',
+                iconClass: 'docs',
+                keywords: ['upload', 'העלאה', 'מסמך', 'קובץ', 'סריקה'],
+                action: 'uploadDoc'
+            },
+
+            // ========== NAVIGATION ==========
+            {
+                id: 'goto',
+                name: 'עבור לאנייה',
+                desc: 'פתח כרטיס אנייה',
+                icon: '🔍',
+                iconClass: 'berthed',
+                keywords: ['goto', 'open', 'פתח', 'הצג', 'view', 'show'],
+                action: 'gotoShip'
+            },
+            {
+                id: 'fieldagent',
+                name: 'ממשק שטח',
+                desc: 'עבור לממשק סוכני שטח',
+                icon: '📱',
+                iconClass: 'service',
+                keywords: ['field', 'שטח', 'סוכן', 'agent', 'mobile'],
+                action: 'gotoFieldAgent'
+            },
+            {
+                id: 'operations',
+                name: 'לוח תפעול',
+                desc: 'עבור ללוח תפעול',
+                icon: '📋',
+                iconClass: 'docs',
+                keywords: ['operations', 'תפעול', 'לוח', 'board'],
+                action: 'gotoOperations'
+            },
+
+            // ========== QUICK INFO ==========
+            {
+                id: 'status',
+                name: 'סטטוס מערכת',
+                desc: 'הצג סיכום מהיר',
+                icon: '📊',
+                iconClass: 'berthed',
+                keywords: ['status', 'סטטוס', 'סיכום', 'summary', 'overview'],
+                action: 'showStatus'
+            }
+        ];
+
+        // Open Command Bar with Ctrl+K
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                openCmdBar();
+            }
+            if (e.key === 'Escape') {
+                closeCmdBar();
+            }
+        });
+
+        function openCmdBar() {
+            const overlay = document.getElementById('cmdBarOverlay');
+            const input = document.getElementById('cmdBarInput');
+            overlay.classList.add('active');
+            input.value = '';
+            input.focus();
+            cmdBarSelectedIndex = 0;
+            cmdBarCurrentCommand = null;
+            cmdBarFormData = {};
+            document.getElementById('cmdBarForm').style.display = 'none';
+            renderCmdBarResults('');
+        }
+
+        function closeCmdBar() {
+            document.getElementById('cmdBarOverlay').classList.remove('active');
+            cmdBarCurrentCommand = null;
+            cmdBarFormData = {};
+        }
+
+        function closeCmdBarOnOverlay(e) {
+            if (e.target.id === 'cmdBarOverlay') {
+                closeCmdBar();
+            }
+        }
+
+        function handleCmdBarInput(e) {
+            const query = e.target.value.trim().toLowerCase();
+            cmdBarSelectedIndex = 0;
+            renderCmdBarResults(query);
+        }
+
+        function handleCmdBarKeydown(e) {
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                cmdBarSelectedIndex = Math.min(cmdBarSelectedIndex + 1, cmdBarCurrentResults.length - 1);
+                updateCmdBarSelection();
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                cmdBarSelectedIndex = Math.max(cmdBarSelectedIndex - 1, 0);
+                updateCmdBarSelection();
+            } else if (e.key === 'Enter') {
+                e.preventDefault();
+                if (cmdBarCurrentResults[cmdBarSelectedIndex]) {
+                    selectCmdBarItem(cmdBarCurrentResults[cmdBarSelectedIndex]);
+                }
+            }
+        }
+
+        function renderCmdBarResults(query) {
+            const resultsDiv = document.getElementById('cmdBarResults');
+            let results = [];
+
+            // Parse command from query (e.g., "sailed ela s" -> command: sailed, ship: ela s)
+            const parts = query.split(' ');
+            const cmdPart = parts[0];
+            const restPart = parts.slice(1).join(' ');
+
+            // Find matching commands
+            const matchingCommands = CMD_BAR_COMMANDS.filter(cmd =>
+                cmd.keywords.some(kw => kw.includes(cmdPart)) ||
+                cmd.name.includes(cmdPart)
+            );
+
+            // Find matching ships
+            const matchingShips = ships.filter(ship =>
+                ship.name.toLowerCase().includes(query) ||
+                (ship.voyage && ship.voyage.toLowerCase().includes(query))
+            ).slice(0, 5);
+
+            // Build results
+            if (query === '') {
+                // Show default commands
+                results = CMD_BAR_COMMANDS.map(cmd => ({
+                    type: 'command',
+                    command: cmd,
+                    title: cmd.name,
+                    desc: cmd.desc
+                }));
+            } else if (matchingCommands.length > 0 && restPart) {
+                // Command + ship search
+                const cmd = matchingCommands[0];
+                const shipMatches = ships.filter(ship =>
+                    ship.name.toLowerCase().includes(restPart.toLowerCase())
+                );
+                results = shipMatches.map(ship => ({
+                    type: 'command_with_ship',
+                    command: cmd,
+                    ship: ship,
+                    title: `${cmd.name} - ${ship.name}`,
+                    desc: `${cmd.desc} (${ship.voyage || ''})`
+                }));
+            } else {
+                // Mixed results
+                results = [
+                    ...matchingCommands.map(cmd => ({
+                        type: 'command',
+                        command: cmd,
+                        title: cmd.name,
+                        desc: cmd.desc
+                    })),
+                    ...matchingShips.map(ship => ({
+                        type: 'ship',
+                        ship: ship,
+                        title: ship.name,
+                        desc: `${ship.voyage || ''} - ${getStatusText(ship.status)}`
+                    }))
+                ];
+            }
+
+            cmdBarCurrentResults = results;
+
+            if (results.length === 0) {
+                resultsDiv.innerHTML = `
+                    <div class="cmd-bar-section">
+                        <div style="padding: 20px; text-align: center; color: var(--text-tertiary);">
+                            לא נמצאו תוצאות
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            resultsDiv.innerHTML = `
+                <div class="cmd-bar-section">
+                    ${results.map((item, i) => `
+                        <div class="cmd-bar-item ${i === cmdBarSelectedIndex ? 'selected' : ''}"
+                             onclick="selectCmdBarItem(cmdBarCurrentResults[${i}])"
+                             data-index="${i}">
+                            <div class="cmd-bar-item-icon ${item.command?.iconClass || ''}">
+                                ${item.type === 'ship' ?
+                                    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
+                                        <path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/>
+                                        <path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/>
+                                        <path d="M12 10v4"/>
+                                    </svg>` :
+                                    item.command?.icon || '⚡'}
+                            </div>
+                            <div class="cmd-bar-item-content">
+                                <div class="cmd-bar-item-title">${item.title}</div>
+                                <div class="cmd-bar-item-desc">${item.desc}</div>
+                            </div>
+                            ${item.type === 'command' ? `<span class="cmd-bar-item-shortcut">${item.command.keywords[0]}</span>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        function updateCmdBarSelection() {
+            const items = document.querySelectorAll('.cmd-bar-item');
+            items.forEach((item, i) => {
+                item.classList.toggle('selected', i === cmdBarSelectedIndex);
+            });
+        }
+
+        function selectCmdBarItem(item) {
+            if (item.type === 'ship') {
+                // Open ship card
+                closeCmdBar();
+                openShipModal(item.ship.id);
+            } else if (item.type === 'command') {
+                // Show command form
+                if (item.command.action) {
+                    // Direct action
+                    executeDirectAction(item.command);
+                } else {
+                    // Show form
+                    showCmdBarForm(item.command);
+                }
+            } else if (item.type === 'command_with_ship') {
+                // Show form pre-filled with ship
+                showCmdBarForm(item.command, item.ship);
+            }
+        }
+
+        function showCmdBarForm(command, preSelectedShip = null) {
+            cmdBarCurrentCommand = command;
+            cmdBarFormData = {};
+
+            // Pre-fill defaults
+            command.fields?.forEach(field => {
+                if (field.default === 'today') {
+                    cmdBarFormData[field.id] = new Date().toISOString().split('T')[0];
+                } else if (field.default === 'tomorrow') {
+                    const tomorrow = new Date();
+                    tomorrow.setDate(tomorrow.getDate() + 1);
+                    cmdBarFormData[field.id] = tomorrow.toISOString().split('T')[0];
+                } else if (field.default === 'now') {
+                    cmdBarFormData[field.id] = new Date().toTimeString().slice(0, 5);
+                } else if (field.default !== undefined) {
+                    cmdBarFormData[field.id] = field.default;
+                }
+            });
+
+            if (preSelectedShip) {
+                cmdBarFormData.ship = preSelectedShip.id;
+            }
+
+            const formDiv = document.getElementById('cmdBarForm');
+            formDiv.style.display = 'block';
+            document.getElementById('cmdBarResults').style.display = 'none';
+
+            formDiv.innerHTML = `
+                <div class="cmd-bar-form-header">
+                    <div class="cmd-bar-form-icon">${command.icon}</div>
+                    <div>
+                        <div class="cmd-bar-form-title">${command.name}</div>
+                        <div class="cmd-bar-form-subtitle">${command.desc}</div>
+                    </div>
+                </div>
+                <div class="cmd-bar-form-fields">
+                    ${command.fields?.map(field => renderCmdBarField(field, preSelectedShip)).join('') || ''}
+                </div>
+                <div class="cmd-bar-form-actions">
+                    <button class="cmd-bar-btn secondary" onclick="cancelCmdBarForm()">ביטול</button>
+                    <button class="cmd-bar-btn primary" onclick="submitCmdBarForm()">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-left: 6px;">
+                            <polyline points="20 6 9 17 4 12"/>
+                        </svg>
+                        אישור
+                    </button>
+                </div>
+            `;
+
+            // Focus first input
+            setTimeout(() => {
+                const firstInput = formDiv.querySelector('input, select, textarea');
+                if (firstInput) firstInput.focus();
+            }, 100);
+        }
+
+        function renderCmdBarField(field, preSelectedShip) {
+            const value = cmdBarFormData[field.id] || '';
+
+            switch (field.type) {
+                case 'ship':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <select class="cmd-bar-field-input" id="cmdField_${field.id}" onchange="cmdBarFormData['${field.id}'] = this.value">
+                                <option value="">בחר אנייה</option>
+                                ${ships.map(s => `
+                                    <option value="${s.id}" ${preSelectedShip?.id === s.id ? 'selected' : ''}>
+                                        ${s.name} ${s.voyage ? `(${s.voyage})` : ''}
+                                    </option>
+                                `).join('')}
+                            </select>
+                        </div>
+                    `;
+
+                case 'date':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <input type="date" class="cmd-bar-field-input" id="cmdField_${field.id}"
+                                   value="${value}"
+                                   onchange="cmdBarFormData['${field.id}'] = this.value">
+                            ${field.default === 'today' ? '<span class="cmd-bar-field-hint">היום</span>' : ''}
+                            ${field.default === 'tomorrow' ? '<span class="cmd-bar-field-hint">מחר</span>' : ''}
+                        </div>
+                    `;
+
+                case 'time':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <input type="time" class="cmd-bar-field-input" id="cmdField_${field.id}"
+                                   value="${value}"
+                                   onchange="cmdBarFormData['${field.id}'] = this.value">
+                            ${field.default === 'now' ? '<span class="cmd-bar-field-hint">עכשיו</span>' : ''}
+                        </div>
+                    `;
+
+                case 'number':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <input type="number" class="cmd-bar-field-input" id="cmdField_${field.id}"
+                                   placeholder="${field.placeholder || ''}"
+                                   value="${value}"
+                                   onchange="cmdBarFormData['${field.id}'] = this.value">
+                        </div>
+                    `;
+
+                case 'text':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <input type="text" class="cmd-bar-field-input" id="cmdField_${field.id}"
+                                   placeholder="${field.placeholder || ''}"
+                                   value="${value}"
+                                   onchange="cmdBarFormData['${field.id}'] = this.value">
+                        </div>
+                    `;
+
+                case 'textarea':
+                    return `
+                        <div class="cmd-bar-field" style="align-items: flex-start;">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <textarea class="cmd-bar-field-input" id="cmdField_${field.id}"
+                                      placeholder="${field.placeholder || ''}"
+                                      rows="3"
+                                      onchange="cmdBarFormData['${field.id}'] = this.value">${value}</textarea>
+                        </div>
+                    `;
+
+                case 'options':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <div class="cmd-bar-field-options">
+                                ${field.options.map(opt => `
+                                    <div class="cmd-bar-option ${cmdBarFormData[field.id] === opt.id ? 'selected' : ''}"
+                                         onclick="selectCmdBarOption('${field.id}', '${opt.id}', this)">
+                                        ${opt.label}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+
+                case 'boolean':
+                    return `
+                        <div class="cmd-bar-field">
+                            <label class="cmd-bar-field-label">${field.label}:</label>
+                            <div class="cmd-bar-field-options">
+                                <div class="cmd-bar-option ${cmdBarFormData[field.id] === true ? 'selected' : ''}"
+                                     onclick="selectCmdBarOption('${field.id}', true, this)">
+                                    כן
+                                </div>
+                                <div class="cmd-bar-option ${cmdBarFormData[field.id] === false ? 'selected' : ''}"
+                                     onclick="selectCmdBarOption('${field.id}', false, this)">
+                                    לא
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+                default:
+                    return '';
+            }
+        }
+
+        function selectCmdBarOption(fieldId, value, element) {
+            cmdBarFormData[fieldId] = value;
+            // Update UI
+            element.parentElement.querySelectorAll('.cmd-bar-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+        }
+
+        function cancelCmdBarForm() {
+            cmdBarCurrentCommand = null;
+            cmdBarFormData = {};
+            document.getElementById('cmdBarForm').style.display = 'none';
+            document.getElementById('cmdBarResults').style.display = 'block';
+            document.getElementById('cmdBarInput').focus();
+            renderCmdBarResults('');
+        }
+
+        async function submitCmdBarForm() {
+            if (!cmdBarCurrentCommand) return;
+
+            // Validate required fields
+            const missingFields = cmdBarCurrentCommand.fields?.filter(f =>
+                f.required && !cmdBarFormData[f.id]
+            );
+
+            if (missingFields?.length > 0) {
+                showToast(`נא למלא: ${missingFields.map(f => f.label).join(', ')}`, 'error');
+                return;
+            }
+
+            try {
+                // Execute command
+                await executeCmdBarCommand(cmdBarCurrentCommand.id, cmdBarFormData);
+                closeCmdBar();
+            } catch (error) {
+                console.error('Command execution error:', error);
+                showToast('שגיאה בביצוע הפקודה', 'error');
+            }
+        }
+
+        async function executeCmdBarCommand(commandId, data) {
+            const ship = ships.find(s => s.id === data.ship);
+            if (!ship && !['docs', 'upload'].includes(commandId)) {
+                throw new Error('Ship not found');
+            }
+
+            switch (commandId) {
+                // ===== STATUS UPDATES =====
+                case 'sailed':
+                    ship.status = STATUS.SAILED;
+                    if (data.date && data.time) {
+                        ship.actualDeparture = `${data.date}T${data.time}:00`;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`${ship.name} סומנה כהפליגה`, 'success');
+                    break;
+
+                case 'berthed':
+                    ship.status = STATUS.AT_PORT;
+                    if (data.date && data.time) {
+                        ship.etb = `${data.date}T${data.time}:00`;
+                        ship.actualBerthing = `${data.date}T${data.time}:00`;
+                    }
+                    if (data.berth) {
+                        ship.berth = data.berth;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`${ship.name} קשורה לרציף ${data.berth || ''}`, 'success');
+                    break;
+
+                case 'anchor':
+                    ship.status = STATUS.AT_ANCHOR;
+                    if (data.date && data.time) {
+                        ship.anchorArrival = `${data.date}T${data.time}:00`;
+                    }
+                    if (data.anchorage) {
+                        ship.anchorage = data.anchorage;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`${ship.name} הגיעה לעוגן ${data.anchorage || ''}`, 'success');
+                    break;
+
+                case 'discharge':
+                    ship.status = STATUS.UNDER_OPERATION;
+                    if (data.date && data.time) {
+                        ship.dischargeStarted = `${data.date}T${data.time}:00`;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`${ship.name} התחילה פריקה`, 'success');
+                    break;
+
+                case 'completed':
+                    ship.status = STATUS.OPERATION_COMPLETED;
+                    if (data.date && data.time) {
+                        ship.dischargeCompleted = `${data.date}T${data.time}:00`;
+                    }
+                    if (data.finalQty) {
+                        ship.finalDischargedQty = parseFloat(data.finalQty);
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`${ship.name} סיימה פריקה`, 'success');
+                    break;
+
+                // ===== TIME UPDATES =====
+                case 'eta':
+                    if (data.date && data.time) {
+                        ship.eta = `${data.date}T${data.time}:00`;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`ETA של ${ship.name} עודכן`, 'success');
+                    break;
+
+                case 'etb':
+                    if (data.date && data.time) {
+                        ship.etb = `${data.date}T${data.time}:00`;
+                    }
+                    if (data.berth) {
+                        ship.berth = data.berth;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`ETB של ${ship.name} עודכן`, 'success');
+                    break;
+
+                case 'etd':
+                    if (data.date && data.time) {
+                        ship.etd = `${data.date}T${data.time}:00`;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`ETD של ${ship.name} עודכן`, 'success');
+                    break;
+
+                case 'nor':
+                    ship.norTendered = true;
+                    if (data.date && data.time) {
+                        ship.norTime = `${data.date}T${data.time}:00`;
+                    }
+                    if (data.norType) {
+                        ship.norType = data.norType;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`NOR הוגש עבור ${ship.name}`, 'success');
+                    break;
+
+                case 'pilot':
+                    if (data.date && data.time) {
+                        ship.pilotTime = `${data.date}T${data.time}:00`;
+                    }
+                    if (data.pilotType) {
+                        ship.pilotType = data.pilotType;
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`פיילוט הוזמן ל-${ship.name}`, 'success');
+                    break;
+
+                // ===== SERVICE REQUESTS =====
+                case 'water':
+                case 'provisions':
+                case 'bunkers':
+                case 'repairs':
+                case 'crew':
+                    const serviceTypes = {
+                        water: 'מים',
+                        provisions: 'אספקה',
+                        bunkers: 'דלק',
+                        repairs: 'תיקונים',
+                        crew: 'צוות'
+                    };
+                    await db.collection('serviceRequests').add({
+                        shipId: ship.id,
+                        shipName: ship.name,
+                        type: commandId,
+                        quantity: data.quantity || null,
+                        payer: data.payer || null,
+                        requestedDate: data.date || null,
+                        notes: data.notes || '',
+                        details: data.details || '',
+                        supplier: data.supplier || null,
+                        status: 'pending',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    showToast(`בקשת ${serviceTypes[commandId]} נוצרה ל-${ship.name}`, 'success');
+                    break;
+
+                // ===== CARGO & DISCHARGE =====
+                case 'tally':
+                    if (data.quantity) {
+                        ship.currentDischargedQty = (ship.currentDischargedQty || 0) + parseFloat(data.quantity);
+                    }
+                    if (data.notes) {
+                        await db.collection('ships').doc(ship.id).collection('tallyRecords').add({
+                            quantity: parseFloat(data.quantity),
+                            notes: data.notes,
+                            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                    await saveShipToFirestore(ship);
+                    showToast(`נוספו ${data.quantity} טון ל-${ship.name}`, 'success');
+                    break;
+
+                case 'stoppage':
+                    ship.dischargeStatus = 'stopped';
+                    if (data.reason) {
+                        ship.stoppageReason = data.reason;
+                    }
+                    if (data.date && data.time) {
+                        ship.stoppageTime = `${data.date}T${data.time}:00`;
+                    }
+                    await db.collection('ships').doc(ship.id).collection('stoppages').add({
+                        reason: data.reason || '',
+                        time: data.date && data.time ? `${data.date}T${data.time}:00` : new Date().toISOString(),
+                        type: 'start',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    await saveShipToFirestore(ship);
+                    showToast(`עצירת פריקה נרשמה ל-${ship.name}`, 'warning');
+                    break;
+
+                case 'resumed':
+                    ship.dischargeStatus = 'active';
+                    ship.stoppageReason = null;
+                    if (data.date && data.time) {
+                        ship.resumedTime = `${data.date}T${data.time}:00`;
+                    }
+                    await db.collection('ships').doc(ship.id).collection('stoppages').add({
+                        time: data.date && data.time ? `${data.date}T${data.time}:00` : new Date().toISOString(),
+                        type: 'end',
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    await saveShipToFirestore(ship);
+                    showToast(`פריקת ${ship.name} חודשה`, 'success');
+                    break;
+
+                // ===== NOTES =====
+                case 'note':
+                    await db.collection('ships').doc(ship.id).collection('notes').add({
+                        text: data.text,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        source: 'commandBar'
+                    });
+                    showToast(`הערה נוספה ל-${ship.name}`, 'success');
+                    break;
+            }
+
+            renderShips();
+        }
+
+        function executeDirectAction(command) {
+            switch (command.action) {
+                case 'openDocs':
+                    // Show ship selector then open docs
+                    showCmdBarForm({
+                        ...command,
+                        fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }]
+                    });
+                    break;
+
+                case 'gotoShip':
+                    // Navigate to ship details
+                    closeCmdBar();
+                    const shipSelector = document.getElementById('shipSelect');
+                    if (shipSelector && ships.length > 0) {
+                        // Show ship selection dialog
+                        showCmdBarForm({
+                            ...command,
+                            id: 'gotoShip',
+                            fields: [{ id: 'ship', type: 'ship', label: 'בחר אנייה', required: true }]
+                        });
+                    }
+                    break;
+
+                case 'gotoFieldAgent':
+                    closeCmdBar();
+                    switchToFieldAgentView();
+                    break;
+
+                case 'gotoOperations':
+                    closeCmdBar();
+                    if (typeof switchToOperationsView === 'function') {
+                        switchToOperationsView();
+                    } else {
+                        // Switch to main view
+                        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+                        document.querySelector('.main-view')?.classList.add('active');
+                    }
+                    break;
+
+                case 'showStatus':
+                    closeCmdBar();
+                    // Show quick status summary
+                    const statusCounts = {};
+                    ships.forEach(s => {
+                        const status = s.status || 'unknown';
+                        statusCounts[status] = (statusCounts[status] || 0) + 1;
+                    });
+                    let statusMsg = '📊 סטטוס מהיר:\n';
+                    Object.entries(statusCounts).forEach(([status, count]) => {
+                        statusMsg += `${status}: ${count} אניות\n`;
+                    });
+                    showToast(statusMsg, 'info', 5000);
+                    break;
+
+                case 'uploadDoc':
+                    // Show upload dialog
+                    showCmdBarForm({
+                        ...command,
+                        id: 'upload',
+                        fields: [
+                            { id: 'ship', type: 'ship', label: 'אנייה', required: true },
+                            { id: 'docType', type: 'select', label: 'סוג מסמך', required: true,
+                              options: ['SOF', 'NOR', 'BL', 'Cargo Manifest', 'Survey Report', 'אחר'] },
+                            { id: 'notes', type: 'text', label: 'הערות', placeholder: 'תיאור המסמך' }
+                        ]
+                    });
+                    break;
             }
         }
 
