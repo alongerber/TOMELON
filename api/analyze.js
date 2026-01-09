@@ -456,7 +456,7 @@ Return your answer as plain text, NOT JSON.`;
                     ]
                 }
             ];
-        } else if (content) {
+        } else if (content || (parseType === 'query' && req.body.query)) {
             messages = [
                 {
                     role: 'user',
@@ -464,7 +464,7 @@ Return your answer as plain text, NOT JSON.`;
                 }
             ];
         } else {
-            return res.status(400).json({ error: 'Provide either text content or image' });
+            return res.status(400).json({ error: 'Provide either text content, query, or image' });
         }
 
         // Call Claude API
