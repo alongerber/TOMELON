@@ -3865,6 +3865,68 @@
             justify-items: center;
         }
 
+        /* --- Quick View Action Buttons --- */
+        .quick-view-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-left: 12px;
+            flex-shrink: 0;
+        }
+
+        .qv-action-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.15s ease;
+            padding: 0;
+        }
+
+        .qv-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        .qv-action-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .qv-action-btn.primary:hover {
+            background: var(--primary-light);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .qv-action-btn.success {
+            background: var(--success);
+            color: white;
+        }
+
+        .qv-action-btn.success:hover {
+            background: var(--success-dark);
+            box-shadow: 0 4px 12px var(--success-glow);
+        }
+
+        .qv-action-btn.warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .qv-action-btn.warning:hover {
+            background: #e67e00;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
         /* --- Smart Search Bar --- */
         .search-bar-container {
             position: relative;
@@ -11218,11 +11280,17 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                                 ${ship.port || '-'}
                                             </span>
-                            </div>
+                                        </div>
+                                        <div class="quick-view-actions">
+                                            <button onclick="event.stopPropagation(); openTallyModal('${ship.id}')" class="qv-action-btn primary" title="הזנת משמרת">📊</button>
+                                            <button onclick="event.stopPropagation(); exportDischargeReport('${ship.id}')" class="qv-action-btn" title="ייצוא דוח">📋</button>
+                                            <button onclick="event.stopPropagation(); openDocVault('${ship.id}')" class="qv-action-btn" title="מסמכים">📁</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('stoppage', '${ship.id}')" class="qv-action-btn warning" title="עצירת עבודה">⛔</button>
+                                        </div>
                                         <div class="task-dots-container">
                                             ${PRE_ARRIVAL.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
-                        </div>
-                    </div>
+                                        </div>
+                                    </div>
                                 </div>`;
                             }).join('')}
                         </div>
@@ -11253,6 +11321,11 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                                 ${ship.port || '-'}
                                             </span>
+                                        </div>
+                                        <div class="quick-view-actions">
+                                            <button onclick="event.stopPropagation(); cmdShipAction('discharge', '${ship.id}')" class="qv-action-btn success" title="התחלת פריקה">⚙️</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('sailed', '${ship.id}')" class="qv-action-btn" title="הפלגה">🚢</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('note', '${ship.id}')" class="qv-action-btn" title="הערה">📝</button>
                                         </div>
                                         <div class="task-dots-container">
                                             ${PRE_ARRIVAL.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
@@ -11289,6 +11362,12 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                                 ${ship.port || '-'}
                                             </span>
                                         </div>
+                                        <div class="quick-view-actions">
+                                            <button onclick="event.stopPropagation(); cmdShipAction('eta', '${ship.id}')" class="qv-action-btn" title="עדכון ETA">🕐</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('anchor', '${ship.id}')" class="qv-action-btn success" title="הגעה לעוגן">⚓</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('note', '${ship.id}')" class="qv-action-btn" title="הערה">📝</button>
+                                            <button onclick="event.stopPropagation(); openDocVault('${ship.id}')" class="qv-action-btn" title="מסמכים">📁</button>
+                                        </div>
                                         <div class="task-dots-container">
                                             ${PRE_ARRIVAL.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
                                         </div>
@@ -11324,6 +11403,12 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                                 ${ship.port || '-'}
                                             </span>
+                                        </div>
+                                        <div class="quick-view-actions">
+                                            <button onclick="event.stopPropagation(); editShip('${ship.id}')" class="qv-action-btn" title="צפייה">👁️</button>
+                                            <button onclick="event.stopPropagation(); exportDischargeReport('${ship.id}')" class="qv-action-btn" title="ייצוא דוח">📋</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('note', '${ship.id}')" class="qv-action-btn" title="הערה">📝</button>
+                                            <button onclick="event.stopPropagation(); openDocVault('${ship.id}')" class="qv-action-btn" title="מסמכים">📁</button>
                                         </div>
                                         <div class="task-dots-container sailed-tasks">
                                             ${POST_SAILED.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
