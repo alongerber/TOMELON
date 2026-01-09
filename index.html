@@ -6680,6 +6680,319 @@
                 grid-template-columns: repeat(3, 1fr);
             }
         }
+
+        /* ==================== Document Vault ==================== */
+        .doc-vault-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            z-index: 10000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .doc-vault-overlay.active {
+            display: flex;
+        }
+        .doc-vault {
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            background: var(--bg-card);
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 100px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        .doc-vault-header {
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .doc-vault-title {
+            font-size: 16px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .doc-vault-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+        .doc-vault-sidebar {
+            width: 200px;
+            background: var(--bg-secondary);
+            border-left: 1px solid var(--glass-border);
+            padding: 12px;
+            overflow-y: auto;
+        }
+        .doc-vault-category {
+            padding: 10px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 4px;
+            font-size: 13px;
+            color: var(--text-secondary);
+            transition: all 200ms;
+        }
+        .doc-vault-category:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+        .doc-vault-category.active {
+            background: var(--primary);
+            color: white;
+        }
+        .doc-vault-category-count {
+            margin-right: auto;
+            font-size: 11px;
+            opacity: 0.7;
+        }
+        .doc-vault-main {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .doc-vault-empty {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+        .doc-vault-empty svg {
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        .doc-vault-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .doc-card {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            padding: 16px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .doc-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+        .doc-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            background: var(--bg-card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 12px;
+            font-size: 24px;
+        }
+        .doc-card-icon.pdf { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+        .doc-card-icon.image { background: rgba(59, 130, 246, 0.1); color: #3b82f6; }
+        .doc-card-icon.doc { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+        .doc-card-icon.excel { background: rgba(16, 185, 129, 0.1); color: #10b981; }
+        .doc-card-name {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .doc-card-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+        .doc-upload-zone {
+            border: 2px dashed var(--glass-border);
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            transition: all 200ms;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+        .doc-upload-zone:hover,
+        .doc-upload-zone.dragover {
+            border-color: var(--primary);
+            background: var(--primary-glow);
+        }
+        .doc-upload-zone svg {
+            margin-bottom: 12px;
+            color: var(--text-muted);
+        }
+        .doc-upload-zone p {
+            color: var(--text-secondary);
+            font-size: 14px;
+            margin: 0;
+        }
+        .doc-upload-zone span {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ==================== Live Shift Log ==================== */
+        .shift-log-container {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+        .shift-log-header {
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .shift-log-entries {
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 12px;
+        }
+        .shift-log-entry {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            background: var(--bg-secondary);
+        }
+        .shift-log-entry:last-child {
+            margin-bottom: 0;
+        }
+        .shift-log-time {
+            font-size: 11px;
+            color: var(--text-muted);
+            white-space: nowrap;
+        }
+        .shift-log-content {
+            flex: 1;
+        }
+        .shift-log-author {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .shift-log-text {
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+        .shift-log-input-area {
+            padding: 12px 16px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 8px;
+        }
+        .shift-log-input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+        .shift-log-send {
+            padding: 10px 16px;
+            border-radius: 8px;
+            border: none;
+            background: var(--primary);
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        /* ==================== Service Request Cards ==================== */
+        .service-requests-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 16px;
+        }
+        .service-request-card {
+            background: var(--bg-card);
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+        }
+        .service-request-header {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .service-request-type {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+        }
+        .service-request-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+        }
+        .service-request-icon.water { background: rgba(59, 130, 246, 0.15); }
+        .service-request-icon.provisions { background: rgba(245, 158, 11, 0.15); }
+        .service-request-icon.bunkers { background: rgba(239, 68, 68, 0.15); }
+        .service-request-icon.repairs { background: rgba(139, 92, 246, 0.15); }
+        .service-request-status {
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .service-request-status.pending { background: rgba(245, 158, 11, 0.15); color: var(--warning); }
+        .service-request-status.approved { background: rgba(34, 197, 94, 0.15); color: var(--success); }
+        .service-request-status.completed { background: rgba(59, 130, 246, 0.15); color: var(--info); }
+        .service-request-body {
+            padding: 14px 16px;
+        }
+        .service-request-ship {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .service-request-details {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .service-request-footer {
+            padding: 12px 16px;
+            background: var(--bg-secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
     </style>
 
     <!-- Firebase SDK (compat version for classic script) -->
@@ -6795,6 +7108,109 @@ BUNDLES STEEL BARS 14M - TASSA - 33 pcs - 80,596 kg
                 <div style="display: flex; gap: 8px;">
                     <button onclick="closeTallyModal()" style="padding: 10px 20px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-secondary); color: var(--text-primary); cursor: pointer;">ביטול</button>
                     <button onclick="saveTallyShift()" style="padding: 10px 20px; border-radius: 8px; border: none; background: var(--primary); color: white; font-weight: 600; cursor: pointer;">שמור משמרת</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Vault Modal -->
+    <div class="doc-vault-overlay" id="docVaultOverlay" onclick="closeDocVaultOnOverlay(event)">
+        <div class="doc-vault" onclick="event.stopPropagation()">
+            <div class="doc-vault-header">
+                <div class="doc-vault-title">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <span>מאגר מסמכים - <span id="docVaultShipName">בחר אנייה</span></span>
+                </div>
+                <button onclick="closeDocVault()" style="width: 32px; height: 32px; border-radius: 8px; border: none; background: transparent; cursor: pointer; color: var(--text-secondary);">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"/>
+                        <line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                </button>
+            </div>
+            <div class="doc-vault-body">
+                <div class="doc-vault-main">
+                    <!-- Upload Zone -->
+                    <div class="doc-upload-zone" id="docUploadZone" onclick="document.getElementById('docFileInput').click()">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="17 8 12 3 7 8"/>
+                            <line x1="12" y1="3" x2="12" y2="15"/>
+                        </svg>
+                        <p>גרור קבצים לכאן או <span>לחץ לבחירה</span></p>
+                    </div>
+                    <input type="file" id="docFileInput" multiple style="display: none;" onchange="handleDocUpload(event)">
+
+                    <!-- Documents Grid -->
+                    <div class="doc-vault-grid" id="docVaultGrid">
+                        <!-- Documents will be rendered here -->
+                    </div>
+
+                    <!-- Empty State -->
+                    <div class="doc-vault-empty" id="docVaultEmpty">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        <div>אין מסמכים עדיין</div>
+                        <div style="font-size: 13px; margin-top: 8px;">העלה מסמכים על ידי גרירה או לחיצה למעלה</div>
+                    </div>
+                </div>
+                <div class="doc-vault-sidebar">
+                    <div class="doc-vault-category active" onclick="filterDocsByCategory('all')" data-category="all">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                        </svg>
+                        הכל
+                        <span class="doc-vault-category-count" id="docCountAll">0</span>
+                    </div>
+                    <div class="doc-vault-category" onclick="filterDocsByCategory('voyage')" data-category="voyage">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                        </svg>
+                        מסמכי הפלגה
+                        <span class="doc-vault-category-count" id="docCountVoyage">0</span>
+                    </div>
+                    <div class="doc-vault-category" onclick="filterDocsByCategory('cargo')" data-category="cargo">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
+                        </svg>
+                        מטען
+                        <span class="doc-vault-category-count" id="docCountCargo">0</span>
+                    </div>
+                    <div class="doc-vault-category" onclick="filterDocsByCategory('tally')" data-category="tally">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="8" y1="6" x2="21" y2="6"/>
+                            <line x1="8" y1="12" x2="21" y2="12"/>
+                            <line x1="8" y1="18" x2="21" y2="18"/>
+                            <line x1="3" y1="6" x2="3.01" y2="6"/>
+                            <line x1="3" y1="12" x2="3.01" y2="12"/>
+                            <line x1="3" y1="18" x2="3.01" y2="18"/>
+                        </svg>
+                        דוחות טאלי
+                        <span class="doc-vault-category-count" id="docCountTally">0</span>
+                    </div>
+                    <div class="doc-vault-category" onclick="filterDocsByCategory('photos')" data-category="photos">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                            <circle cx="8.5" cy="8.5" r="1.5"/>
+                            <polyline points="21 15 16 10 5 21"/>
+                        </svg>
+                        תמונות
+                        <span class="doc-vault-category-count" id="docCountPhotos">0</span>
+                    </div>
+                    <div class="doc-vault-category" onclick="filterDocsByCategory('invoices')" data-category="invoices">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                            <polyline points="10 9 9 9 8 9"/>
+                        </svg>
+                        חשבוניות
+                        <span class="doc-vault-category-count" id="docCountInvoices">0</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -7391,13 +7807,21 @@ Captain"></textarea>
                                 </svg>
                                 <span id="statusBarShipName">ASL ELSA</span>
                             </h3>
-                            <button onclick="openTallyModal()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <line x1="12" y1="5" x2="12" y2="19"/>
-                                    <line x1="5" y1="12" x2="19" y2="12"/>
-                                </svg>
-                                הזן משמרת
-                            </button>
+                            <div style="display: flex; gap: 8px;">
+                                <button onclick="openDocVault()" style="padding: 10px 16px; background: var(--bg-secondary); color: var(--text-primary); border: 1px solid var(--glass-border); border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                                    </svg>
+                                    מסמכים
+                                </button>
+                                <button onclick="openTallyModal()" style="padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="12" y1="5" x2="12" y2="19"/>
+                                        <line x1="5" y1="12" x2="19" y2="12"/>
+                                    </svg>
+                                    הזן משמרת
+                                </button>
+                            </div>
                         </div>
                         <div class="discharge-progress-container">
                             <div class="discharge-progress-fill" id="dischargeProgressFill" style="width: 0%"></div>
@@ -13366,6 +13790,333 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                     </div>
                 `;
             }).join('');
+        }
+
+        // ==================== Document Vault ====================
+        let docVaultShipId = null;
+        let shipDocuments = [];
+        let currentDocCategory = 'all';
+
+        function openDocVault(shipId) {
+            shipId = shipId || selectedDischargeShipId;
+            if (!shipId) {
+                showToast('יש לבחור אנייה קודם', 'warning');
+                return;
+            }
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            docVaultShipId = shipId;
+            document.getElementById('docVaultShipName').textContent = ship.name;
+            loadShipDocuments(shipId);
+            setupDocUploadDragDrop();
+            document.getElementById('docVaultOverlay').classList.add('active');
+        }
+
+        function closeDocVault() {
+            document.getElementById('docVaultOverlay').classList.remove('active');
+        }
+
+        function closeDocVaultOnOverlay(e) {
+            if (e.target.id === 'docVaultOverlay') {
+                closeDocVault();
+            }
+        }
+
+        function setupDocUploadDragDrop() {
+            const uploadZone = document.getElementById('docUploadZone');
+            uploadZone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadZone.classList.add('dragover');
+            });
+            uploadZone.addEventListener('dragleave', () => {
+                uploadZone.classList.remove('dragover');
+            });
+            uploadZone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadZone.classList.remove('dragover');
+                handleDocUpload({ target: { files: e.dataTransfer.files } });
+            });
+        }
+
+        async function loadShipDocuments(shipId) {
+            try {
+                const snapshot = await db.collection('ships').doc(shipId).collection('documents').orderBy('createdAt', 'desc').get();
+                shipDocuments = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderDocVaultGrid();
+                updateDocCounts();
+            } catch (error) {
+                console.error('Error loading documents:', error);
+                shipDocuments = [];
+                renderDocVaultGrid();
+            }
+        }
+
+        function updateDocCounts() {
+            const counts = {
+                all: shipDocuments.length,
+                voyage: shipDocuments.filter(d => d.category === 'voyage').length,
+                cargo: shipDocuments.filter(d => d.category === 'cargo').length,
+                tally: shipDocuments.filter(d => d.category === 'tally').length,
+                photos: shipDocuments.filter(d => d.category === 'photos').length,
+                invoices: shipDocuments.filter(d => d.category === 'invoices').length
+            };
+
+            Object.keys(counts).forEach(key => {
+                const el = document.getElementById('docCount' + key.charAt(0).toUpperCase() + key.slice(1));
+                if (el) el.textContent = counts[key];
+            });
+        }
+
+        function filterDocsByCategory(category) {
+            currentDocCategory = category;
+            document.querySelectorAll('.doc-vault-category').forEach(c => c.classList.remove('active'));
+            document.querySelector(`.doc-vault-category[data-category="${category}"]`)?.classList.add('active');
+            renderDocVaultGrid();
+        }
+
+        function renderDocVaultGrid() {
+            const grid = document.getElementById('docVaultGrid');
+            const empty = document.getElementById('docVaultEmpty');
+
+            let docs = shipDocuments;
+            if (currentDocCategory !== 'all') {
+                docs = docs.filter(d => d.category === currentDocCategory);
+            }
+
+            if (docs.length === 0) {
+                grid.style.display = 'none';
+                empty.style.display = 'block';
+                return;
+            }
+
+            grid.style.display = 'grid';
+            empty.style.display = 'none';
+
+            grid.innerHTML = docs.map(doc => {
+                const iconType = getDocIconType(doc.fileName || doc.name);
+                const iconEmoji = { pdf: '📄', image: '🖼️', doc: '📝', excel: '📊' }[iconType] || '📎';
+                const date = doc.createdAt?.toDate?.() || new Date();
+                const dateStr = date.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit', year: '2-digit' });
+
+                return `
+                    <div class="doc-card" onclick="openDocument('${doc.id}')">
+                        <div class="doc-card-icon ${iconType}">${iconEmoji}</div>
+                        <div class="doc-card-name">${doc.fileName || doc.name || 'מסמך'}</div>
+                        <div class="doc-card-meta">${dateStr} • ${getCategoryLabel(doc.category)}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getDocIconType(fileName) {
+            if (!fileName) return 'doc';
+            const ext = fileName.split('.').pop().toLowerCase();
+            if (['pdf'].includes(ext)) return 'pdf';
+            if (['jpg', 'jpeg', 'png', 'gif', 'webp'].includes(ext)) return 'image';
+            if (['xls', 'xlsx', 'csv'].includes(ext)) return 'excel';
+            return 'doc';
+        }
+
+        function getCategoryLabel(category) {
+            const labels = {
+                voyage: 'מסמכי הפלגה',
+                cargo: 'מטען',
+                tally: 'דוח טאלי',
+                photos: 'תמונות',
+                invoices: 'חשבוניות'
+            };
+            return labels[category] || 'כללי';
+        }
+
+        async function handleDocUpload(event) {
+            const files = event.target.files;
+            if (!files || files.length === 0) return;
+            if (!docVaultShipId) {
+                showToast('שגיאה - אין אנייה נבחרת', 'error');
+                return;
+            }
+
+            for (const file of files) {
+                const category = detectDocCategory(file.name);
+                try {
+                    // Store document metadata (actual file upload would need Firebase Storage)
+                    await db.collection('ships').doc(docVaultShipId).collection('documents').add({
+                        fileName: file.name,
+                        fileSize: file.size,
+                        fileType: file.type,
+                        category: category,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        uploadedBy: 'user'
+                    });
+                    showToast(`${file.name} הועלה בהצלחה`, 'success');
+                } catch (error) {
+                    console.error('Error uploading document:', error);
+                    showToast(`שגיאה בהעלאת ${file.name}`, 'error');
+                }
+            }
+
+            // Reload documents
+            loadShipDocuments(docVaultShipId);
+            // Clear file input
+            document.getElementById('docFileInput').value = '';
+        }
+
+        function detectDocCategory(fileName) {
+            const lower = fileName.toLowerCase();
+            if (lower.includes('tally') || lower.includes('טאלי')) return 'tally';
+            if (lower.includes('bl') || lower.includes('manifest') || lower.includes('nor')) return 'voyage';
+            if (lower.includes('invoice') || lower.includes('חשבונית')) return 'invoices';
+            if (/\.(jpg|jpeg|png|gif|webp)$/i.test(lower)) return 'photos';
+            return 'cargo';
+        }
+
+        function openDocument(docId) {
+            const doc = shipDocuments.find(d => d.id === docId);
+            if (!doc) return;
+            // For now just show a toast - in production would open the actual file
+            showToast(`פותח: ${doc.fileName || doc.name}`, 'info');
+        }
+
+        // ==================== Live Shift Log ====================
+        let shiftLogEntries = [];
+
+        async function loadShiftLog(shipId) {
+            if (!shipId) return;
+            try {
+                const snapshot = await db.collection('ships').doc(shipId).collection('shiftLog')
+                    .orderBy('createdAt', 'desc').limit(50).get();
+                shiftLogEntries = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderShiftLogEntries();
+            } catch (error) {
+                console.error('Error loading shift log:', error);
+                shiftLogEntries = [];
+            }
+        }
+
+        function renderShiftLogEntries() {
+            const container = document.getElementById('shiftLogEntries');
+            if (!container) return;
+
+            if (shiftLogEntries.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-muted);">
+                        <div>אין הודעות עדיין</div>
+                        <div style="font-size: 12px; margin-top: 4px;">התחל לתעד את המשמרת</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = shiftLogEntries.map(entry => {
+                const time = entry.createdAt?.toDate?.() || new Date();
+                const timeStr = time.toLocaleTimeString('he-IL', { hour: '2-digit', minute: '2-digit' });
+                const dateStr = time.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' });
+                return `
+                    <div class="shift-log-entry">
+                        <div class="shift-log-time">${timeStr}<br>${dateStr}</div>
+                        <div class="shift-log-content">
+                            <div class="shift-log-author">${entry.author || 'סוכן'}</div>
+                            <div class="shift-log-text">${entry.text}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function sendShiftLogMessage() {
+            const input = document.getElementById('shiftLogInput');
+            const text = input?.value?.trim();
+            if (!text || !selectedDischargeShipId) return;
+
+            try {
+                await db.collection('ships').doc(selectedDischargeShipId).collection('shiftLog').add({
+                    text: text,
+                    author: 'סוכן שטח',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                input.value = '';
+                loadShiftLog(selectedDischargeShipId);
+                showToast('הודעה נשלחה', 'success');
+            } catch (error) {
+                console.error('Error sending message:', error);
+                showToast('שגיאה בשליחת ההודעה', 'error');
+            }
+        }
+
+        // ==================== Service Requests ====================
+        let serviceRequests = [];
+
+        async function loadServiceRequests() {
+            try {
+                const snapshot = await db.collection('serviceRequests')
+                    .orderBy('createdAt', 'desc').limit(20).get();
+                serviceRequests = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderServiceRequests();
+            } catch (error) {
+                console.error('Error loading service requests:', error);
+                serviceRequests = [];
+            }
+        }
+
+        function renderServiceRequests() {
+            const container = document.getElementById('serviceRequestsGrid');
+            if (!container) return;
+
+            if (serviceRequests.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-muted); grid-column: 1/-1;">
+                        <div>אין בקשות שירות פעילות</div>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = serviceRequests.map(req => {
+                const ship = ships.find(s => s.id === req.shipId);
+                const icons = { water: '💧', provisions: '📦', bunkers: '⛽', repairs: '🔧' };
+                const labels = { water: 'מים', provisions: 'אספקה', bunkers: 'דלק', repairs: 'תיקונים' };
+                const statusLabels = { pending: 'ממתין', approved: 'אושר', completed: 'הושלם' };
+                const date = req.createdAt?.toDate?.() || new Date();
+                const dateStr = date.toLocaleDateString('he-IL', { day: '2-digit', month: '2-digit' });
+
+                return `
+                    <div class="service-request-card">
+                        <div class="service-request-header">
+                            <div class="service-request-type">
+                                <div class="service-request-icon ${req.type}">${icons[req.type] || '📋'}</div>
+                                <span>${labels[req.type] || req.type}</span>
+                            </div>
+                            <span class="service-request-status ${req.status || 'pending'}">${statusLabels[req.status] || 'ממתין'}</span>
+                        </div>
+                        <div class="service-request-body">
+                            <div class="service-request-ship">${ship?.name || 'אנייה לא ידועה'}</div>
+                            <div class="service-request-details">${req.details || ''}</div>
+                        </div>
+                        <div class="service-request-footer">
+                            <span>${dateStr}</span>
+                            <span>${req.quantity ? req.quantity + ' טון' : ''}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function createServiceRequest(type, shipId, details) {
+            try {
+                await db.collection('serviceRequests').add({
+                    type: type,
+                    shipId: shipId,
+                    details: details,
+                    status: 'pending',
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                showToast('בקשת שירות נוצרה', 'success');
+                loadServiceRequests();
+            } catch (error) {
+                console.error('Error creating service request:', error);
+                showToast('שגיאה ביצירת בקשה', 'error');
+            }
         }
 
         function switchReportType(type) {
@@ -20470,12 +21221,12 @@ ${signature}`;
             },
             {
                 id: 'docs',
-                name: 'מסמכי אנייה',
-                desc: 'פתח מסמכים',
-                icon: '📄',
+                name: 'מאגר מסמכים',
+                desc: 'פתח מאגר מסמכים לאנייה',
+                icon: '📁',
                 iconClass: 'docs',
-                keywords: ['docs', 'documents', 'מסמכים', 'קבצים', 'files'],
-                action: 'openDocs'
+                keywords: ['docs', 'documents', 'מסמכים', 'קבצים', 'files', 'vault', 'מאגר', 'תיקייה'],
+                action: 'openDocVault'
             },
             {
                 id: 'upload',
@@ -20484,7 +21235,7 @@ ${signature}`;
                 icon: '📤',
                 iconClass: 'docs',
                 keywords: ['upload', 'העלאה', 'מסמך', 'קובץ', 'סריקה'],
-                action: 'uploadDoc'
+                action: 'openDocVault'
             },
 
             // ========== NAVIGATION ==========
@@ -21132,6 +21883,13 @@ ${signature}`;
                         openTallyModal(ship.id);
                     }
                     return; // Don't render ships or call closeCmdBar again
+
+                // ===== DOCUMENT VAULT =====
+                case 'selectShipForDocs':
+                    if (ship) {
+                        openDocVault(ship.id);
+                    }
+                    return; // Don't render ships or call closeCmdBar again
             }
 
             renderShips();
@@ -21140,11 +21898,21 @@ ${signature}`;
         function executeDirectAction(command) {
             switch (command.action) {
                 case 'openDocs':
-                    // Show ship selector then open docs
-                    showCmdBarForm({
-                        ...command,
-                        fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }]
-                    });
+                case 'openDocVault':
+                    closeCmdBar();
+                    // If a ship is selected, open directly. Otherwise show ship selector.
+                    if (selectedDischargeShipId) {
+                        openDocVault(selectedDischargeShipId);
+                    } else if (ships.length === 1) {
+                        openDocVault(ships[0].id);
+                    } else {
+                        showCmdBarForm({
+                            ...command,
+                            id: 'selectShipForDocs',
+                            name: 'מאגר מסמכים',
+                            fields: [{ id: 'ship', type: 'ship', label: 'בחר אנייה', required: true }]
+                        });
+                    }
                     break;
 
                 case 'gotoShip':
