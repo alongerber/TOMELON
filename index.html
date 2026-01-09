@@ -1591,6 +1591,122 @@
             font-family: monospace;
         }
 
+        /* Command Bar Ship Actions */
+        .cmd-bar-ship-actions {
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .cmd-bar-ship-actions:last-child {
+            border-bottom: none;
+        }
+        .cmd-bar-ship-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .cmd-bar-ship-name {
+            font-weight: 700;
+            font-size: 15px;
+            color: var(--text-primary);
+        }
+        .cmd-bar-ship-status {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+        .cmd-bar-quick-actions {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+        .cmd-quick-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 8px;
+            border: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 150ms;
+        }
+        .cmd-quick-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary);
+        }
+        .cmd-quick-btn.primary {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .cmd-quick-btn.primary:hover {
+            background: var(--primary-hover);
+        }
+        .cmd-quick-btn.warning {
+            border-color: var(--warning);
+            color: var(--warning);
+        }
+        .cmd-quick-btn.warning:hover {
+            background: rgba(245, 158, 11, 0.15);
+        }
+        .cmd-quick-btn.success {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        /* Command Bar Action Grid */
+        .cmd-bar-action-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 10px;
+            padding: 0 20px 12px;
+        }
+        .cmd-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 14px 10px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 150ms;
+        }
+        .cmd-action-btn:hover {
+            background: var(--bg-hover);
+            border-color: var(--primary);
+            transform: translateY(-1px);
+        }
+        .cmd-action-btn.sailed {
+            border-color: rgba(16, 185, 129, 0.3);
+        }
+        .cmd-action-btn.sailed:hover {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success);
+        }
+        .cmd-action-btn.berthed {
+            border-color: rgba(79, 70, 229, 0.3);
+        }
+        .cmd-action-btn.berthed:hover {
+            background: rgba(79, 70, 229, 0.1);
+            border-color: var(--primary);
+        }
+        .cmd-action-btn.success {
+            border-color: rgba(34, 197, 94, 0.3);
+        }
+        .cmd-action-btn.success:hover {
+            background: rgba(34, 197, 94, 0.1);
+            border-color: var(--success);
+        }
+        .cmd-action-icon {
+            font-size: 22px;
+        }
+
         /* Command Bar Form */
         .cmd-bar-form {
             padding: 20px;
@@ -3749,6 +3865,68 @@
             justify-items: center;
         }
 
+        /* --- Quick View Action Buttons --- */
+        .quick-view-actions {
+            display: flex;
+            gap: 6px;
+            align-items: center;
+            margin-left: 12px;
+            flex-shrink: 0;
+        }
+
+        .qv-action-btn {
+            width: 28px;
+            height: 28px;
+            border: none;
+            border-radius: var(--radius-sm);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.15s ease;
+            padding: 0;
+        }
+
+        .qv-action-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px var(--primary-glow);
+        }
+
+        .qv-action-btn.primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .qv-action-btn.primary:hover {
+            background: var(--primary-light);
+            box-shadow: 0 4px 12px var(--primary-glow);
+        }
+
+        .qv-action-btn.success {
+            background: var(--success);
+            color: white;
+        }
+
+        .qv-action-btn.success:hover {
+            background: var(--success-dark);
+            box-shadow: 0 4px 12px var(--success-glow);
+        }
+
+        .qv-action-btn.warning {
+            background: var(--warning);
+            color: white;
+        }
+
+        .qv-action-btn.warning:hover {
+            background: #e67e00;
+            box-shadow: 0 4px 12px rgba(255, 152, 0, 0.3);
+        }
+
         /* --- Smart Search Bar --- */
         .search-bar-container {
             position: relative;
@@ -3980,6 +4158,54 @@
             font-size: 24px;
             font-weight: 700;
             color: var(--text-primary);
+        }
+
+        /* ===== REPORT TYPE TABS - IMPROVED ===== */
+        .report-type-tabs {
+            display: flex;
+            gap: 12px;
+            padding: 16px 20px;
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, rgba(79, 70, 229, 0.05) 100%);
+            border-bottom: 2px solid var(--glass-border);
+            flex-wrap: wrap;
+        }
+        .report-type-tab {
+            padding: 12px 18px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 200ms;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .report-type-tab:hover {
+            border-color: var(--primary);
+            background: rgba(79, 70, 229, 0.08);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+        .report-type-tab.active {
+            background: linear-gradient(135deg, var(--primary) 0%, #6366f1 100%);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(79, 70, 229, 0.4);
+        }
+        .report-type-tab .report-count {
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 700;
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .report-type-tab:not(.active) .report-count {
+            background: var(--bg-secondary);
+            color: var(--text-muted);
         }
         .discharge-actions {
             display: flex;
@@ -6993,6 +7219,62 @@
             font-size: 11px;
             color: var(--text-muted);
         }
+
+        /* ======================== FLOATING ACTION BUTTON (Command Bar) ======================== */
+        .cmd-fab {
+            position: fixed;
+            bottom: 24px;
+            left: 24px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 14px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .cmd-fab:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(59, 130, 246, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .cmd-fab:active {
+            transform: translateY(0) scale(0.98);
+        }
+
+        .cmd-fab svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .cmd-fab-kbd {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-family: monospace;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .cmd-fab {
+                bottom: 16px;
+                left: 16px;
+                padding: 12px 16px;
+                font-size: 13px;
+            }
+            .cmd-fab-kbd {
+                display: none;
+            }
+        }
     </style>
 
     <!-- Firebase SDK (compat version for classic script) -->
@@ -7261,17 +7543,6 @@ BUNDLES STEEL BARS 14M - TASSA - 33 pcs - 80,596 kg
                         <span class="sparkle"></span>
                     </div>
                 </div>
-                <!-- Command Bar Button -->
-                <button onclick="openCmdBar()" class="cmd-bar-trigger" style="width: 100%; margin-top: 12px; padding: 10px 16px; background: var(--bg-secondary); border: 1px solid var(--glass-border); border-radius: 8px; color: var(--text-secondary); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; transition: all 200ms ease;">
-                    <span style="display: flex; align-items: center; gap: 8px;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="m21 21-4.35-4.35"/>
-                        </svg>
-                        חיפוש מהיר...
-                    </span>
-                    <span style="background: var(--bg-card); padding: 2px 6px; border-radius: 4px; font-size: 11px; font-family: monospace;">⌘K</span>
-                </button>
             </div>
 
             <nav class="nav-menu">
@@ -7446,11 +7717,11 @@ BUNDLES STEEL BARS 14M - TASSA - 33 pcs - 80,596 kg
                             </svg>
                             נקה נתונים
                         </button>
-                        <button class="btn btn-success" onclick="addShipManually()" title="הוסף אנייה חדשה ידנית">
+                        <button class="btn btn-success" onclick="addShipManually()" title="הוסף הפלגה חדשה">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 5v14m-7-7h14"/>
                             </svg>
-                            הוסף אנייה
+                            הוסף הפלגה
                         </button>
                         <button class="btn btn-primary" onclick="importExcel()" title="ייבוא דוח Excel">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -7753,40 +8024,37 @@ Captain"></textarea>
                     </div>
 
                     <!-- Report Type Tabs -->
-                    <div class="report-type-tabs" style="display: flex; gap: 8px; padding: 16px 20px; background: var(--bg-secondary); border-bottom: 1px solid var(--glass-border); flex-wrap: wrap;">
-                        <button class="report-type-tab active" onclick="switchReportType('discharge')" id="reportTabDischarge" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--primary); color: white; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <div class="report-type-tabs">
+                        <button class="report-type-tab active" onclick="switchReportType('discharge')" id="reportTabDischarge">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>
                                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
                             </svg>
-                            דיווחי פריקה
-                            <span id="reportCountDischarge" class="report-count" style="background: rgba(255,255,255,0.3); padding: 2px 8px; border-radius: 10px; font-size: 12px;">0</span>
+                            פריקה
+                            <span id="reportCountDischarge" class="report-count">0</span>
                         </button>
-                        <button class="report-type-tab" onclick="switchReportType('eta')" id="reportTabEta" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-primary); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button class="report-type-tab" onclick="switchReportType('eta')" id="reportTabEta">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <circle cx="12" cy="12" r="10"/>
                                 <polyline points="12 6 12 12 16 14"/>
                             </svg>
-                            דיווחי ETA
-                            <span id="reportCountEta" class="report-count" style="background: var(--bg-secondary); padding: 2px 8px; border-radius: 10px; font-size: 12px;">0</span>
+                            ETA
+                            <span id="reportCountEta" class="report-count">0</span>
                         </button>
-                        <button class="report-type-tab" onclick="switchReportType('berthing')" id="reportTabBerthing" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-primary); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button class="report-type-tab" onclick="switchReportType('berthing')" id="reportTabBerthing">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
                                 <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
-                                <line x1="6" y1="1" x2="6" y2="4"/>
-                                <line x1="10" y1="1" x2="10" y2="4"/>
-                                <line x1="14" y1="1" x2="14" y2="4"/>
                             </svg>
-                            צפי קשירה
-                            <span id="reportCountBerthing" class="report-count" style="background: var(--bg-secondary); padding: 2px 8px; border-radius: 10px; font-size: 12px;">0</span>
+                            קשירה
+                            <span id="reportCountBerthing" class="report-count">0</span>
                         </button>
-                        <button class="report-type-tab" onclick="switchReportType('general')" id="reportTabGeneral" style="padding: 10px 16px; border-radius: 8px; border: 1px solid var(--glass-border); background: var(--bg-card); color: var(--text-primary); font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <button class="report-type-tab" onclick="switchReportType('general')" id="reportTabGeneral">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M12 20h9"/>
                                 <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
                             </svg>
-                            דיווחים כלליים
+                            כללי
                         </button>
                     </div>
 
@@ -9215,7 +9483,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             const title = document.getElementById('modalTitle');
             const body = document.getElementById('modalBody');
 
-            title.textContent = 'הוספת אנייה חדשה';
+            title.textContent = 'הוספת הפלגה חדשה';
             body.innerHTML = `
                 <form id="addShipForm" style="display: flex; flex-direction: column; gap: var(--spacing-md);">
                     <div class="form-group"><label>שם אנייה:</label><input type="text" name="name" required></div>
@@ -9227,7 +9495,7 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
 
                     <div style="display: flex; gap: var(--spacing-md); justify-content: flex-end; margin-top: var(--spacing-md);">
                         <button type="button" class="btn btn-secondary" onclick="closeModal()">ביטול</button>
-                        <button type="submit" class="btn btn-primary">שמור אנייה</button>
+                        <button type="submit" class="btn btn-primary">שמור</button>
                     </div>
                 </form>
             `;
@@ -9260,10 +9528,10 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                 ships.push(finalShip);
                 db.collection("ships").doc(finalShip.id).set(finalShip)
                     .then(() => {
-                        showToast('אנייה חדשה נוספה בהצלחה', 'success');
-                        addActivity('הוספת אנייה', `נוספה אנייה חדשה: ${finalShip.name}`);
+                        showToast('הפלגה חדשה נוספה בהצלחה', 'success');
+                        addActivity('הוספת הפלגה', `נוספה הפלגה חדשה: ${finalShip.name}`);
                     })
-                    .catch(e => showToast('שגיאה בהוספת אנייה', 'error'));
+                    .catch(e => showToast('שגיאה בהוספת הפלגה', 'error'));
 
                 // עדכן ממשק
                 if (currentTab !== 'quick') renderShips(); // אין לרנדר אם במבט מהיר
@@ -11057,11 +11325,17 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                                 ${ship.port || '-'}
                                             </span>
-                            </div>
+                                        </div>
+                                        <div class="quick-view-actions">
+                                            <button onclick="event.stopPropagation(); openTallyModal('${ship.id}')" class="qv-action-btn primary" title="הזנת משמרת">📊</button>
+                                            <button onclick="event.stopPropagation(); exportDischargeReport('${ship.id}')" class="qv-action-btn" title="ייצוא דוח">📋</button>
+                                            <button onclick="event.stopPropagation(); openDocVault('${ship.id}')" class="qv-action-btn" title="מסמכים">📁</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('stoppage', '${ship.id}')" class="qv-action-btn warning" title="עצירת עבודה">⛔</button>
+                                        </div>
                                         <div class="task-dots-container">
                                             ${PRE_ARRIVAL.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
-                        </div>
-                    </div>
+                                        </div>
+                                    </div>
                                 </div>`;
                             }).join('')}
                         </div>
@@ -11092,6 +11366,11 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                                 ${ship.port || '-'}
                                             </span>
+                                        </div>
+                                        <div class="quick-view-actions">
+                                            <button onclick="event.stopPropagation(); cmdShipAction('discharge', '${ship.id}')" class="qv-action-btn success" title="התחלת פריקה">⚙️</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('sailed', '${ship.id}')" class="qv-action-btn" title="הפלגה">🚢</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('note', '${ship.id}')" class="qv-action-btn" title="הערה">📝</button>
                                         </div>
                                         <div class="task-dots-container">
                                             ${PRE_ARRIVAL.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
@@ -11128,6 +11407,12 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                                 ${ship.port || '-'}
                                             </span>
                                         </div>
+                                        <div class="quick-view-actions">
+                                            <button onclick="event.stopPropagation(); cmdShipAction('eta', '${ship.id}')" class="qv-action-btn" title="עדכון ETA">🕐</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('anchor', '${ship.id}')" class="qv-action-btn success" title="הגעה לעוגן">⚓</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('note', '${ship.id}')" class="qv-action-btn" title="הערה">📝</button>
+                                            <button onclick="event.stopPropagation(); openDocVault('${ship.id}')" class="qv-action-btn" title="מסמכים">📁</button>
+                                        </div>
                                         <div class="task-dots-container">
                                             ${PRE_ARRIVAL.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
                                         </div>
@@ -11163,6 +11448,12 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
                                                 ${ship.port || '-'}
                                             </span>
+                                        </div>
+                                        <div class="quick-view-actions">
+                                            <button onclick="event.stopPropagation(); editShip('${ship.id}')" class="qv-action-btn" title="צפייה">👁️</button>
+                                            <button onclick="event.stopPropagation(); exportDischargeReport('${ship.id}')" class="qv-action-btn" title="ייצוא דוח">📋</button>
+                                            <button onclick="event.stopPropagation(); cmdShipAction('note', '${ship.id}')" class="qv-action-btn" title="הערה">📝</button>
+                                            <button onclick="event.stopPropagation(); openDocVault('${ship.id}')" class="qv-action-btn" title="מסמכים">📁</button>
                                         </div>
                                         <div class="task-dots-container sailed-tasks">
                                             ${POST_SAILED.map(task => `<div class="task-dot ${taskMap.get(task.key)?.status || 'pending'}" onclick="cycleTaskStatus(event, '${ship.id}', '${task.key}')"></div>`).join('')}
@@ -13114,8 +13405,8 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
             saveData();
             renderShips();
 
-            showToast(shipId === 'new' ? 'אנייה חדשה נוספה בהצלחה!' : 'כל העדכונים הוחלו בהצלחה!', 'success');
-            addActivity(shipId === 'new' ? 'אנייה חדשה' : 'עדכון מניתוח', `${ship.name} עודכנה מניתוח הודעה`);
+            showToast(shipId === 'new' ? 'הפלגה חדשה נוספה בהצלחה!' : 'כל העדכונים הוחלו בהצלחה!', 'success');
+            addActivity(shipId === 'new' ? 'הפלגה חדשה' : 'עדכון מניתוח', `${ship.name} עודכנה מניתוח הודעה`);
 
             // Clear the form and show success
             document.getElementById('emailInput').value = '';
@@ -14130,15 +14421,13 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
         function switchReportType(type) {
             currentReportType = type;
 
-            // Update tab styling
+            // Update tab styling using CSS classes
             document.querySelectorAll('.report-type-tab').forEach(tab => {
-                tab.style.background = 'var(--bg-card)';
-                tab.style.color = 'var(--text-primary)';
+                tab.classList.remove('active');
             });
             const activeTab = document.getElementById('reportTab' + type.charAt(0).toUpperCase() + type.slice(1));
             if (activeTab) {
-                activeTab.style.background = 'var(--primary)';
-                activeTab.style.color = 'white';
+                activeTab.classList.add('active');
             }
 
             // Update ship selector based on report type
@@ -17560,19 +17849,109 @@ Generated: ${new Date().toLocaleString('en-GB')}
         }
 
 
-        function clearAllData() {
-            if (confirm('האם אתה בטוח שברצונך למחוק את כל הנתונים ולהתחיל מחדש?')) {
+        async function clearAllData() {
+            if (!confirm('האם אתה בטוח שברצונך למחוק את כל הנתונים ולהתחיל מחדש?\n\nפעולה זו תמחק לצמיתות:\n• כל האניות\n• כל המסמכים\n• כל הפעילויות\n• כל אנשי הקשר\n• כל הנתונים האחרים')) {
+                return;
+            }
+
+            if (!confirm('אישור סופי: כל הנתונים יימחקו לצמיתות ולא ניתן יהיה לשחזר אותם. להמשיך?')) {
+                return;
+            }
+
+            showToast('מוחק את כל הנתונים...', 'info');
+
+            try {
+                // Delete all ships and their subcollections
+                const shipsSnapshot = await db.collection('ships').get();
+                for (const shipDoc of shipsSnapshot.docs) {
+                    // Delete subcollections
+                    const subcollections = ['documents', 'shiftLog', 'notes', 'tallyRecords', 'stoppages'];
+                    for (const subcol of subcollections) {
+                        const subSnapshot = await db.collection('ships').doc(shipDoc.id).collection(subcol).get();
+                        for (const subDoc of subSnapshot.docs) {
+                            await subDoc.ref.delete();
+                        }
+                    }
+                    await shipDoc.ref.delete();
+                }
+
+                // Delete archived ships
+                const archivedSnapshot = await db.collection('archived').get();
+                for (const doc of archivedSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete activities
+                const activitiesSnapshot = await db.collection('activities').get();
+                for (const doc of activitiesSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete gallery
+                const gallerySnapshot = await db.collection('gallery').get();
+                for (const doc of gallerySnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete service requests
+                const serviceSnapshot = await db.collection('serviceRequests').get();
+                for (const doc of serviceSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete contacts
+                const contactsSnapshot = await db.collection('contacts').get();
+                for (const doc of contactsSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete email groups
+                const emailGroupsSnapshot = await db.collection('emailGroups').get();
+                for (const doc of emailGroupsSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete field agent docs
+                const fieldAgentSnapshot = await db.collection('fieldAgentDocs').get();
+                for (const doc of fieldAgentSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete shift summaries
+                const shiftSummariesSnapshot = await db.collection('shiftSummaries').get();
+                for (const doc of shiftSummariesSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Delete shift handovers
+                const shiftHandoversSnapshot = await db.collection('shiftHandovers').get();
+                for (const doc of shiftHandoversSnapshot.docs) {
+                    await doc.ref.delete();
+                }
+
+                // Clear local storage and session storage
                 localStorage.clear();
                 sessionStorage.clear();
+
+                // Reset local variables
                 ships = [];
                 activities = [];
                 archived = [];
+                contacts = [];
+                emailGroups = [];
+                fieldAgentShipData = {};
                 fileHandle = null;
+
+                // Refresh UI
                 renderShips();
                 updateStats();
                 updateActivities();
-                showToast('כל הנתונים נמחקו', 'success');
-                addActivity('מחיקת נתונים', 'כל הנתונים נמחקו מהמערכת');
+
+                showToast('כל הנתונים נמחקו בהצלחה!', 'success');
+
+            } catch (error) {
+                console.error('Error clearing data:', error);
+                showToast('שגיאה במחיקת הנתונים: ' + error.message, 'error');
             }
         }
 
@@ -21553,99 +21932,383 @@ ${signature}`;
 
         function renderCmdBarResults(query) {
             const resultsDiv = document.getElementById('cmdBarResults');
-            let results = [];
+            let html = '';
+            const q = query.toLowerCase().trim();
 
-            // Parse command from query (e.g., "sailed ela s" -> command: sailed, ship: ela s)
-            const parts = query.split(' ');
-            const cmdPart = parts[0];
-            const restPart = parts.slice(1).join(' ');
+            // Find matching commands and ships
+            const matchingCommands = q ? CMD_BAR_COMMANDS.filter(cmd =>
+                cmd.keywords.some(kw => kw.includes(q)) ||
+                cmd.name.toLowerCase().includes(q)
+            ) : [];
 
-            // Find matching commands
-            const matchingCommands = CMD_BAR_COMMANDS.filter(cmd =>
-                cmd.keywords.some(kw => kw.includes(cmdPart)) ||
-                cmd.name.includes(cmdPart)
-            );
+            const matchingShips = q ? ships.filter(ship =>
+                ship.name.toLowerCase().includes(q) ||
+                (ship.voyage && ship.voyage.toLowerCase().includes(q))
+            ).slice(0, 5) : [];
 
-            // Find matching ships
-            const matchingShips = ships.filter(ship =>
-                ship.name.toLowerCase().includes(query) ||
-                (ship.voyage && ship.voyage.toLowerCase().includes(query))
-            ).slice(0, 5);
-
-            // Build results
-            if (query === '') {
-                // Show default commands
-                results = CMD_BAR_COMMANDS.map(cmd => ({
-                    type: 'command',
-                    command: cmd,
-                    title: cmd.name,
-                    desc: cmd.desc
-                }));
-            } else if (matchingCommands.length > 0 && restPart) {
-                // Command + ship search
-                const cmd = matchingCommands[0];
-                const shipMatches = ships.filter(ship =>
-                    ship.name.toLowerCase().includes(restPart.toLowerCase())
-                );
-                results = shipMatches.map(ship => ({
-                    type: 'command_with_ship',
-                    command: cmd,
-                    ship: ship,
-                    title: `${cmd.name} - ${ship.name}`,
-                    desc: `${cmd.desc} (${ship.voyage || ''})`
-                }));
-            } else {
-                // Mixed results
-                results = [
-                    ...matchingCommands.map(cmd => ({
-                        type: 'command',
-                        command: cmd,
-                        title: cmd.name,
-                        desc: cmd.desc
-                    })),
-                    ...matchingShips.map(ship => ({
-                        type: 'ship',
-                        ship: ship,
-                        title: ship.name,
-                        desc: `${ship.voyage || ''} - ${getStatusText(ship.status)}`
-                    }))
-                ];
-            }
-
-            cmdBarCurrentResults = results;
-
-            if (results.length === 0) {
-                resultsDiv.innerHTML = `
+            if (q === '') {
+                // === DEFAULT VIEW: ALL system actions organized by category ===
+                html = `
                     <div class="cmd-bar-section">
-                        <div style="padding: 20px; text-align: center; color: var(--text-tertiary);">
-                            לא נמצאו תוצאות
+                        <div class="cmd-bar-section-title">⚡ מרכז פקודות - הקלד או בחר פעולה</div>
+                    </div>
+
+                    <div class="cmd-bar-section">
+                        <div class="cmd-bar-section-title">🔄 עדכוני סטטוס אנייה</div>
+                        <div class="cmd-bar-action-grid">
+                            <button onclick="cmdOpenForm('eta')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">🕐</span>
+                                <span>עדכון ETA</span>
+                            </button>
+                            <button onclick="cmdOpenForm('etb')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">⏰</span>
+                                <span>עדכון ETB</span>
+                            </button>
+                            <button onclick="cmdOpenForm('anchor')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">⚓</span>
+                                <span>הגעה לעוגן</span>
+                            </button>
+                            <button onclick="cmdOpenForm('berthed')" class="cmd-action-btn berthed">
+                                <span class="cmd-action-icon">🔗</span>
+                                <span>קשירה לרציף</span>
+                            </button>
+                            <button onclick="cmdOpenForm('discharge')" class="cmd-action-btn success">
+                                <span class="cmd-action-icon">⚙️</span>
+                                <span>התחלת פריקה</span>
+                            </button>
+                            <button onclick="cmdOpenForm('completed')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">✅</span>
+                                <span>סיום פריקה</span>
+                            </button>
+                            <button onclick="cmdOpenForm('sailed')" class="cmd-action-btn sailed">
+                                <span class="cmd-action-icon">🚢</span>
+                                <span>הפלגה</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cmd-bar-section">
+                        <div class="cmd-bar-section-title">📊 פריקה ומשמרות</div>
+                        <div class="cmd-bar-action-grid">
+                            <button onclick="cmdOpenForm('tally')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📊</span>
+                                <span>הזנת משמרת</span>
+                            </button>
+                            <button onclick="cmdOpenForm('stoppage')" class="cmd-action-btn warning">
+                                <span class="cmd-action-icon">⛔</span>
+                                <span>עצירת עבודה</span>
+                            </button>
+                            <button onclick="cmdOpenForm('resumed')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">▶️</span>
+                                <span>חידוש עבודה</span>
+                            </button>
+                            <button onclick="quickAction('exportAll')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📋</span>
+                                <span>סטטוס כל האניות</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cmd-bar-section">
+                        <div class="cmd-bar-section-title">🛠️ שירותים ובקשות</div>
+                        <div class="cmd-bar-action-grid">
+                            <button onclick="cmdOpenForm('water')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">💧</span>
+                                <span>הזמנת מים</span>
+                            </button>
+                            <button onclick="cmdOpenForm('provisions')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📦</span>
+                                <span>הזמנת אספקה</span>
+                            </button>
+                            <button onclick="cmdOpenForm('bunkers')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">⛽</span>
+                                <span>תדלוק</span>
+                            </button>
+                            <button onclick="cmdOpenForm('repairs')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">🔧</span>
+                                <span>תיקונים</span>
+                            </button>
+                            <button onclick="cmdOpenForm('pilot')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">👨‍✈️</span>
+                                <span>הזמנת נווט</span>
+                            </button>
+                            <button onclick="cmdOpenForm('tugs')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">🚤</span>
+                                <span>הזמנת גוררות</span>
+                            </button>
+                            <button onclick="cmdOpenForm('crew')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">👥</span>
+                                <span>החלפת צוות</span>
+                            </button>
+                            <button onclick="cmdOpenForm('agent')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">🧑‍💼</span>
+                                <span>שיבוץ סוכן</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cmd-bar-section">
+                        <div class="cmd-bar-section-title">📝 מסמכים והערות</div>
+                        <div class="cmd-bar-action-grid">
+                            <button onclick="cmdOpenForm('note')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📝</span>
+                                <span>הוספת הערה</span>
+                            </button>
+                            <button onclick="cmdOpenForm('nor')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📋</span>
+                                <span>NOR הוגש</span>
+                            </button>
+                            <button onclick="quickAction('docs')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📁</span>
+                                <span>מאגר מסמכים</span>
+                            </button>
+                            <button onclick="cmdOpenForm('cargo')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📦</span>
+                                <span>עדכון מטען</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="cmd-bar-section">
+                        <div class="cmd-bar-section-title">🚢 ניהול הפלגות</div>
+                        <div class="cmd-bar-action-grid">
+                            <button onclick="cmdOpenForm('newShip')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">➕</span>
+                                <span>הפלגה חדשה</span>
+                            </button>
+                            <button onclick="showShipQuickSelector('view')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">🔍</span>
+                                <span>חפש אנייה</span>
+                            </button>
+                            <button onclick="quickAction('export')" class="cmd-action-btn">
+                                <span class="cmd-action-icon">📤</span>
+                                <span>ייצוא דוח</span>
+                            </button>
                         </div>
                     </div>
                 `;
+
+                cmdBarCurrentResults = [];
+                resultsDiv.innerHTML = html;
                 return;
             }
 
-            resultsDiv.innerHTML = `
+            // === SEARCH MODE ===
+            let results = [];
+
+            // If found ships - show them with status-relevant quick actions
+            if (matchingShips.length > 0) {
+                html += `<div class="cmd-bar-section">
+                    <div class="cmd-bar-section-title">🚢 אניות</div>
+                `;
+
+                matchingShips.forEach(ship => {
+                    const actions = getRelevantActionsForShip(ship);
+                    html += `
+                        <div class="cmd-bar-ship-actions">
+                            <div class="cmd-bar-ship-header">
+                                <span class="cmd-bar-ship-name">${ship.name}</span>
+                                <span class="cmd-bar-ship-status">${getStatusText(ship.status)}${ship.berth ? ' • ' + ship.berth : ''}</span>
+                            </div>
+                            <div class="cmd-bar-quick-actions">
+                                ${actions.map(a => `
+                                    <button onclick="cmdShipAction('${a.action}', '${ship.id}')" class="cmd-quick-btn ${a.cls || ''}">
+                                        <span>${a.icon}</span> ${a.label}
+                                    </button>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                    results.push({ type: 'ship', ship: ship });
+                });
+
+                html += `</div>`;
+            }
+
+            // If found commands - show them
+            if (matchingCommands.length > 0) {
+                html += `
+                    <div class="cmd-bar-section">
+                        <div class="cmd-bar-section-title">⚡ פעולות</div>
+                        ${matchingCommands.slice(0, 8).map((cmd, i) => `
+                            <div class="cmd-bar-item ${i === 0 && matchingShips.length === 0 ? 'selected' : ''}"
+                                 onclick="cmdOpenForm('${cmd.id}')"
+                                 data-index="${i}">
+                                <div class="cmd-bar-item-icon ${cmd.iconClass || ''}">${cmd.icon || '⚡'}</div>
+                                <div class="cmd-bar-item-content">
+                                    <div class="cmd-bar-item-title">${cmd.name}</div>
+                                    <div class="cmd-bar-item-desc">${cmd.desc}</div>
+                                </div>
+                                <span class="cmd-bar-item-shortcut">${cmd.keywords[0]}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                matchingCommands.slice(0, 8).forEach(cmd => {
+                    results.push({ type: 'command', command: cmd });
+                });
+            }
+
+            if (html === '') {
+                html = `
+                    <div class="cmd-bar-section">
+                        <div style="padding: 30px; text-align: center; color: var(--text-muted);">
+                            <div style="font-size: 32px; margin-bottom: 10px;">🔍</div>
+                            <div>לא נמצאו תוצאות עבור "${query}"</div>
+                            <div style="font-size: 12px; margin-top: 8px;">נסה: eta, משמרת, מים, הערה, נווט, קשירה...</div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            cmdBarCurrentResults = results;
+            resultsDiv.innerHTML = html;
+        }
+
+        // Get relevant quick actions based on ship status
+        function getRelevantActionsForShip(ship) {
+            const actions = [{ action: 'view', icon: '👁️', label: 'צפייה' }];
+
+            switch(ship.status) {
+                case STATUS.EXPECTED:
+                case STATUS.AT_SEA:
+                    actions.push({ action: 'eta', icon: '🕐', label: 'ETA' });
+                    actions.push({ action: 'anchor', icon: '⚓', label: 'הגיע לעוגן' });
+                    break;
+                case STATUS.AT_ANCHOR:
+                    actions.push({ action: 'etb', icon: '⏰', label: 'ETB' });
+                    actions.push({ action: 'berthed', icon: '🔗', label: 'קשירה', cls: 'primary' });
+                    break;
+                case STATUS.AT_PORT:
+                    actions.push({ action: 'discharge', icon: '⚙️', label: 'התחלת פריקה', cls: 'success' });
+                    actions.push({ action: 'sailed', icon: '🚢', label: 'הפלגה' });
+                    break;
+                case STATUS.UNDER_OPERATION:
+                    actions.push({ action: 'tally', icon: '📊', label: 'משמרת', cls: 'primary' });
+                    actions.push({ action: 'stoppage', icon: '⛔', label: 'עצירה', cls: 'warning' });
+                    actions.push({ action: 'completed', icon: '✅', label: 'סיום' });
+                    break;
+                case STATUS.OPERATION_COMPLETED:
+                    actions.push({ action: 'sailed', icon: '🚢', label: 'הפלגה', cls: 'primary' });
+                    break;
+            }
+
+            actions.push({ action: 'note', icon: '📝', label: 'הערה' });
+            actions.push({ action: 'docs', icon: '📁', label: 'מסמכים' });
+            return actions;
+        }
+
+        // Open form for a command
+        function cmdOpenForm(commandId) {
+            closeCmdBar();
+            const cmd = CMD_BAR_COMMANDS.find(c => c.id === commandId);
+            if (cmd) {
+                if (cmd.action) {
+                    executeDirectAction(cmd);
+                } else {
+                    showCmdBarForm(cmd);
+                }
+            } else if (commandId === 'newShip') {
+                openNewShipModal();
+            } else {
+                // Create ad-hoc command for services not in main list
+                const serviceCommands = {
+                    water: { name: 'הזמנת מים', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'quantity', type: 'number', label: 'כמות (טון)' }, { id: 'date', type: 'date', label: 'תאריך', default: 'today' }] },
+                    provisions: { name: 'הזמנת אספקה', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'text', type: 'textarea', label: 'פירוט' }] },
+                    bunkers: { name: 'הזמנת תדלוק', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'quantity', type: 'number', label: 'כמות (טון)' }, { id: 'fuelType', type: 'text', label: 'סוג דלק' }] },
+                    repairs: { name: 'בקשת תיקון', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'text', type: 'textarea', label: 'תיאור התקלה' }] },
+                    pilot: { name: 'הזמנת נווט', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'datetime', type: 'datetime-local', label: 'תאריך ושעה' }] },
+                    tugs: { name: 'הזמנת גוררות', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'quantity', type: 'number', label: 'מספר גוררות' }, { id: 'datetime', type: 'datetime-local', label: 'תאריך ושעה' }] },
+                    crew: { name: 'החלפת צוות', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'text', type: 'textarea', label: 'פרטים' }] },
+                    agent: { name: 'שיבוץ סוכן', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'agentName', type: 'text', label: 'שם הסוכן' }] },
+                    cargo: { name: 'עדכון מטען', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'text', type: 'textarea', label: 'פירוט מטען' }] },
+                    nor: { name: 'NOR הוגש', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'datetime', type: 'datetime-local', label: 'תאריך ושעה' }] },
+                    resumed: { name: 'חידוש עבודה', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'datetime', type: 'datetime-local', label: 'תאריך ושעה' }] },
+                    etb: { name: 'עדכון ETB', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'etb', type: 'datetime-local', label: 'ETB' }] },
+                    completed: { name: 'סיום פריקה', fields: [{ id: 'ship', type: 'ship', label: 'אנייה', required: true }, { id: 'datetime', type: 'datetime-local', label: 'תאריך ושעה סיום' }] }
+                };
+                if (serviceCommands[commandId]) {
+                    showCmdBarForm({ id: commandId, ...serviceCommands[commandId] });
+                }
+            }
+        }
+
+        // Ship-specific action from command bar
+        function cmdShipAction(action, shipId) {
+            closeCmdBar();
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            if (action === 'view') {
+                openShipModal(shipId);
+            } else if (action === 'tally') {
+                openTallyModal(shipId);
+            } else if (action === 'docs') {
+                openDocVault(shipId);
+            } else if (action === 'export') {
+                exportDischargeReport(shipId);
+            } else {
+                cmdOpenForm(action);
+                // Pre-select ship if form opens
+                setTimeout(() => {
+                    const shipSelect = document.querySelector('.cmd-bar-form select');
+                    if (shipSelect) shipSelect.value = shipId;
+                }, 100);
+            }
+        }
+
+        // Quick action handler
+        function quickAction(action, shipId = null) {
+            closeCmdBar();
+
+            switch(action) {
+                case 'tally':
+                    if (shipId) openTallyModal(shipId);
+                    else showShipQuickSelector('tally');
+                    break;
+                case 'export':
+                    if (shipId) exportDischargeReport(shipId);
+                    else showShipQuickSelector('export');
+                    break;
+                case 'exportAll':
+                    exportAllShipsStatus();
+                    break;
+                case 'docs':
+                    if (shipId) openDocVault(shipId);
+                    else showShipQuickSelector('docs');
+                    break;
+            }
+        }
+
+        // Quick ship selector for actions
+        function showShipQuickSelector(nextAction) {
+            const overlay = document.getElementById('cmdBarOverlay');
+            overlay.classList.add('active');
+            document.getElementById('cmdBarInput').value = '';
+            document.getElementById('cmdBarInput').placeholder = 'חפש אנייה...';
+            document.getElementById('cmdBarInput').focus();
+
+            // Show ALL ships for 'view', or relevant ships for other actions
+            const relevantShips = nextAction === 'view' ? ships : ships.filter(s =>
+                s.status === STATUS.AT_PORT ||
+                s.status === STATUS.UNDER_OPERATION ||
+                s.status === STATUS.AT_ANCHOR ||
+                s.status === STATUS.EXPECTED ||
+                s.status === STATUS.AT_SEA
+            );
+
+            const actionHandler = nextAction === 'view' ? 'cmdShipAction' : 'quickAction';
+
+            document.getElementById('cmdBarResults').innerHTML = `
                 <div class="cmd-bar-section">
-                    ${results.map((item, i) => `
-                        <div class="cmd-bar-item ${i === cmdBarSelectedIndex ? 'selected' : ''}"
-                             onclick="selectCmdBarItem(cmdBarCurrentResults[${i}])"
-                             data-index="${i}">
-                            <div class="cmd-bar-item-icon ${item.command?.iconClass || ''}">
-                                ${item.type === 'ship' ?
-                                    `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <path d="M2 21c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1 .6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/>
-                                        <path d="M19.38 20A11.6 11.6 0 0 0 21 14l-9-4-9 4c0 2.9.94 5.34 2.81 7.76"/>
-                                        <path d="M19 13V7a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v6"/>
-                                        <path d="M12 10v4"/>
-                                    </svg>` :
-                                    item.command?.icon || '⚡'}
-                            </div>
+                    <div class="cmd-bar-section-title">בחר אנייה (${relevantShips.length})</div>
+                    ${relevantShips.map(ship => `
+                        <div class="cmd-bar-item" onclick="${actionHandler}('${nextAction}', '${ship.id}')">
+                            <div class="cmd-bar-item-icon">🚢</div>
                             <div class="cmd-bar-item-content">
-                                <div class="cmd-bar-item-title">${item.title}</div>
-                                <div class="cmd-bar-item-desc">${item.desc}</div>
+                                <div class="cmd-bar-item-title">${ship.name}</div>
+                                <div class="cmd-bar-item-desc">${getStatusText(ship.status)}${ship.berth ? ' • רציף ' + ship.berth : ''}</div>
                             </div>
-                            ${item.type === 'command' ? `<span class="cmd-bar-item-shortcut">${item.command.keywords[0]}</span>` : ''}
                         </div>
                     `).join('')}
                 </div>
@@ -22243,5 +22906,15 @@ ${signature}`;
         // ==================== Initialize App ====================
         document.addEventListener('DOMContentLoaded', init);
     </script>
+
+    <!-- Floating Command Bar Button -->
+    <button onclick="openCmdBar()" class="cmd-fab" title="מרכז פקודות (Ctrl+K)">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+        </svg>
+        <span>מרכז פקודות</span>
+        <span class="cmd-fab-kbd">⌘K</span>
+    </button>
 </body>
 </html>
