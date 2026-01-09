@@ -5142,6 +5142,713 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* ======================== FIELD AGENT MODULE ======================== */
+        .field-agent-view {
+            display: none;
+            padding: 0;
+            max-width: 100%;
+        }
+        .field-agent-view.active {
+            display: block;
+        }
+
+        /* Mobile-first header */
+        .fa-header {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+            padding: 16px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .fa-header-title {
+            font-size: 18px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .fa-header-shift {
+            background: rgba(255,255,255,0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        /* Agent/Shift selector */
+        .fa-selector {
+            padding: 16px 20px;
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .fa-selector select {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px 16px;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .fa-selector select:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* Ships list */
+        .fa-ships-list {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .fa-ship-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-lg);
+            border: 1px solid var(--glass-border);
+            overflow: hidden;
+            transition: all 200ms;
+        }
+        .fa-ship-card:hover {
+            border-color: var(--primary);
+        }
+        .fa-ship-card.expanded {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 1px var(--primary);
+        }
+
+        .fa-ship-header {
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .fa-ship-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .fa-ship-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .fa-ship-location {
+            font-size: 13px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .fa-ship-status {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 4px;
+        }
+        .fa-status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        .fa-status-badge.working { background: var(--success); color: white; }
+        .fa-status-badge.berthed { background: var(--primary); color: white; }
+        .fa-status-badge.anchor { background: var(--warning); color: #000; }
+        .fa-status-badge.completed { background: var(--text-tertiary); color: white; }
+
+        .fa-doc-summary {
+            font-size: 11px;
+            color: var(--text-tertiary);
+        }
+        .fa-doc-summary.complete { color: var(--success); }
+        .fa-doc-summary.incomplete { color: var(--warning); }
+
+        /* Expanded ship content */
+        .fa-ship-content {
+            display: none;
+            border-top: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+        }
+        .fa-ship-card.expanded .fa-ship-content {
+            display: block;
+        }
+
+        /* Action buttons row */
+        .fa-actions {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .fa-action-btn {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 8px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-md);
+            color: var(--text-secondary);
+            font-size: 11px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .fa-action-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .fa-action-btn svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Documents checklist */
+        .fa-documents {
+            padding: 16px;
+        }
+        .fa-documents-title {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fa-doc-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            margin-bottom: 8px;
+            border: 1px solid var(--glass-border);
+        }
+        .fa-doc-item-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .fa-doc-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+        .fa-doc-icon.done { background: var(--success); color: white; }
+        .fa-doc-icon.pending { background: var(--warning); color: #000; }
+        .fa-doc-icon.missing { background: var(--danger); color: white; }
+        .fa-doc-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+        .fa-doc-action {
+            padding: 6px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .fa-doc-action:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .fa-doc-action.scan {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+
+        /* Bottom bar */
+        .fa-bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-top: 1px solid var(--glass-border);
+            padding: 12px 16px;
+            display: flex;
+            gap: 12px;
+            z-index: 100;
+        }
+        .fa-bottom-btn {
+            flex: 1;
+            padding: 14px;
+            border-radius: var(--radius-md);
+            border: none;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 200ms;
+        }
+        .fa-bottom-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            color: white;
+        }
+        .fa-bottom-btn.secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+        }
+        .fa-bottom-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Shift summary modal */
+        .fa-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+            display: none;
+            align-items: flex-end;
+            justify-content: center;
+        }
+        .fa-modal-overlay.active {
+            display: flex;
+        }
+        .fa-modal {
+            background: var(--bg-primary);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .fa-modal-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--glass-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .fa-modal-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .fa-modal-close {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: none;
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .fa-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+        .fa-modal-footer {
+            padding: 16px 20px;
+            border-top: 1px solid var(--glass-border);
+            display: flex;
+            gap: 12px;
+        }
+
+        /* Ship summary card in modal */
+        .fa-summary-ship {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid var(--glass-border);
+        }
+        .fa-summary-ship-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+        .fa-summary-options {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .fa-option-chip {
+            padding: 6px 12px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 200ms;
+        }
+        .fa-option-chip.selected {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .fa-option-chip:hover:not(.selected) {
+            border-color: var(--primary);
+        }
+        .fa-summary-textarea {
+            width: 100%;
+            min-height: 60px;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 13px;
+            resize: none;
+        }
+        .fa-summary-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .fa-money-input {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .fa-money-input label {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+        .fa-money-input input {
+            width: 100px;
+            padding: 8px 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 13px;
+        }
+        .fa-money-input input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        /* General notes */
+        .fa-general-notes {
+            margin-top: 20px;
+        }
+        .fa-general-notes label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        /* Handover section */
+        .fa-handover-section {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: 16px;
+            margin-top: 16px;
+            border: 1px solid var(--glass-border);
+        }
+        .fa-handover-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .fa-handover-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed var(--glass-border);
+            font-size: 13px;
+        }
+        .fa-handover-item:last-child {
+            border-bottom: none;
+        }
+        .fa-handover-ship {
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+        .fa-handover-status {
+            color: var(--text-secondary);
+        }
+
+        /* Empty state */
+        .fa-empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-tertiary);
+        }
+        .fa-empty-state svg {
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+        .fa-empty-state h3 {
+            font-size: 18px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .fa-empty-state p {
+            font-size: 14px;
+        }
+
+        /* Summary modal header */
+        .fa-summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, var(--primary-glow), transparent);
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+        }
+        .fa-summary-date {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .fa-summary-shift {
+            font-size: 13px;
+            padding: 4px 12px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+        }
+        .fa-summary-ships {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .fa-summary-ship-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+        .fa-summary-ship-name {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+        .fa-summary-ship-berth {
+            font-size: 12px;
+            padding: 3px 8px;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            color: var(--text-secondary);
+        }
+        .fa-summary-status-select {
+            margin-bottom: 12px;
+        }
+        .fa-summary-status-select label,
+        .fa-summary-notes label,
+        .fa-summary-general label {
+            display: block;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .fa-option-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .fa-option-chip {
+            display: inline-flex;
+            cursor: pointer;
+        }
+        .fa-option-chip input[type="radio"] {
+            display: none;
+        }
+        .fa-option-chip span {
+            padding: 6px 12px;
+            border-radius: 16px;
+            border: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+            color: var(--text-secondary);
+            font-size: 12px;
+            transition: all 200ms;
+        }
+        .fa-option-chip input[type="radio"]:checked + span {
+            background: var(--primary);
+            border-color: var(--primary);
+            color: white;
+        }
+        .fa-option-chip:hover span {
+            border-color: var(--primary);
+        }
+        .fa-summary-notes textarea,
+        .fa-summary-general textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 13px;
+            resize: vertical;
+        }
+        .fa-summary-notes textarea:focus,
+        .fa-summary-general textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .fa-summary-general {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        /* Handover modal */
+        .fa-handover-info {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-glow), transparent);
+            border-radius: var(--radius-md);
+            margin-bottom: 20px;
+        }
+        .fa-handover-from,
+        .fa-handover-to {
+            text-align: center;
+        }
+        .fa-handover-label {
+            font-size: 11px;
+            color: var(--text-tertiary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+        .fa-handover-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        .fa-handover-arrow {
+            flex-shrink: 0;
+        }
+        .fa-handover-select {
+            margin-bottom: 16px;
+        }
+        .fa-handover-select label,
+        .fa-handover-notes label,
+        .fa-handover-checklist label {
+            display: block;
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        .fa-handover-select select {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+        .fa-handover-notes textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            font-size: 13px;
+            resize: vertical;
+        }
+        .fa-handover-notes textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+        .fa-handover-checklist {
+            margin-top: 16px;
+        }
+        .fa-checklist-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .fa-checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            background: var(--bg-secondary);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: background 200ms;
+        }
+        .fa-checklist-item:hover {
+            background: var(--bg-tertiary);
+        }
+        .fa-checklist-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+        .fa-checklist-item span {
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        /* Responsive for desktop */
+        @media (min-width: 768px) {
+            .fa-ships-list {
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .fa-bottom-bar {
+                position: relative;
+                max-width: 600px;
+                margin: 20px auto;
+                border-radius: var(--radius-lg);
+            }
+            .fa-modal {
+                border-radius: var(--radius-xl);
+                margin: auto;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .fa-ships-list {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
     </style>
 
     <!-- Firebase SDK (compat version for classic script) -->
@@ -5229,6 +5936,16 @@
                         <polyline points="21 15 16 10 5 21"/>
                     </svg>
                     <span>גלריית תמונות</span>
+                </div>
+                <div class="nav-item" onclick="switchToFieldAgentView()">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                        <line x1="12" y1="18" x2="12" y2="18"/>
+                        <path d="M9 6h6"/>
+                        <path d="M9 10h6"/>
+                        <path d="M9 14h4"/>
+                    </svg>
+                    <span>סוכני שטח</span>
                 </div>
             </nav>
 
@@ -6332,6 +7049,156 @@ Remarks: Rain stopped operations 14:30-15:15"></textarea>
                         </svg>
                         <h3>אין תמונות עדיין</h3>
                         <p>העלה תמונות של מעמסות, מסמכים או תיעוד אנייה</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Field Agent View -->
+            <div class="field-agent-view" id="fieldAgentView">
+                <!-- Header -->
+                <div class="fa-header">
+                    <div class="fa-header-title">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
+                            <line x1="12" y1="18" x2="12" y2="18"/>
+                        </svg>
+                        TOMELON Field
+                    </div>
+                    <div class="fa-header-shift" id="faCurrentShift">משמרת א'</div>
+                </div>
+
+                <!-- Agent & Shift Selector -->
+                <div class="fa-selector">
+                    <select id="faAgentSelect" onchange="updateFieldAgentView()">
+                        <option value="">בחר סוכן שטח</option>
+                        <option value="agent1">דני</option>
+                        <option value="agent2">יוסי</option>
+                        <option value="agent3">משה</option>
+                        <option value="agent4">אבי</option>
+                    </select>
+                    <select id="faShiftSelect" onchange="updateFieldAgentView()">
+                        <option value="a">משמרת א' (07:00-15:00)</option>
+                        <option value="b">משמרת ב' (15:00-23:00)</option>
+                        <option value="c">משמרת ג' (23:00-07:00)</option>
+                    </select>
+                </div>
+
+                <!-- Ships List -->
+                <div class="fa-ships-list" id="faShipsList">
+                    <!-- Ships will be rendered here -->
+                </div>
+
+                <!-- Bottom Action Bar -->
+                <div class="fa-bottom-bar">
+                    <button class="fa-bottom-btn secondary" onclick="openShiftHandover()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 1l4 4-4 4"/>
+                            <path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                            <path d="M7 23l-4-4 4-4"/>
+                            <path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+                        </svg>
+                        העברת משמרת
+                    </button>
+                    <button class="fa-bottom-btn primary" onclick="openShiftSummary()">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" y1="13" x2="8" y2="13"/>
+                            <line x1="16" y1="17" x2="8" y2="17"/>
+                        </svg>
+                        סיכום משמרת
+                    </button>
+                </div>
+            </div>
+
+            <!-- Field Agent Modals -->
+            <div class="fa-modal-overlay" id="faShiftSummaryModal">
+                <div class="fa-modal">
+                    <div class="fa-modal-header">
+                        <div class="fa-modal-title">סיכום משמרת</div>
+                        <button class="fa-modal-close" onclick="closeShiftSummary()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="fa-modal-body" id="faShiftSummaryBody">
+                        <!-- Summary forms will be rendered here -->
+                    </div>
+                    <div class="fa-modal-footer">
+                        <button class="fa-bottom-btn secondary" onclick="closeShiftSummary()">ביטול</button>
+                        <button class="fa-bottom-btn primary" onclick="submitShiftSummary()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 2L11 13"/>
+                                <path d="M22 2l-7 20-4-9-9-4 20-7z"/>
+                            </svg>
+                            שלח סיכום
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fa-modal-overlay" id="faHandoverModal">
+                <div class="fa-modal">
+                    <div class="fa-modal-header">
+                        <div class="fa-modal-title">העברת משמרת</div>
+                        <button class="fa-modal-close" onclick="closeShiftHandover()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="fa-modal-body" id="faHandoverBody">
+                        <!-- Handover content will be rendered here -->
+                    </div>
+                    <div class="fa-modal-footer">
+                        <button class="fa-bottom-btn secondary" onclick="closeShiftHandover()">ביטול</button>
+                        <button class="fa-bottom-btn primary" onclick="confirmHandover()">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
+                            אשר העברה
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fa-modal-overlay" id="faDocScanModal">
+                <div class="fa-modal">
+                    <div class="fa-modal-header">
+                        <div class="fa-modal-title" id="faDocScanTitle">סריקת מסמך</div>
+                        <button class="fa-modal-close" onclick="closeDocScan()">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="fa-modal-body">
+                        <div style="text-align: center; padding: 20px;">
+                            <input type="file" id="faDocFileInput" accept="image/*,application/pdf" capture="environment" style="display: none;" onchange="handleDocScan(event)">
+                            <button onclick="document.getElementById('faDocFileInput').click()" style="padding: 40px; border-radius: 16px; border: 2px dashed var(--glass-border); background: var(--bg-tertiary); cursor: pointer; width: 100%;">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" style="margin-bottom: 12px;">
+                                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                                    <circle cx="12" cy="13" r="4"/>
+                                </svg>
+                                <div style="color: var(--text-primary); font-size: 14px; font-weight: 600;">לחץ לצילום או בחירת קובץ</div>
+                                <div style="color: var(--text-tertiary); font-size: 12px; margin-top: 8px;">תמונה או PDF</div>
+                            </button>
+                            <div id="faDocPreview" style="margin-top: 16px; display: none;">
+                                <img id="faDocPreviewImg" style="max-width: 100%; border-radius: 8px; margin-bottom: 12px;">
+                                <button class="fa-bottom-btn primary" onclick="uploadScannedDoc()" style="width: 100%;">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                        <polyline points="17 8 12 3 7 8"/>
+                                        <line x1="12" y1="3" x2="12" y2="15"/>
+                                    </svg>
+                                    העלה מסמך
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -16508,6 +17375,626 @@ ${signature}`;
 
             // Clear data
             smartParserData = null;
+        }
+
+        // ==================== Field Agent Interface ====================
+        let fieldAgentCurrentDoc = null;
+        let fieldAgentShipData = {};
+
+        // Document types required for each ship
+        const REQUIRED_DOCUMENTS = [
+            { id: 'discharge_approval', name: 'אישור פריקה', icon: '📋' },
+            { id: 'lashing_approval', name: 'אישור לשינג', icon: '🔗' },
+            { id: 'breakdown', name: 'Breakdown', icon: '📊' },
+            { id: 'manifest', name: 'Manifest', icon: '📄' },
+            { id: 'cargo_plan', name: 'Cargo Plan', icon: '🗺️' },
+            { id: 'sof', name: 'SOF', icon: '📝' }
+        ];
+
+        // Ship status options for shift summary
+        const SHIP_STATUS_OPTIONS = [
+            { id: 'working', label: 'עובדת', emoji: '⚙️' },
+            { id: 'waiting_berth', label: 'ממתינה לרציף', emoji: '⏳' },
+            { id: 'waiting_approval', label: 'ממתינה לאישור', emoji: '📋' },
+            { id: 'stopped_rain', label: 'עצירת גשם', emoji: '🌧️' },
+            { id: 'stopped_technical', label: 'תקלה טכנית', emoji: '🔧' },
+            { id: 'completed', label: 'סיימה פריקה', emoji: '✅' }
+        ];
+
+        function switchToFieldAgentView() {
+            // Update nav menu
+            document.querySelectorAll('.nav-menu .nav-item').forEach(item => item.classList.remove('active'));
+            document.querySelectorAll('.nav-menu .nav-item')[8].classList.add('active');
+
+            // Hide other views
+            document.querySelector('.tabs').style.display = 'none';
+            document.querySelector('.stats-grid').style.display = 'none';
+            document.getElementById('shipsGrid').style.display = 'none';
+            document.getElementById('emailParserView').classList.remove('active');
+            document.getElementById('contactsView').classList.remove('active');
+            document.getElementById('dischargeView').classList.remove('active');
+            document.getElementById('referenceView').classList.remove('active');
+            document.getElementById('operationsView').classList.remove('active');
+            document.getElementById('galleryView').classList.remove('active');
+
+            // Show field agent view
+            document.getElementById('fieldAgentView').classList.add('active');
+            currentTab = 'fieldAgent';
+
+            // Auto-detect current shift based on time
+            autoDetectShift();
+
+            // Load field agent data
+            updateFieldAgentView();
+        }
+
+        function autoDetectShift() {
+            const hour = new Date().getHours();
+            const shiftSelect = document.getElementById('faShiftSelect');
+
+            if (hour >= 7 && hour < 15) {
+                shiftSelect.value = 'a';
+            } else if (hour >= 15 && hour < 23) {
+                shiftSelect.value = 'b';
+            } else {
+                shiftSelect.value = 'c';
+            }
+
+            updateShiftBadge();
+        }
+
+        function updateShiftBadge() {
+            const shift = document.getElementById('faShiftSelect').value;
+            const badge = document.getElementById('faCurrentShift');
+            const shiftNames = { a: "משמרת א'", b: "משמרת ב'", c: "משמרת ג'" };
+            badge.textContent = shiftNames[shift] || "משמרת א'";
+        }
+
+        async function updateFieldAgentView() {
+            updateShiftBadge();
+            await loadFieldAgentShipData();
+            renderFieldAgentShips();
+        }
+
+        async function loadFieldAgentShipData() {
+            // Load document status from Firestore for each ship
+            try {
+                const snapshot = await db.collection('fieldAgentDocs').get();
+                fieldAgentShipData = {};
+                snapshot.forEach(doc => {
+                    fieldAgentShipData[doc.id] = doc.data();
+                });
+            } catch (error) {
+                console.error('Error loading field agent data:', error);
+            }
+        }
+
+        function renderFieldAgentShips() {
+            const container = document.getElementById('faShipsList');
+            const agent = document.getElementById('faAgentSelect').value;
+            const shift = document.getElementById('faShiftSelect').value;
+
+            // Filter active ships (at port or under operation)
+            const activeShips = ships.filter(ship =>
+                ship.status === STATUS.AT_PORT ||
+                ship.status === STATUS.UNDER_OPERATION ||
+                ship.status === STATUS.AT_SEA
+            );
+
+            if (activeShips.length === 0) {
+                container.innerHTML = `
+                    <div class="fa-empty-state">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="1.5">
+                            <path d="M3 17l6-6 4 4 8-8"/>
+                            <path d="M17 7h4v4"/>
+                        </svg>
+                        <h3>אין אניות פעילות</h3>
+                        <p>כרגע אין אניות בנמל או בפעילות</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = activeShips.map(ship => {
+                const shipDocs = fieldAgentShipData[ship.id] || {};
+                const completedDocs = REQUIRED_DOCUMENTS.filter(doc => shipDocs[doc.id]?.uploaded).length;
+                const progress = Math.round((completedDocs / REQUIRED_DOCUMENTS.length) * 100);
+
+                return `
+                    <div class="fa-ship-card" data-ship-id="${ship.id}">
+                        <div class="fa-ship-header" onclick="toggleFaShipExpand('${ship.id}')">
+                            <div class="fa-ship-info">
+                                <div class="fa-ship-name">${ship.name}</div>
+                                <div class="fa-ship-meta">
+                                    <span class="fa-ship-status ${getStatusClass(ship.status)}">${getStatusText(ship.status)}</span>
+                                    ${ship.berth ? `<span class="fa-ship-berth">רציף ${ship.berth}</span>` : ''}
+                                </div>
+                            </div>
+                            <div class="fa-ship-progress">
+                                <div class="fa-progress-ring">
+                                    <svg viewBox="0 0 36 36">
+                                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="var(--glass-border)" stroke-width="3"/>
+                                        <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="${progress === 100 ? 'var(--success)' : 'var(--primary)'}" stroke-width="3" stroke-dasharray="${progress}, 100"/>
+                                    </svg>
+                                    <span class="fa-progress-text">${completedDocs}/${REQUIRED_DOCUMENTS.length}</span>
+                                </div>
+                                <svg class="fa-expand-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="6 9 12 15 18 9"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="fa-ship-content">
+                            <div class="fa-documents">
+                                ${REQUIRED_DOCUMENTS.map(doc => {
+                                    const docStatus = shipDocs[doc.id] || {};
+                                    const uploaded = docStatus.uploaded;
+                                    const uploadedAt = docStatus.uploadedAt ? new Date(docStatus.uploadedAt.seconds * 1000).toLocaleString('he-IL') : '';
+
+                                    return `
+                                        <div class="fa-doc-item ${uploaded ? 'completed' : ''}" onclick="openDocScan('${ship.id}', '${doc.id}', '${doc.name}')">
+                                            <div class="fa-doc-icon">${doc.icon}</div>
+                                            <div class="fa-doc-info">
+                                                <div class="fa-doc-name">${doc.name}</div>
+                                                ${uploaded ? `<div class="fa-doc-time">${uploadedAt}</div>` : '<div class="fa-doc-time">לא הועלה</div>'}
+                                            </div>
+                                            <div class="fa-doc-status">
+                                                ${uploaded ?
+                                                    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2">
+                                                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+                                                        <polyline points="22 4 12 14.01 9 11.01"/>
+                                                    </svg>` :
+                                                    `<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--text-tertiary)" stroke-width="2">
+                                                        <circle cx="12" cy="12" r="10"/>
+                                                        <line x1="12" y1="8" x2="12" y2="12"/>
+                                                        <line x1="12" y1="16" x2="12.01" y2="16"/>
+                                                    </svg>`
+                                                }
+                                            </div>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                            <div class="fa-actions">
+                                <button class="fa-action-btn" onclick="callCaptain('${ship.id}')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72"/>
+                                    </svg>
+                                    התקשר לרב חובל
+                                </button>
+                                <button class="fa-action-btn" onclick="addShipNote('${ship.id}')">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                    </svg>
+                                    הוסף הערה
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getStatusClass(status) {
+            const classes = {
+                [STATUS.AT_SEA]: 'at-sea',
+                [STATUS.AT_PORT]: 'at-port',
+                [STATUS.UNDER_OPERATION]: 'under-operation',
+                [STATUS.SAILED]: 'sailed'
+            };
+            return classes[status] || '';
+        }
+
+        function getStatusText(status) {
+            const texts = {
+                [STATUS.AT_SEA]: 'בים',
+                [STATUS.AT_PORT]: 'בנמל',
+                [STATUS.UNDER_OPERATION]: 'בפעילות',
+                [STATUS.SAILED]: 'הפליגה'
+            };
+            return texts[status] || status;
+        }
+
+        function toggleFaShipExpand(shipId) {
+            const card = document.querySelector(`.fa-ship-card[data-ship-id="${shipId}"]`);
+            if (card) {
+                card.classList.toggle('expanded');
+            }
+        }
+
+        // Document Scan Modal
+        function openDocScan(shipId, docId, docName) {
+            fieldAgentCurrentDoc = { shipId, docId, docName };
+            document.getElementById('faDocScanTitle').textContent = `סריקת ${docName}`;
+            document.getElementById('faDocPreview').style.display = 'none';
+            document.getElementById('faDocFileInput').value = '';
+            document.getElementById('faDocScanModal').classList.add('active');
+        }
+
+        function closeDocScan() {
+            document.getElementById('faDocScanModal').classList.remove('active');
+            fieldAgentCurrentDoc = null;
+        }
+
+        function handleDocScan(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.getElementById('faDocPreview');
+                const previewImg = document.getElementById('faDocPreviewImg');
+
+                if (file.type.startsWith('image/')) {
+                    previewImg.src = e.target.result;
+                    preview.style.display = 'block';
+                } else if (file.type === 'application/pdf') {
+                    previewImg.src = '/api/placeholder/200/150';
+                    previewImg.alt = 'PDF Document';
+                    preview.style.display = 'block';
+                }
+
+                // Store file data for upload
+                preview.dataset.fileData = e.target.result;
+                preview.dataset.fileName = file.name;
+                preview.dataset.fileType = file.type;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        async function uploadScannedDoc() {
+            if (!fieldAgentCurrentDoc) return;
+
+            const preview = document.getElementById('faDocPreview');
+            const fileData = preview.dataset.fileData;
+            const fileName = preview.dataset.fileName;
+
+            if (!fileData) {
+                showToast('לא נבחר קובץ', 'error');
+                return;
+            }
+
+            try {
+                showToast('מעלה מסמך...', 'info');
+
+                const agent = document.getElementById('faAgentSelect').value;
+                const agentName = document.getElementById('faAgentSelect').options[document.getElementById('faAgentSelect').selectedIndex].text;
+
+                // Save to Firestore
+                const docRef = db.collection('fieldAgentDocs').doc(fieldAgentCurrentDoc.shipId);
+                await docRef.set({
+                    [fieldAgentCurrentDoc.docId]: {
+                        uploaded: true,
+                        uploadedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                        uploadedBy: agentName || 'סוכן',
+                        fileName: fileName,
+                        fileData: fileData.substring(0, 100) + '...' // Store reference, not full data
+                    }
+                }, { merge: true });
+
+                // Update local data
+                if (!fieldAgentShipData[fieldAgentCurrentDoc.shipId]) {
+                    fieldAgentShipData[fieldAgentCurrentDoc.shipId] = {};
+                }
+                fieldAgentShipData[fieldAgentCurrentDoc.shipId][fieldAgentCurrentDoc.docId] = {
+                    uploaded: true,
+                    uploadedAt: { seconds: Date.now() / 1000 },
+                    uploadedBy: agentName || 'סוכן'
+                };
+
+                showToast('המסמך הועלה בהצלחה', 'success');
+                closeDocScan();
+                renderFieldAgentShips();
+
+            } catch (error) {
+                console.error('Error uploading document:', error);
+                showToast('שגיאה בהעלאת המסמך', 'error');
+            }
+        }
+
+        // Shift Summary Modal
+        function openShiftSummary() {
+            renderShiftSummaryForm();
+            document.getElementById('faShiftSummaryModal').classList.add('active');
+        }
+
+        function closeShiftSummary() {
+            document.getElementById('faShiftSummaryModal').classList.remove('active');
+        }
+
+        function renderShiftSummaryForm() {
+            const body = document.getElementById('faShiftSummaryBody');
+            const shift = document.getElementById('faShiftSelect').value;
+            const shiftNames = { a: "א'", b: "ב'", c: "ג'" };
+
+            // Get active ships
+            const activeShips = ships.filter(ship =>
+                ship.status === STATUS.AT_PORT ||
+                ship.status === STATUS.UNDER_OPERATION ||
+                ship.status === STATUS.AT_SEA
+            );
+
+            body.innerHTML = `
+                <div class="fa-summary-header">
+                    <div class="fa-summary-date">${new Date().toLocaleDateString('he-IL', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
+                    <div class="fa-summary-shift">משמרת ${shiftNames[shift]}</div>
+                </div>
+
+                <div class="fa-summary-ships">
+                    ${activeShips.map(ship => `
+                        <div class="fa-summary-ship" data-ship-id="${ship.id}">
+                            <div class="fa-summary-ship-header">
+                                <span class="fa-summary-ship-name">${ship.name}</span>
+                                ${ship.berth ? `<span class="fa-summary-ship-berth">רציף ${ship.berth}</span>` : ''}
+                            </div>
+
+                            <div class="fa-summary-status-select">
+                                <label>סטטוס:</label>
+                                <div class="fa-option-chips" data-ship="${ship.id}">
+                                    ${SHIP_STATUS_OPTIONS.map(opt => `
+                                        <label class="fa-option-chip">
+                                            <input type="radio" name="status_${ship.id}" value="${opt.id}">
+                                            <span>${opt.emoji} ${opt.label}</span>
+                                        </label>
+                                    `).join('')}
+                                </div>
+                            </div>
+
+                            <div class="fa-summary-notes">
+                                <label>הערות:</label>
+                                <textarea id="notes_${ship.id}" placeholder="הערות נוספות על האנייה..." rows="2"></textarea>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+
+                <div class="fa-summary-general">
+                    <label>הערות כלליות למשמרת:</label>
+                    <textarea id="generalNotes" placeholder="הערות כלליות, אירועים מיוחדים וכו'..." rows="3"></textarea>
+                </div>
+            `;
+        }
+
+        async function submitShiftSummary() {
+            const agent = document.getElementById('faAgentSelect').value;
+            const agentName = document.getElementById('faAgentSelect').options[document.getElementById('faAgentSelect').selectedIndex].text;
+            const shift = document.getElementById('faShiftSelect').value;
+            const shiftNames = { a: "א'", b: "ב'", c: "ג'" };
+
+            // Collect data from form
+            const activeShips = ships.filter(ship =>
+                ship.status === STATUS.AT_PORT ||
+                ship.status === STATUS.UNDER_OPERATION ||
+                ship.status === STATUS.AT_SEA
+            );
+
+            const shipsSummary = activeShips.map(ship => {
+                const statusRadio = document.querySelector(`input[name="status_${ship.id}"]:checked`);
+                const status = statusRadio ? SHIP_STATUS_OPTIONS.find(o => o.id === statusRadio.value) : null;
+                const notes = document.getElementById(`notes_${ship.id}`)?.value || '';
+
+                return {
+                    shipId: ship.id,
+                    shipName: ship.name,
+                    berth: ship.berth,
+                    status: status ? status.label : '',
+                    statusEmoji: status ? status.emoji : '',
+                    notes: notes
+                };
+            }).filter(s => s.status || s.notes);
+
+            const generalNotes = document.getElementById('generalNotes')?.value || '';
+
+            // Generate WhatsApp-style summary text
+            const summaryText = generateShiftSummaryText(agentName, shift, shiftNames, shipsSummary, generalNotes);
+
+            try {
+                // Save to Firestore
+                await db.collection('shiftSummaries').add({
+                    agent: agent,
+                    agentName: agentName,
+                    shift: shift,
+                    date: new Date().toISOString().split('T')[0],
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    ships: shipsSummary,
+                    generalNotes: generalNotes,
+                    summaryText: summaryText
+                });
+
+                showToast('סיכום המשמרת נשלח בהצלחה', 'success');
+                closeShiftSummary();
+
+                // Copy to clipboard
+                navigator.clipboard.writeText(summaryText).then(() => {
+                    showToast('הסיכום הועתק ללוח - ניתן להדביק בוואטסאפ', 'info');
+                }).catch(() => {});
+
+            } catch (error) {
+                console.error('Error submitting shift summary:', error);
+                showToast('שגיאה בשליחת הסיכום', 'error');
+            }
+        }
+
+        function generateShiftSummaryText(agentName, shift, shiftNames, shipsSummary, generalNotes) {
+            const date = new Date().toLocaleDateString('he-IL');
+            let text = `📋 סיכום משמרת ${shiftNames[shift]} - ${date}\n`;
+            text += `👤 סוכן: ${agentName || 'לא צוין'}\n\n`;
+
+            shipsSummary.forEach(ship => {
+                text += `🚢 ${ship.shipName}`;
+                if (ship.berth) text += ` (רציף ${ship.berth})`;
+                text += '\n';
+                if (ship.status) text += `   ${ship.statusEmoji} ${ship.status}\n`;
+                if (ship.notes) text += `   📝 ${ship.notes}\n`;
+                text += '\n';
+            });
+
+            if (generalNotes) {
+                text += `📌 הערות כלליות:\n${generalNotes}\n`;
+            }
+
+            return text;
+        }
+
+        // Shift Handover Modal
+        function openShiftHandover() {
+            renderHandoverForm();
+            document.getElementById('faHandoverModal').classList.add('active');
+        }
+
+        function closeShiftHandover() {
+            document.getElementById('faHandoverModal').classList.remove('active');
+        }
+
+        function renderHandoverForm() {
+            const body = document.getElementById('faHandoverBody');
+            const currentShift = document.getElementById('faShiftSelect').value;
+            const nextShift = currentShift === 'a' ? 'b' : (currentShift === 'b' ? 'c' : 'a');
+            const shiftNames = { a: "א' (07:00-15:00)", b: "ב' (15:00-23:00)", c: "ג' (23:00-07:00)" };
+
+            body.innerHTML = `
+                <div class="fa-handover-info">
+                    <div class="fa-handover-from">
+                        <div class="fa-handover-label">ממשמרת</div>
+                        <div class="fa-handover-value">משמרת ${shiftNames[currentShift]}</div>
+                    </div>
+                    <div class="fa-handover-arrow">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2">
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                            <polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                    </div>
+                    <div class="fa-handover-to">
+                        <div class="fa-handover-label">למשמרת</div>
+                        <div class="fa-handover-value">משמרת ${shiftNames[nextShift]}</div>
+                    </div>
+                </div>
+
+                <div class="fa-handover-select">
+                    <label>סוכן מקבל:</label>
+                    <select id="faHandoverToAgent">
+                        <option value="">בחר סוכן</option>
+                        <option value="agent1">דני</option>
+                        <option value="agent2">יוסי</option>
+                        <option value="agent3">משה</option>
+                        <option value="agent4">אבי</option>
+                    </select>
+                </div>
+
+                <div class="fa-handover-notes">
+                    <label>הערות להעברה:</label>
+                    <textarea id="faHandoverNotes" placeholder="נקודות חשובות להעביר למשמרת הבאה..." rows="4"></textarea>
+                </div>
+
+                <div class="fa-handover-checklist">
+                    <label>צ'ק ליסט העברה:</label>
+                    <div class="fa-checklist-items">
+                        <label class="fa-checklist-item">
+                            <input type="checkbox" id="handover_summary">
+                            <span>סיכום משמרת נשלח</span>
+                        </label>
+                        <label class="fa-checklist-item">
+                            <input type="checkbox" id="handover_docs">
+                            <span>כל המסמכים עודכנו</span>
+                        </label>
+                        <label class="fa-checklist-item">
+                            <input type="checkbox" id="handover_issues">
+                            <span>בעיות פתוחות דווחו</span>
+                        </label>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function confirmHandover() {
+            const currentAgent = document.getElementById('faAgentSelect').value;
+            const currentAgentName = document.getElementById('faAgentSelect').options[document.getElementById('faAgentSelect').selectedIndex].text;
+            const toAgent = document.getElementById('faHandoverToAgent').value;
+            const toAgentName = document.getElementById('faHandoverToAgent').options[document.getElementById('faHandoverToAgent').selectedIndex].text;
+            const notes = document.getElementById('faHandoverNotes')?.value || '';
+            const currentShift = document.getElementById('faShiftSelect').value;
+
+            if (!toAgent) {
+                showToast('יש לבחור סוכן מקבל', 'error');
+                return;
+            }
+
+            try {
+                // Save handover record
+                await db.collection('shiftHandovers').add({
+                    fromAgent: currentAgent,
+                    fromAgentName: currentAgentName,
+                    toAgent: toAgent,
+                    toAgentName: toAgentName,
+                    shift: currentShift,
+                    date: new Date().toISOString().split('T')[0],
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    notes: notes,
+                    checklist: {
+                        summary: document.getElementById('handover_summary')?.checked || false,
+                        docs: document.getElementById('handover_docs')?.checked || false,
+                        issues: document.getElementById('handover_issues')?.checked || false
+                    }
+                });
+
+                showToast(`המשמרת הועברה ל${toAgentName}`, 'success');
+                closeShiftHandover();
+
+            } catch (error) {
+                console.error('Error confirming handover:', error);
+                showToast('שגיאה בהעברת המשמרת', 'error');
+            }
+        }
+
+        function callCaptain(shipId) {
+            const ship = ships.find(s => s.id === shipId);
+            if (ship && ship.captain?.phone) {
+                window.location.href = `tel:${ship.captain.phone}`;
+            } else {
+                showToast('לא נמצא מספר טלפון של רב החובל', 'error');
+            }
+        }
+
+        function addShipNote(shipId) {
+            const ship = ships.find(s => s.id === shipId);
+            if (!ship) return;
+
+            document.getElementById('modalTitle').textContent = `הוסף הערה - ${ship.name}`;
+            document.getElementById('modalBody').innerHTML = `
+                <div style="display: grid; gap: 16px;">
+                    <textarea id="faShipNoteInput" placeholder="הקלד הערה..." rows="4" style="width: 100%; padding: 12px; border: 1px solid var(--glass-border); border-radius: 8px; background: var(--bg-secondary); color: var(--text-primary); resize: vertical;"></textarea>
+                    <button onclick="saveShipNote('${shipId}')" style="padding: 12px 24px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        שמור הערה
+                    </button>
+                </div>
+            `;
+            document.getElementById('modalOverlay').classList.add('active');
+        }
+
+        async function saveShipNote(shipId) {
+            const note = document.getElementById('faShipNoteInput')?.value;
+            if (!note) {
+                showToast('יש להזין הערה', 'error');
+                return;
+            }
+
+            try {
+                const agent = document.getElementById('faAgentSelect').value;
+                const agentName = document.getElementById('faAgentSelect').options[document.getElementById('faAgentSelect').selectedIndex].text;
+
+                await db.collection('ships').doc(shipId).collection('notes').add({
+                    text: note,
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                    createdBy: agentName || 'סוכן שטח',
+                    source: 'fieldAgent'
+                });
+
+                showToast('ההערה נשמרה', 'success');
+                closeModal();
+            } catch (error) {
+                console.error('Error saving note:', error);
+                showToast('שגיאה בשמירת ההערה', 'error');
+            }
         }
 
         // ==================== Initialize App ====================
