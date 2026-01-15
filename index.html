@@ -19971,34 +19971,34 @@ ${signature}`;
                 const underOp = ships.filter(s => s.status === STATUS.UNDER_OPERATION);
                 const sailed = ships.filter(s => s.status === STATUS.SAILED);
 
-                results.push(`<div style="margin-bottom: 12px;"><strong>📊 סיכום אניות במערכת</strong></div>`);
+                results.push(`<div style="margin-bottom: 12px;"><strong>📊 Vessels Summary</strong></div>`);
                 results.push(`<div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--glass-border); font-size: 16px;">
-                    <span>סה"כ אניות פעילות:</span>
+                    <span>Total Active Vessels:</span>
                     <span style="font-weight: 700; color: var(--primary);">${activeShips.length}</span>
                 </div>`);
                 results.push(`<div style="display: flex; justify-content: space-between; padding: 6px 0;">
-                    <span style="color: var(--text-secondary);">🚢 בדרך / צפויות:</span>
+                    <span style="color: var(--text-secondary);">🚢 At Sea / Expected:</span>
                     <span>${atSea.length}</span>
                 </div>`);
                 results.push(`<div style="display: flex; justify-content: space-between; padding: 6px 0;">
-                    <span style="color: var(--text-secondary);">⚓ על עוגן:</span>
+                    <span style="color: var(--text-secondary);">⚓ At Anchor:</span>
                     <span>${atAnchor.length}</span>
                 </div>`);
                 results.push(`<div style="display: flex; justify-content: space-between; padding: 6px 0;">
-                    <span style="color: var(--text-secondary);">🏭 בנמל:</span>
+                    <span style="color: var(--text-secondary);">🏭 At Port:</span>
                     <span>${atPort.length}</span>
                 </div>`);
                 results.push(`<div style="display: flex; justify-content: space-between; padding: 6px 0;">
-                    <span style="color: var(--text-secondary);">⏳ בפריקה:</span>
+                    <span style="color: var(--text-secondary);">⏳ Under Discharge:</span>
                     <span>${underOp.length}</span>
                 </div>`);
                 results.push(`<div style="display: flex; justify-content: space-between; padding: 6px 0; color: var(--text-muted);">
-                    <span>✅ הפליגו:</span>
+                    <span>✅ Sailed:</span>
                     <span>${sailed.length}</span>
                 </div>`);
 
                 if (activeShips.length > 0) {
-                    results.push(`<div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--glass-border);"><strong>רשימת אניות פעילות:</strong></div>`);
+                    results.push(`<div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid var(--glass-border);"><strong>Active Vessels:</strong></div>`);
                     activeShips.forEach(s => {
                         results.push(`<div style="padding: 4px 0; font-size: 13px;">• ${s.name} - ${getStatusText(s.status)}${s.port ? ' - ' + s.port : ''}</div>`);
                     });
@@ -20035,7 +20035,7 @@ ${signature}`;
                         }
                     });
                     if (Object.keys(cargoTypes).length > 0) {
-                        results.push(`<strong>📦 סיכום מטענים:</strong>`);
+                        results.push(`<strong>📦 Cargo Summary:</strong>`);
                         Object.entries(cargoTypes).forEach(([cargo, shipNames]) => {
                             results.push(`<div style="padding: 6px 0; border-bottom: 1px solid var(--glass-border);">
                                 <div style="font-weight: 500;">${cargo}</div>
@@ -20063,11 +20063,11 @@ ${signature}`;
                     }
                 });
                 if (Object.keys(receivers).length > 0) {
-                    results.push(`<strong>👥 מקבלים פעילים:</strong>`);
+                    results.push(`<strong>👥 Active Receivers:</strong>`);
                     Object.entries(receivers).forEach(([rec, shipNames]) => {
                         results.push(`<div style="padding: 6px 0; border-bottom: 1px solid var(--glass-border);">
                             <div style="font-weight: 500;">${rec}</div>
-                            <div style="font-size: 12px; color: var(--text-secondary);">אניות: ${shipNames.join(', ')}</div>
+                            <div style="font-size: 12px; color: var(--text-secondary);">Vessels: ${shipNames.join(', ')}</div>
                         </div>`);
                     });
                     return results.join('');
@@ -20091,46 +20091,46 @@ ${signature}`;
 
                 // Check each possible question type
                 if (queryLower.includes('מקבל') || queryLower.includes('receivers')) {
-                    answers.push({ label: 'מקבלים', value: shipMatch.receivers || 'לא הוגדר' });
+                    answers.push({ label: 'Receivers', value: shipMatch.receivers || 'N/A' });
                 }
                 if (queryLower.includes('eta') || queryLower.includes('הגעה') || queryLower.includes('מתי מגיע')) {
-                    answers.push({ label: 'ETA', value: shipMatch.eta ? new Date(shipMatch.eta).toLocaleString('he-IL') : 'לא הוגדר' });
+                    answers.push({ label: 'ETA', value: shipMatch.eta ? new Date(shipMatch.eta).toLocaleString('en-GB') : 'N/A' });
                 }
                 if (queryLower.includes('etb') || queryLower.includes('עגינה')) {
-                    answers.push({ label: 'ETB', value: shipMatch.expected_berth_time ? new Date(shipMatch.expected_berth_time).toLocaleString('he-IL') : 'לא הוגדר' });
+                    answers.push({ label: 'ETB', value: shipMatch.expected_berth_time ? new Date(shipMatch.expected_berth_time).toLocaleString('en-GB') : 'N/A' });
                 }
                 if (queryLower.includes('מטען') || queryLower.includes('cargo')) {
-                    answers.push({ label: 'מטען', value: shipMatch.cargo || 'לא הוגדר' });
+                    answers.push({ label: 'Cargo', value: shipMatch.cargo || 'N/A' });
                 }
                 if (queryLower.includes('פירוט') || queryLower.includes('סחורה') || queryLower.includes('breakdown')) {
                     // Show cargo breakdown if available
                     if (shipMatch.cargoBreakdown && shipMatch.cargoBreakdown.length > 0) {
                         const breakdownText = shipMatch.cargoBreakdown
                             .filter(c => c.type)
-                            .map(c => `${c.type}: ${c.quantity ? c.quantity + ' יח\' / ' : ''}${c.weight ? c.weight.toLocaleString() + ' MT' : ''}`)
+                            .map(c => `${c.type}: ${c.quantity ? c.quantity + ' pcs / ' : ''}${c.weight ? c.weight.toLocaleString() + ' MT' : ''}`)
                             .join('<br>');
-                        answers.push({ label: 'פירוט מטען', value: breakdownText || shipMatch.cargo || 'לא הוגדר', isHtml: true });
+                        answers.push({ label: 'Cargo Breakdown', value: breakdownText || shipMatch.cargo || 'N/A', isHtml: true });
                     } else {
-                        answers.push({ label: 'פירוט מטען', value: shipMatch.cargo || 'לא הוגדר' });
+                        answers.push({ label: 'Cargo Breakdown', value: shipMatch.cargo || 'N/A' });
                     }
                 }
                 if (queryLower.includes('נמל') || queryLower.includes('port') || queryLower.includes('יעד')) {
-                    answers.push({ label: 'נמל יעד', value: shipMatch.port || 'לא הוגדר' });
+                    answers.push({ label: 'Port', value: shipMatch.port || 'N/A' });
                 }
                 if (queryLower.includes('סטטוס') || queryLower.includes('status') || queryLower.includes('מצב')) {
-                    answers.push({ label: 'סטטוס', value: getStatusText(shipMatch.status) });
+                    answers.push({ label: 'Status', value: getStatusText(shipMatch.status) });
                 }
                 if (queryLower.includes('בעלים') || queryLower.includes('owner')) {
-                    answers.push({ label: 'בעלים', value: shipMatch.owner || 'לא הוגדר' });
+                    answers.push({ label: 'Owner', value: shipMatch.owner || 'N/A' });
                 }
                 if (queryLower.includes('ספק') || queryLower.includes('supplier') || queryLower.includes('שולח')) {
-                    answers.push({ label: 'ספק', value: shipMatch.supplier || 'לא הוגדר' });
+                    answers.push({ label: 'Supplier', value: shipMatch.supplier || 'N/A' });
                 }
                 if (queryLower.includes('סוכן') || queryLower.includes('agent')) {
-                    answers.push({ label: 'סוכן', value: shipMatch.agent || 'לא הוגדר' });
+                    answers.push({ label: 'Agent', value: shipMatch.agent || 'N/A' });
                 }
                 if (queryLower.includes('מסע') || queryLower.includes('voyage')) {
-                    answers.push({ label: 'מס\' מסע', value: shipMatch.voyage || 'לא הוגדר' });
+                    answers.push({ label: 'Voyage No.', value: shipMatch.voyage || 'N/A' });
                 }
 
                 // Format multiple answers nicely
@@ -20153,15 +20153,15 @@ ${signature}`;
 
                 // If no specific question, show all info
                 if (answers.length === 0) {
-                    results.push(`<div style="margin-bottom: 8px;"><strong>📋 ${shipMatch.name}</strong> (${shipMatch.voyage || 'ללא מסע'})</div>`);
+                    results.push(`<div style="margin-bottom: 8px;"><strong>📋 ${shipMatch.name}</strong> (${shipMatch.voyage || 'No voyage'})</div>`);
                     const allInfo = [
-                        { label: 'סטטוס', value: getStatusText(shipMatch.status) },
-                        { label: 'נמל', value: shipMatch.port || '-' },
-                        { label: 'ETA', value: shipMatch.eta ? new Date(shipMatch.eta).toLocaleString('he-IL') : '-' },
-                        { label: 'מטען', value: shipMatch.cargo || '-' },
-                        { label: 'מקבלים', value: shipMatch.receivers || '-' },
-                        { label: 'ספק', value: shipMatch.supplier || '-' },
-                        { label: 'בעלים', value: shipMatch.owner || '-' }
+                        { label: 'Status', value: getStatusText(shipMatch.status) },
+                        { label: 'Port', value: shipMatch.port || '-' },
+                        { label: 'ETA', value: shipMatch.eta ? new Date(shipMatch.eta).toLocaleString('en-GB') : '-' },
+                        { label: 'Cargo', value: shipMatch.cargo || '-' },
+                        { label: 'Receivers', value: shipMatch.receivers || '-' },
+                        { label: 'Supplier', value: shipMatch.supplier || '-' },
+                        { label: 'Owner', value: shipMatch.owner || '-' }
                     ];
                     allInfo.forEach(a => {
                         if (a.value && a.value !== '-') {
@@ -20175,14 +20175,14 @@ ${signature}`;
             }
 
             // Technical specs from reference
-            if (refVesselMatch && (queryLower.includes('אורך') || queryLower.includes('loa') || queryLower.includes('מידות') || queryLower.includes('רוחב') || queryLower.includes('גודל'))) {
-                results.push(`<div style="margin-top: 12px; margin-bottom: 8px;"><strong>📐 מידות ${refVesselMatch.name}:</strong></div>`);
+            if (refVesselMatch && (queryLower.includes('אורך') || queryLower.includes('loa') || queryLower.includes('מידות') || queryLower.includes('רוחב') || queryLower.includes('גודל') || queryLower.includes('dimensions'))) {
+                results.push(`<div style="margin-top: 12px; margin-bottom: 8px;"><strong>📐 ${refVesselMatch.name} Dimensions:</strong></div>`);
                 const specs = [];
-                if (refVesselMatch.loa) specs.push({ label: 'LOA', value: `${refVesselMatch.loa} מ'` });
-                if (refVesselMatch.beam) specs.push({ label: 'רוחב', value: `${refVesselMatch.beam} מ'` });
-                if (refVesselMatch.dwt) specs.push({ label: 'DWT', value: `${refVesselMatch.dwt} טון` });
+                if (refVesselMatch.loa) specs.push({ label: 'LOA', value: `${refVesselMatch.loa} m` });
+                if (refVesselMatch.beam) specs.push({ label: 'Beam', value: `${refVesselMatch.beam} m` });
+                if (refVesselMatch.dwt) specs.push({ label: 'DWT', value: `${refVesselMatch.dwt} MT` });
                 if (refVesselMatch.grt) specs.push({ label: 'GRT', value: refVesselMatch.grt });
-                if (refVesselMatch.holds) specs.push({ label: 'מחסנים', value: refVesselMatch.holds });
+                if (refVesselMatch.holds) specs.push({ label: 'Holds', value: refVesselMatch.holds });
                 specs.forEach(s => {
                     results.push(`<div style="display: flex; justify-content: space-between; padding: 4px 0;">
                         <span style="color: var(--text-secondary);">${s.label}:</span>
@@ -20200,12 +20200,12 @@ ${signature}`;
                 );
 
                 if (matchingShips.length > 0) {
-                    results.push(`<strong>נמצאו ${matchingShips.length} אניות:</strong>`);
+                    results.push(`<strong>Found ${matchingShips.length} vessels:</strong>`);
                     matchingShips.forEach(s => {
                         results.push(`<div style="padding: 4px 0;">• ${s.name} - ${getStatusText(s.status)} - ${s.port || '-'}</div>`);
                     });
                 } else {
-                    results.push('לא נמצא מידע מתאים. נסה לשאול שאלה ספציפית יותר או לציין שם אנייה.');
+                    results.push('No matching data found. Try asking a more specific question or mention a vessel name.');
                 }
             }
 
